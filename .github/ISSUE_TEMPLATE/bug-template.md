@@ -2,7 +2,7 @@
 name: BUG TEMPLATE
 about: 버그 발생 관련 이슈 템플릿입니다.
 title: "[BUG]"
-labels: ''
+labels: "\U0001F41B BugFix"
 assignees: ''
 
 ---
