@@ -24,6 +24,7 @@ public class JwtProvider {
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
+    private String ROLES = "roles";
 
     private long tokenValidMillisecond = 60 * 60 * 1000L; // 1 hour
 
@@ -41,8 +42,8 @@ public class JwtProvider {
     public String createToken(String userPk, List<String> roles) {
 
         // user 구분을 위해 Claims 에 User Pk 값을 넣어줌
-        Claims claims = Jwts.claims().subject(userPk).build();
-        claims.put("roles", roles);
+        Claims claims = Jwts.claims().subject(String.valueOf(userPk)).build();
+//        claims.put(ROLES, roles);
         // 생성 날짜, 만료 날짜를 위한 Date
         Date now = new Date();
 
