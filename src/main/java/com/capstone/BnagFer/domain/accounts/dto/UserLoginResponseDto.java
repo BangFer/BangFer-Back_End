@@ -15,7 +15,7 @@ public record UserLoginResponseDto(
     public static UserLoginResponseDto from(User user, String token) {
         return UserLoginResponseDto.builder()
                 .userId(user.getId())
-                .createdAt(user.getCreatedAt())
+                .createdAt(LocalDateTime.now())
                 .token(token)
                 .build();
     }
