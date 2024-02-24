@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountsController {
 
     private final AccountsService accountsService;
-    private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
     public ApiResponse<UserLoginResponseDto> login(@Valid @RequestBody UserLoginRequestDto requestDto) {
