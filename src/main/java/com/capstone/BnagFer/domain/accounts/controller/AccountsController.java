@@ -4,7 +4,6 @@ import com.capstone.BnagFer.domain.accounts.dto.UserLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
-import com.capstone.BnagFer.domain.accounts.jwt.config.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.service.AccountsService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import jakarta.validation.Valid;

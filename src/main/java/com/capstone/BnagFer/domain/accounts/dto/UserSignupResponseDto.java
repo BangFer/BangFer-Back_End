@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.accounts.dto;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import lombok.Builder;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.accounts.dto;
 
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
