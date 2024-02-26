@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.tactic.entity;
 
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
