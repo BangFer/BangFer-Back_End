@@ -1,11 +1,9 @@
-package com.capstone.BnagFer.domain.accounts.myteam.entity;
+package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.domain.accounts.User;
 import com.capstone.BnagFer.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -13,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-
+@Table(name = "myteam_team")
 public class Team extends BaseEntity {
     //팀 id 값
     @Id
@@ -42,7 +40,4 @@ public class Team extends BaseEntity {
     //캘린더
     @OneToMany(mappedBy = "team")
     private List<CalendarEvent> calendarEvents;
-
-    @Column(name = "creation_date")
-    private LocalDateTime creationDate;
 }
