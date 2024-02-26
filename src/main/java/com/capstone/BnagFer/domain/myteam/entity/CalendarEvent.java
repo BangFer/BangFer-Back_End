@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.myteam.entity;
+package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.global.BaseEntity;
 import jakarta.persistence.*;
@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(name = "myteam_calendarevent")
 public class CalendarEvent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
