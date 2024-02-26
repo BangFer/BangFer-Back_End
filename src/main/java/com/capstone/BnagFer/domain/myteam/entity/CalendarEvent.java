@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.entity;
 
-import com.capstone.BnagFer.global.BaseEntity;
+import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
