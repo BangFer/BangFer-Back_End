@@ -1,7 +1,9 @@
 package com.capstone.BnagFer.domain.myteam.entity;
 
-import com.capstone.BnagFer.domain.accounts.User;
-import com.capstone.BnagFer.global.BaseEntity;
+
+import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.tactic.entity.Tactic;
+import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
