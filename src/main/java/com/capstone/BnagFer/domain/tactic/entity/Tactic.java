@@ -59,7 +59,7 @@ public class Tactic extends BaseEntity {
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<TacticComment> comments = new ArrayList<>(TacticComment);
+    private List<TacticComment> comments = new ArrayList<TacticComment>();
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore

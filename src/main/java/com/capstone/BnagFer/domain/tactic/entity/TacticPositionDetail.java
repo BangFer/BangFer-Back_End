@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tactic_tacticpositiondetail")
 public class TacticPositionDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
