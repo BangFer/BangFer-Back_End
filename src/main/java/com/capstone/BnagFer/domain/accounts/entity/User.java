@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
-import com.capstone.BnagFer.domain.myteam.entity.CalendarEvent;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -52,7 +51,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
     @OneToMany(mappedBy = "leader_id")
