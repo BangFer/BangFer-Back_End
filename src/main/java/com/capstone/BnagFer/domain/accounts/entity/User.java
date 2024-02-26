@@ -1,5 +1,11 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
+import com.capstone.BnagFer.domain.myteam.entity.CalendarEvent;
+import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
+import com.capstone.BnagFer.domain.tactic.entity.Tactic;
+import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
+import com.capstone.BnagFer.domain.tactic.entity.TacticLike;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -30,6 +36,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 20)
@@ -47,6 +54,21 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Profile profile;
+
+    @OneToMany(mappedBy = "leader_id")
+    private List<Team> leadingTeams;
+
+    @OneToMany(mappedBy = "user")
+    private List<TeamMember> teamMemberships;
+
+    @OneToMany(mappedBy = "user")
+    private List<Tactic> tactics;
+
+    @OneToMany(mappedBy = "user")
+    private List<TacticComment> tacticComments;
+
+    @OneToMany(mappedBy = "user")
+    private List<TacticLike> tacticLikes;
 
     // 회원이 가지고 있는 권한 정보, 기본: "ROLE_USER"
     @ElementCollection
