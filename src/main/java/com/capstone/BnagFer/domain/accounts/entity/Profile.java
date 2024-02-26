@@ -1,6 +1,6 @@
-package com.capstone.BnagFer.domain.accounts;
+package com.capstone.BnagFer.domain.accounts.entity;
 
-import com.capstone.BnagFer.global.BaseEntity;
+import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -24,8 +24,8 @@ public class Profile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 20)
-    private String name; // 닉네임
+    @Column(name = "nickname", nullable = false, length = 20)
+    private String nickname; // 닉네임
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description; // 소개 설명
