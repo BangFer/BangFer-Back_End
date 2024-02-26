@@ -24,6 +24,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/accounts/signup", "/accounts/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/oauth/kakao/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/exception/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                                 .anyRequest().hasRole("USER")
                 )
                 .sessionManagement(sessionManagement ->
