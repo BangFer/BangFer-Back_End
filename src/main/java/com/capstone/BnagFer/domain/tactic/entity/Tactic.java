@@ -67,5 +67,5 @@ public class Tactic extends BaseEntity {
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Team> teams; // Team 관련 내용을 pull 받지 않은 상태
+    private List<Team> teams; // Team 관련 내용을 pull 받지 않은 상태 + develop으로 풀 받아야 함
 }
