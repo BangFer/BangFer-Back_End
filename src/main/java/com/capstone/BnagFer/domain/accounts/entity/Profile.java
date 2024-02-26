@@ -22,7 +22,7 @@ public class Profile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "profile_id")
     private Long id;
 
     @Column(name = "nickname", nullable = false, length = 20)
