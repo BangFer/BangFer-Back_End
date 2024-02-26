@@ -43,13 +43,18 @@ dependencies {
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+	// Swagger
+	// http://localhost:8080/swagger-ui/index.html#/
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.0.4'
+
 	// Slf4j
 	implementation 'org.slf4j:slf4j-api:2.0.7'
 
 	// Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	implementation 'com.google.guava:guava:30.1-jre'
+	implementation 'com.google.guava:guava:33.0.0-jre'
 }
 
 tasks.named('test') {
