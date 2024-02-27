@@ -78,10 +78,10 @@ public class JwtProvider {
     }
 
     // Jwt 로 인증 정보 조회
-    public Authentication getAuthentication (String token) {
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
+//    public Authentication getAuthentication (String token) {
+//        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserPk(token));
+//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+//    }
 
     // jwt 에서 회원 구분 pk 추출
     public String getUserPk(String token) {
@@ -131,10 +131,10 @@ public class JwtProvider {
         return (Boolean)Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("is_staff");
     }
 
-    public Boolean isExpired(String token) throws SignatureException {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
-                .before(new Date());
-    }
+//    public Boolean isExpired(String token) throws SignatureException {
+//        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
+//                .before(new Date());
+//    }
 
     public JwtDto reissueToken(String refreshToken) throws SignatureException {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(getUserEmail(refreshToken));

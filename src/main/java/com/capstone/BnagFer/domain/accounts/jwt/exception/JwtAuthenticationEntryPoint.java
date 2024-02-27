@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.accounts.jwt.exception;
 
 import com.capstone.BnagFer.domain.accounts.jwt.util.HttpResponseUtil;
 import com.capstone.BnagFer.global.common.ApiResponse;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
