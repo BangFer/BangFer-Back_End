@@ -8,8 +8,6 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +60,7 @@ public class JwtProvider {
         Instant issuedAt = Instant.now();
         Instant expiration = issuedAt.plusMillis(refreshExpMs);
 
-        String refreshToken = Jwts.builder()
+        return Jwts.builder()
                 .header()
                 .add("alg", "HS256")
                 .add("typ", "JWT")
@@ -73,8 +71,6 @@ public class JwtProvider {
                 .expiration(Date.from(expiration))
                 .signWith(secretKey)
                 .compact();
-
-        return refreshToken;
     }
 
     // Jwt 로 인증 정보 조회
