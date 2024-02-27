@@ -28,7 +28,7 @@ public class Team extends BaseEntity {
     //방장 id 값
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User leader_id;
+    private User leaderId; // 원래는 leader_id였는데 leaderId로 바꿈
 
     //팀 맴버
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
