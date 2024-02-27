@@ -128,7 +128,10 @@ public class JwtProvider {
     }
 
     public Boolean isStaff(String token) throws SignatureException {
-        return (Boolean)Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("is_staff");
+        return (Boolean) Jwts.parser()
+                .verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload().get("is_staff");
     }
 
 //    public Boolean isExpired(String token) throws SignatureException {
