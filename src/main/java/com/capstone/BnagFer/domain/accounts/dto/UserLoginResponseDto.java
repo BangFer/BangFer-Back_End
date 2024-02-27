@@ -9,14 +9,16 @@ import java.time.LocalDateTime;
 public record UserLoginResponseDto(
         Long userId,
         LocalDateTime createdAt,
-        String token
+        String accessToken,
+        String refreshToken
 ) {
 
-    public static UserLoginResponseDto from(User user, String token) {
+    public static UserLoginResponseDto from(User user, String accessToken, String refreshToken) {
         return UserLoginResponseDto.builder()
                 .userId(user.getId())
                 .createdAt(LocalDateTime.now())
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }
