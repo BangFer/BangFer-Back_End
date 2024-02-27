@@ -54,10 +54,10 @@ public class User extends BaseEntity {
     private Profile profile;
 
     @OneToMany(mappedBy = "leader_id")
-    private List<Team> leadingTeams;
+    private List<Team> team;
 
     @OneToMany(mappedBy = "user")
-    private List<TeamMember> teamMemberships;
+    private List<TeamMember> teamMember;
 
     @OneToMany(mappedBy = "user")
     private List<Tactic> tactics;
