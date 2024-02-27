@@ -60,7 +60,7 @@ public class JwtProvider {
         Instant issuedAt = Instant.now();
         Instant expiration = issuedAt.plusMillis(refreshExpMs);
 
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .header()
                 .add("alg", "HS256")
                 .add("typ", "JWT")
@@ -71,6 +71,10 @@ public class JwtProvider {
                 .expiration(Date.from(expiration))
                 .signWith(secretKey)
                 .compact();
+
+        // 추가 매서드
+
+        return refreshToken;
     }
 
     // Jwt 로 인증 정보 조회
