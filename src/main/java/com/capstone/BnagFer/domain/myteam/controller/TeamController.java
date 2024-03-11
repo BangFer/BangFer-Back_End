@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
     private final TeamService teamService;
 
-//    @GetMapping("/{teamId}")
-//    public ApiResponse<TeamResponse.teamDetail> getMyTeam(@PathVariable Long teamId) {
-//        TeamResponse.teamDetail myTeam = teamService.getMyTeamById(teamId);
-//        return ApiResponse.onSuccess(myTeam);
-//    }
+    @GetMapping("/{teamId}")
+    public ApiResponse<TeamResponse.teamDetail> getMyTeam(@PathVariable Long teamId) {
+        TeamResponse.teamDetail myTeam = teamService.getMyTeamById(teamId);
+        return ApiResponse.onSuccess(myTeam);
+    }
 }
