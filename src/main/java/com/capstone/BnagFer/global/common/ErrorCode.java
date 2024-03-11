@@ -20,6 +20,8 @@ public enum ErrorCode implements BaseErrorCode {
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER4003", "비밀번호가 일치하지 않습니다."),
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4004", "사용자가 이미 존재합니다.");
 
+
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

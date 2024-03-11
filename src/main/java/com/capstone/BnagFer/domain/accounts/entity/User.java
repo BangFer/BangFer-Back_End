@@ -54,8 +54,8 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
-    @OneToMany(mappedBy = "leader_id")
-    private List<Team> leadingTeams;
+//    @OneToMany(mappedBy = "leader_id")
+//    private List<Team> leadingTeams;
 
     @OneToMany(mappedBy = "user")
     private List<TeamMember> teamMemberships;
