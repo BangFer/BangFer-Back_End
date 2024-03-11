@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
-import com.capstone.BnagFer.domain.myteam.dto.TeamResponse;
+import com.capstone.BnagFer.domain.myteam.dto.CreateTeamResponse;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
     private final TeamRepository teamRepository;
 
-    public TeamResponse.teamDetail getMyTeamById(Long teamId) {
+    public CreateTeamResponse.teamDetail getMyTeamById(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        return TeamResponse.teamDetail.from(team);
+        return CreateTeamResponse.teamDetail.from(team);
     }
 
 
