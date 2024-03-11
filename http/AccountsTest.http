@@ -1,0 +1,19 @@
+### 회원가입
+POST {{api}}/accounts/signup
+Content-Type: application/json
+
+{
+  "name": "퍼거슨",
+  "email": "test1234@naver.com",
+  "password": "test1234!!",
+  "passwordCheck": "test1234!!"
+}
+
+### 로그인
+POST {{api}}/accounts/login
+Content-Type: application/json
+
+{
+  "email": "test1234@naver.com",
+  "password": "test1234!!"
+}
