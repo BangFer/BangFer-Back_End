@@ -36,4 +36,9 @@ public class TeamController {
         return ApiResponse.onSuccess(updatedTeam);
     }
 
+    @DeleteMapping("/{teamId}")
+    public ApiResponse<Object> deleteMyTeam(@PathVariable Long teamId) {
+        teamService.deleteMyTeam(teamId);
+        return ApiResponse.noContent();
+    }
 }

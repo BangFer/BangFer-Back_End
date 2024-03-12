@@ -36,6 +36,5 @@ public class TeamService {
         return CUTeamResponse.teamDetail.from(updatedTeam);
     }
 
-
-
+    public void deleteMyTeam(Long teamId) { teamRepository.deleteById(teamId); }
 }
