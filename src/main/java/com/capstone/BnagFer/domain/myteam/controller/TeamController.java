@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.controller;
 
-import com.capstone.BnagFer.domain.myteam.dto.CreateTeamRequest;
-import com.capstone.BnagFer.domain.myteam.dto.CreateTeamResponse;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequest;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponse;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponse;
 import com.capstone.BnagFer.domain.myteam.service.TeamQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamService;
@@ -24,9 +24,16 @@ public class TeamController {
     }
 
     @PostMapping
-    public ApiResponse<CreateTeamResponse.teamDetail> createMyTeam(@RequestBody CreateTeamRequest.CreateDTO request) {
+    public ApiResponse<CUTeamResponse.teamDetail> createMyTeam(@RequestBody CUTeamRequest.CreateDTO request) {
         System.out.println("name : " + SecurityContextHolder.getContext().getAuthentication().getName());
-        CreateTeamResponse.teamDetail myTeam = teamService.createMyTeam(request);
+        CUTeamResponse.teamDetail myTeam = teamService.createMyTeam(request);
         return ApiResponse.onSuccess(myTeam);
     }
+
+    @PutMapping("/{teamId}")
+    public ApiResponse<CUTeamResponse.teamDetail> updateMyTeam(@RequestBody CUTeamRequest.UpdateDTO request) {
+        CUTeamResponse.teamDetail updatedTeam = teamService.updateMyTeam(request);
+        return ApiResponse.onSuccess(updatedTeam);
+    }
+
 }

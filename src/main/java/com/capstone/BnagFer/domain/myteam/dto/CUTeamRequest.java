@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateTeamRequest {
+public class CUTeamRequest {
     private String teamName;
 
     @Getter

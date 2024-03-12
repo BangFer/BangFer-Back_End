@@ -1,11 +1,10 @@
 package com.capstone.BnagFer.domain.myteam.dto;
 
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import lombok.*;
 import java.time.LocalDateTime;
 
-public class CreateTeamResponse {
+public class CUTeamResponse {
     @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
