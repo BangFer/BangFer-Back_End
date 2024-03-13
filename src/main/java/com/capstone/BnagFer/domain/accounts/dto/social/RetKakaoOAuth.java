@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.dto;
+package com.capstone.BnagFer.domain.accounts.dto.social;
 
 import lombok.Getter;
 
