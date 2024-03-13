@@ -1,5 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.controller;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequest;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponse;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponse;
@@ -10,10 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/team")
 public class TeamController {
+    private final UserJpaRepository userJpaRepository;
     private final TeamQueryService teamQueryService;
     private final TeamService teamService;
 
@@ -25,13 +30,12 @@ public class TeamController {
 
     @PostMapping
     public ApiResponse<CUTeamResponse.teamDetail> createMyTeam(@RequestBody CUTeamRequest.CreateDTO request) {
-        System.out.println("name : " + SecurityContextHolder.getContext().getAuthentication().getName());
         CUTeamResponse.teamDetail myTeam = teamService.createMyTeam(request);
         return ApiResponse.onSuccess(myTeam);
     }
 
     @PutMapping("/{teamId}")
-    public ApiResponse<CUTeamResponse.teamDetail> updateMyTeam(@RequestBody CUTeamRequest.UpdateDTO request) {
+    public ApiResponse<CUTeamResponse.teamDetail> updateMyTeam(@PathVariable Long teamId, String userEmail, @RequestBody CUTeamRequest.UpdateDTO request) {
         CUTeamResponse.teamDetail updatedTeam = teamService.updateMyTeam(request);
         return ApiResponse.onSuccess(updatedTeam);
     }

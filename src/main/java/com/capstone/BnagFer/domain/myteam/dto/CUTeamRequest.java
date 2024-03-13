@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CUTeamRequest {
     private String teamName;
+    private String email;
 
     @Getter
     public static class CreateDTO {
