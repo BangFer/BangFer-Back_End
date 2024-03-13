@@ -70,4 +70,8 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<TacticLike> tacticLikes;
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }

@@ -41,4 +41,8 @@ public class Profile extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
     private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
