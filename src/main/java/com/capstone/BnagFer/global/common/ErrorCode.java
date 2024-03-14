@@ -21,7 +21,7 @@ public enum ErrorCode implements BaseErrorCode {
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4004", "사용자가 이미 존재합니다."),
 
     // Tactic 관련 에러
-    TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC4001", "전술이 없습니다.");
+    TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC4001", "전술이 없습니다."),
 
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM4001", "팀이 없습니다.");
