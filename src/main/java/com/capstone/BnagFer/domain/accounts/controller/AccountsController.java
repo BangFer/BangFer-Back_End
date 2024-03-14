@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.accounts.controller;
 
-import com.capstone.BnagFer.domain.accounts.annotation.AccountResolver;
 import com.capstone.BnagFer.domain.accounts.dto.UserLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
@@ -57,10 +56,5 @@ public class AccountsController {
         } catch (IllegalArgumentException iae) {
             throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN, iae);
         }
-    }
-
-    @GetMapping("/test")
-    public ApiResponse<String> register(@AccountResolver User user) {
-        return ApiResponse.onSuccess(user.getEmail());
     }
 }
