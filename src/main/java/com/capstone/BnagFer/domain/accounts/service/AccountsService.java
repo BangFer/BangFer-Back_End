@@ -6,7 +6,8 @@ import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.domain.accounts.jwt.config.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,13 @@ public class AccountsService {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
         }
 
-        // 로그인 성공 시 토큰 생성
-        String token = jwtProvider.createToken(user.getId().toString(), user.getRoles());
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
-        return UserLoginResponseDto.from(user, token);
+        // 로그인 성공 시 토큰 생성
+        String accessToken = jwtProvider.createJwtAccessToken(customUserDetails);
+        String refreshToken = jwtProvider.createJwtRefreshToken(customUserDetails);
+
+        return UserLoginResponseDto.from(user, accessToken, refreshToken);
     }
 
     public UserSignupResponseDto signup(UserSignupRequestDto requestDto) {
