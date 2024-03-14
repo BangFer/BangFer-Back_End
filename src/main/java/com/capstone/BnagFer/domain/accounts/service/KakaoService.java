@@ -1,7 +1,9 @@
 package com.capstone.BnagFer.domain.accounts.service;
 
+import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.KakaoProfile;
 import com.capstone.BnagFer.domain.accounts.dto.social.RetKakaoOAuth;
+import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.google.gson.Gson;
@@ -23,6 +25,7 @@ public class KakaoService {
     private final Environment env;
     private final RestTemplate restTemplate;
     private final Gson gson;
+    private final AccountsService accountsService;
 
     @Value("${spring.url.base}")
     private String baseUrl;
@@ -74,5 +77,39 @@ public class KakaoService {
             throw new AccountsExceptionHandler(ErrorCode._INTERNAL_SERVER_ERROR);
         }
         throw new AccountsExceptionHandler(ErrorCode._INTERNAL_SERVER_ERROR);
+    }
+
+    // 연결 끊기
+    public void kakaoUnlink(String accessToken) {
+        String unlinkUrl = env.getProperty("social.kakao.url.unlink");
+        if (unlinkUrl == null) throw new AccountsExceptionHandler(ErrorCode._INTERNAL_SERVER_ERROR);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(unlinkUrl, request, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) return;
+        throw new AccountsExceptionHandler(ErrorCode._INTERNAL_SERVER_ERROR);
+    }
+
+    public Long signupByKakao(UserSocialSignupRequestDto requestDto) {
+        KakaoProfile  kakaoProfile= getKakaoProfile(requestDto.accessToken());
+        if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
+//        if (kakaoProfile.getKakao_account().getEmail() == null) {
+//            kakaoUnlink(requestDto.accessToken());
+//            throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
+//        }
+
+        UserSignupRequestDto signupRequestDto = UserSignupRequestDto.builder()
+                .email(requestDto.email())
+                .name(kakaoProfile.getProperties().getNickname())
+                .nickName(kakaoProfile.getProperties().getNickname())
+                .provider("kakao")
+                .build();
+
+        return accountsService.socialSignup(signupRequestDto);
     }
 }
