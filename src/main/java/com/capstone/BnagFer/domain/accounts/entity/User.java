@@ -53,7 +53,7 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
-    @OneToMany(mappedBy = "leader")
+    @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
     private List<Team> team;
 
     @OneToMany(mappedBy = "user")
