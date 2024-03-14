@@ -38,7 +38,7 @@ public class SwaggerConfig {
     private Components authSetting() {
         return new Components()
                 .addSecuritySchemes(
-                        "X-AUTH-TOKEN", //변경사항
+                        "access-token", //변경사항
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
