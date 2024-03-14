@@ -27,7 +27,7 @@ public class Team extends BaseEntity {
     private String teamName;
 
     //방장 id 값
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User leader;
 
