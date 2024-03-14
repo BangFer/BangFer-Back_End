@@ -1,25 +1,27 @@
 package com.capstone.BnagFer.domain.accounts.jwt.userdetails;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Getter
 public class CustomUserDetails implements UserDetails {
 
-    private final String email;
+    private final String username;
     private final String password;
     private final Boolean isStaff;
 
     public CustomUserDetails(User user) {
-        email = user.getEmail();
+        username = user.getEmail();
         password = user.getPassword();
         isStaff = user.getIsStaff();
     }
 
     public CustomUserDetails(String email, String password, Boolean isStaff) {
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.isStaff = isStaff;
     }
@@ -33,6 +35,7 @@ public class CustomUserDetails implements UserDetails {
         return null;
     }
 
+
     @Override
     public String getPassword() {
         return password;
@@ -40,7 +43,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
