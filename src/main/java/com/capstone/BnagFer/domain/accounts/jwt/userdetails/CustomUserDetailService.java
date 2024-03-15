@@ -19,8 +19,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user =  userJpaRepository.findUserByEmail(email)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user =  userJpaRepository.findUserByEmail(username)
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
         log.info("[*] User found : " + user.getEmail());
