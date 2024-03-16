@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
 import com.capstone.BnagFer.global.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -38,6 +39,7 @@ public class Profile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender; // MALE | FEMALE
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
     private User user;
