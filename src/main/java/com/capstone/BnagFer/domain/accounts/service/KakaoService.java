@@ -1,10 +1,17 @@
 package com.capstone.BnagFer.domain.accounts.service;
 
+import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
+import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.KakaoProfile;
 import com.capstone.BnagFer.domain.accounts.dto.social.RetKakaoOAuth;
+import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
+import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
+import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +24,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -26,6 +35,8 @@ public class KakaoService {
     private final RestTemplate restTemplate;
     private final Gson gson;
     private final AccountsService accountsService;
+    private final JwtProvider jwtProvider;
+    private final UserJpaRepository userJpaRepository;
 
     @Value("${spring.url.base}")
     private String baseUrl;
@@ -95,8 +106,8 @@ public class KakaoService {
         throw new AccountsExceptionHandler(ErrorCode._INTERNAL_SERVER_ERROR);
     }
 
-    public Long signupByKakao(UserSocialSignupRequestDto requestDto) {
-        KakaoProfile  kakaoProfile= getKakaoProfile(requestDto.accessToken());
+    public UserSignupResponseDto signupByKakao(UserSocialSignupRequestDto requestDto) {
+        KakaoProfile  kakaoProfile = getKakaoProfile(requestDto.accessToken());
         if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
 //        if (kakaoProfile.getKakao_account().getEmail() == null) {
 //            kakaoUnlink(requestDto.accessToken());
@@ -111,5 +122,28 @@ public class KakaoService {
                 .build();
 
         return accountsService.socialSignup(signupRequestDto);
+    }
+
+    public UserLoginResponseDto loginByKakao(UserSocialLoginRequestDto requestDto) {
+        KakaoProfile kakaoProfile = getKakaoProfile(requestDto.accessToken());
+        if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
+
+//        String kakaoEmail = kakaoProfile.getKakao_account().getEmail();
+//        if (kakaoEmail == null) throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
+
+        User user = userJpaRepository.findByEmailAndProvider(requestDto.email(), "kakao")
+                .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
+        String accessToken = jwtProvider.createJwtAccessToken(customUserDetails);
+        String refreshToken = jwtProvider.createJwtRefreshToken(customUserDetails);
+
+        return UserLoginResponseDto.builder()
+                .userId(user.getId())
+                .createdAt(LocalDateTime.now())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
