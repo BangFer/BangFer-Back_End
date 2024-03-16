@@ -5,12 +5,9 @@ import com.capstone.BnagFer.domain.accounts.dto.UserLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
-import com.capstone.BnagFer.domain.accounts.dto.social.KakaoProfile;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
@@ -20,7 +17,6 @@ import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
 import com.capstone.BnagFer.domain.accounts.service.AccountsService;
 import com.capstone.BnagFer.domain.accounts.service.KakaoService;
 import com.capstone.BnagFer.global.common.ApiResponse;
-import com.capstone.BnagFer.global.common.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -70,33 +66,13 @@ public class AccountsController {
     }
 
     @PostMapping("/social/signup/kakao")
-    public ApiResponse signupByKakao(@Valid @RequestBody UserSocialSignupRequestDto requestDto) {
-        Long userId = kakaoService.signupByKakao(requestDto);
-        return ApiResponse.onSuccess(userId);
+    public ApiResponse<UserSignupResponseDto> signupByKakao(@Valid @RequestBody UserSocialSignupRequestDto requestDto) {
+        return ApiResponse.onSuccess(kakaoService.signupByKakao(requestDto));
     }
 
     @PostMapping("/social/login/kakao")
     public ApiResponse<UserLoginResponseDto> loginByKakao(@Valid @RequestBody UserSocialLoginRequestDto requestDto) {
-        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(requestDto.accessToken());
-        if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
-
-        String kakaoEmail = kakaoProfile.getKakao_account().getEmail();
-        if (kakaoEmail == null) throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
-
-        User user = userJpaRepository.findByEmailAndProvider(kakaoEmail, "kakao")
-                .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
-
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
-
-        String accessToken = jwtProvider.createJwtAccessToken(customUserDetails);
-        String refreshToken = jwtProvider.createJwtRefreshToken(customUserDetails);
-
-        UserLoginResponseDto responseDto = UserLoginResponseDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-
-        return ApiResponse.onSuccess(responseDto);
+        return ApiResponse.onSuccess(kakaoService.loginByKakao(requestDto));
     }
 
     @GetMapping("/test")
