@@ -20,7 +20,13 @@ public enum ErrorCode implements BaseErrorCode {
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER4003", "비밀번호가 일치하지 않습니다."),
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4004", "사용자가 이미 존재합니다."),
     EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER4005", "사용자 이메일이 존재하지 않습니다."),
-    PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER4006", "사용자 프로필이 존재하지 않습니다.");
+    PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER4006", "사용자 프로필이 존재하지 않습니다."),
+
+    // Tactic 관련 에러
+    TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC4001", "전술이 없습니다."),
+
+    //TEAM 관련 에러
+    TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM4001", "팀이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

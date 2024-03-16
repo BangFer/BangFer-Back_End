@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.entity;
 
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequest;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -26,9 +27,9 @@ public class Team extends BaseEntity {
     private String teamName;
 
     //방장 id 값
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
-    private User leader_id;
+    private User leader;
 
     //팀 맴버
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
@@ -39,6 +40,12 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "tactic_id")
     private Tactic tactic;
 
+    //Leader Setter
+    public void setLeader(User leader) {
+        this.leader = leader;
+    }
+
+    public void updateTeam(CUTeamRequest.UpdateDTO updateDTO) { this.teamName = updateDTO.getTeamName();}
     //캘린더
     @OneToMany(mappedBy = "team")
     private List<CalendarEvent> calendarEvents;

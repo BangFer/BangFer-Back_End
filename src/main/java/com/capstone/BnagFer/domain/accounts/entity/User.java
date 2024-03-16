@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "last_login")
@@ -56,7 +56,7 @@ public class User extends BaseEntity {
     @Column(length = 100) // provider 추가 (kakao)
     private String provider;
 
-    @OneToMany(mappedBy = "leader_id")
+    @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
     private List<Team> team;
 
     @OneToMany(mappedBy = "user")
