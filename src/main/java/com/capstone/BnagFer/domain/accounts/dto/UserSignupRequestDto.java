@@ -1,10 +1,13 @@
 package com.capstone.BnagFer.domain.accounts.dto;
 
+import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record UserSignupRequestDto(
 
         @NotBlank(message = "[ERROR] 이름 입력은 필수 입니다.")
@@ -20,13 +23,38 @@ public record UserSignupRequestDto(
         String password,
 
         @NotBlank(message = "[ERROR] 비밀번호 재확인 입력은 필수 입니다.")
-        String passwordCheck
+        String passwordCheck,
+
+        String nickName,
+
+        String provider
 ) {
         public User toEntity(String encodedPw) {
-                return User.builder()
-                        .name(name)
-                        .password(encodedPw)
-                        .email(email)
+                Profile profile = Profile.builder()
+                        .nickname(nickName)
                         .build();
+                User user = User.builder()
+                        .email(email)
+                        .password(encodedPw)
+                        .name(name)
+                        .build();
+                profile.setUser(user);
+                user.setProfile(profile);
+                return user;
+        }
+
+        public User toEntity() {
+                Profile profile = Profile.builder()
+                        .nickname(nickName)
+                        .build();
+                User user = User.builder()
+                        .email(email)
+                        .name(name)
+                        .provider(provider)
+                        .build();
+                profile.setUser(user);
+                user.setProfile(profile);
+
+                return user;
         }
 }

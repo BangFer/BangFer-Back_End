@@ -60,4 +60,13 @@ public class AccountsService {
 
         return UserSignupResponseDto.from(userJpaRepository.save(user));
     }
+
+    public UserSignupResponseDto socialSignup(UserSignupRequestDto userSignupRequestDto) {
+        if (userJpaRepository
+                .findByEmailAndProvider(userSignupRequestDto.email(), userSignupRequestDto.provider())
+                .isPresent()
+        ) throw new AccountsExceptionHandler(ErrorCode.USER_ALREADY_EXIST);
+        User user = userJpaRepository.save(userSignupRequestDto.toEntity());
+        return UserSignupResponseDto.from(user);
+    }
 }

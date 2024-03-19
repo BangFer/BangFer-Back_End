@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     private String name; // 사용자 이름
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -53,6 +53,9 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
+    @Column(length = 100) // provider 추가 (kakao)
+    private String provider;
+
     @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
     private List<Team> team;
 
@@ -67,4 +70,8 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<TacticLike> tacticLikes;
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }
