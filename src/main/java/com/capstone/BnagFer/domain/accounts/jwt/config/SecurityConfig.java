@@ -31,12 +31,10 @@ import java.util.stream.Stream;
 public class SecurityConfig {
 
     private final String[] swaggerUrls = {"/swagger-ui/**", "/v3/**"};
-    private final String[] authUrls = {"/", "/accounts/signup/**", "/accounts/login/**",
-            "/api/v1/auth"};
+    private final String[] authUrls = {"/", "/accounts/signup/**", "/accounts/social/**", "/accounts/login/**",
+            "/api/v1/auth", "/oauth/kakao/**", "/accounts/reissue/**"};
     private final String[] allowedUrls = Stream.concat(Arrays.stream(swaggerUrls), Arrays.stream(authUrls))
             .toArray(String[]::new);
-
-//    private final AuthenticationConfiguration authenticationConfiguration;
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
