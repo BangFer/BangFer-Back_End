@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
+import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -18,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final UserJpaRepository userRepository;
+    private final AccountsServiceUtils accountsServiceUtils;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
-        User user = userRepository.findByEmail("geunsikevin@gmail.com").orElseThrow(() -> new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        User user = accountsServiceUtils.getCurrentUser();
         Team team = request.toEntity();
         team.setLeader(user);
         teamRepository.save(team);
@@ -28,7 +30,7 @@ public class TeamService {
     }
 
     public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request) {
-        User user = userRepository.findByEmail("geunsikevin@gmail.com").orElseThrow(() -> new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        User user = accountsServiceUtils.getCurrentUser();
         Team team = teamRepository.findById(user.getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         team.updateTeam(request);
         Team updatedTeam = teamRepository.save(team);
