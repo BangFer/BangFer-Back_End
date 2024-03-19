@@ -2,7 +2,7 @@ package com.capstone.BnagFer.domain.myteam.entity;
 
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequest;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -45,7 +45,7 @@ public class Team extends BaseEntity {
         this.leader = leader;
     }
 
-    public void updateTeam(CUTeamRequest.UpdateDTO updateDTO) { this.teamName = updateDTO.getTeamName();}
+    public void updateTeam(CUTeamRequestDto updateDTO) { this.teamName = updateDTO.teamName();}
     //캘린더
     @OneToMany(mappedBy = "team")
     private List<CalendarEvent> calendarEvents;
