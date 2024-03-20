@@ -1,14 +1,13 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequest;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponse;
+import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
-import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,23 +17,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final UserJpaRepository userRepository;
+    private final AccountsServiceUtils accountsServiceUtils;
 
-    public CUTeamResponse.teamDetail createMyTeam(CUTeamRequest.CreateDTO request) {
-        User user = userRepository.findByEmail("geunsikevin@gmail.com").orElseThrow(() -> new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND));
+    public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
+        User user = accountsServiceUtils.getCurrentUser();
         Team team = request.toEntity();
         team.setLeader(user);
         teamRepository.save(team);
-        return CUTeamResponse.teamDetail.from(team);
+        return CUTeamResponseDto.from(team);
     }
 
-    public CUTeamResponse.teamDetail updateMyTeam(CUTeamRequest.UpdateDTO request) {
-        User user = userRepository.findByEmail("geunsikevin@gmail.com").orElseThrow(() -> new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        Team team = teamRepository.findById(user.getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+    public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId) {
+        User user = accountsServiceUtils.getCurrentUser();
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        if(team.getLeader().getId() != user.getId()) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
         team.updateTeam(request);
         Team updatedTeam = teamRepository.save(team);
-        return CUTeamResponse.teamDetail.from(updatedTeam);
+        return CUTeamResponseDto.from(updatedTeam);
     }
 
-    public void deleteMyTeam(Long teamId) { teamRepository.deleteById(teamId); }
+    public void deleteMyTeam(Long teamId) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        else if(team.getLeader().getId()!= user.getId()) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
+        teamRepository.deleteById(teamId); }
 }
