@@ -1,7 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final UserJpaRepository userRepository;
     private final AccountsServiceUtils accountsServiceUtils;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {

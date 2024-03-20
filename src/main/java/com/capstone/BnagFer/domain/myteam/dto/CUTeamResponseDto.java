@@ -16,6 +16,7 @@ public record CUTeamResponseDto (
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
                 .leaderName(team.getLeader().getName())
+                .teamName(team.getTeamName())
                 .createdAt(team.getCreatedAt())
                 .build();
     }
