@@ -74,9 +74,4 @@ public class AccountsController {
         return ApiResponse.onSuccess(kakaoService.loginByKakao(requestDto));
     }
 
-    @GetMapping("/test")
-    public ApiResponse<String> register(@AccountResolver User user) {
-        return ApiResponse.onSuccess(user.getEmail());
-    }
-
 }
