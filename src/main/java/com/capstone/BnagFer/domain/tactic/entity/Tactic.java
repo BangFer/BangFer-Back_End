@@ -8,6 +8,7 @@ import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class Tactic extends BaseEntity {
     private String tacticName;
 
     @Column(name = "anonymous")
-    private boolean anonymous = Boolean.TRUE;
+    @ColumnDefault("true")
+    private boolean anonymous;
 
     @Column(name = "famous_coach_name", length = 20)
     private String famousCoachName;
