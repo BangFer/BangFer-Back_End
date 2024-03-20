@@ -1,41 +1,57 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class TacticResponse {
-    @Getter
+public record TacticResponse(Long tacticId,
+                             Long userId,
+                             String tacticName,
+                             Boolean anonymous,
+                             String famousCoachName,
+                             String mainFormation,
+                             String tacticDetails,
+                             String attackDetails,
+                             String defenseDetails,
+                             LocalDateTime createdAt,
+                             LocalDateTime updatedAt) {
+        public static TacticResponse from(Tactic tactic) {
+            return new TacticResponse(
+                    tactic.getTacticId(),
+                    tactic.getUser().getId(),
+                    tactic.getTacticName(),
+                    tactic.isAnonymous(),
+                    tactic.getFamousCoachName(),
+                    tactic.getMainFormation(),
+                    tactic.getTacticDetails(),
+                    tactic.getAttackDetails(),
+                    tactic.getDefenseDetails(),
+                    tactic.getCreatedAt(),
+                    tactic.getUpdatedAt()
+            );
+        }
     @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class tacticDetail{
-        private Long tacticId;
-        private Long userId;
-        private String tacticName;
-        private Boolean anonymous;
-        private String famousCoachName;
-        private String mainFormation;
-        private String tacticDetails;
-        private String attackDetails;
-        private String defenseDetails;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        public static tacticDetail from(Tactic tactic){
-            return tacticDetail.builder()
-                    .tacticId(tactic.getTacticId())
-                    .userId(tactic.getUser().getId())
-                    .tacticName(tactic.getTacticName())
-                    .anonymous(tactic.isAnonymous())
-                    .famousCoachName(tactic.getFamousCoachName())
-                    .mainFormation(tactic.getMainFormation())
-                    .tacticDetails(tactic.getTacticDetails())
-                    .attackDetails(tactic.getAttackDetails())
-                    .defenseDetails(tactic.getDefenseDetails())
-                    .createdAt(tactic.getCreatedAt())
-                    .updatedAt(tactic.getUpdatedAt())
-                    .build();
+    public record TacticList(Long tacticId,
+                             Long userId,
+                             String tacticName,
+                             Boolean anonymous,
+                             String famousCoachName,
+                             String mainFormation) {
+            public static TacticList from(Tactic tactic){
+                return TacticList.builder()
+                        .tacticId(tactic.getTacticId())
+                        .userId(tactic.getUser().getId())
+                        .tacticName(tactic.getTacticName())
+                        .anonymous(tactic.isAnonymous())
+                        .famousCoachName(tactic.getFamousCoachName())
+                        .mainFormation(tactic.getMainFormation())
+                        .build();
+            }
+            public static List<TacticList> from(List<Tactic> tactics) {
+                return tactics.stream().map(TacticList::from).collect(Collectors.toList());
         }
     }
 }
