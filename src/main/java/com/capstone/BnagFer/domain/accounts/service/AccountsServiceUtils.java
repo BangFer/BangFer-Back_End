@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AccountsServiceUtils {
 
-    private static final UserJpaRepository userRepository = null;
+    private final UserJpaRepository userRepository;
 
-    public static User getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName(); // 현재 로그인한 사용자의 이메일
         return userRepository.findByEmail(userEmail)

@@ -20,8 +20,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TacticService {
     private final TacticRepository tacticRepository;
+    private final AccountsServiceUtils accountsServiceUtils;
 
     public TacticResponse createTactic(TacticRequest.CreateDTO request){
+        User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = request.toEntity();
         tacticRepository.save(tactic);
         return TacticResponse.from(tactic);
@@ -32,7 +34,7 @@ public class TacticService {
     }
 
     public TacticResponse updateTactic(TacticRequest.UpdateDTO request) {
-        User user = AccountsServiceUtils.getCurrentUser(); //userRepository.findByEmail("kijiwi1@gmail.com").orElseThrow(() -> new TacticExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(user.getId()).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         tactic.updateTactic(request);
         Tactic updatedTactic = tacticRepository.save(tactic);
