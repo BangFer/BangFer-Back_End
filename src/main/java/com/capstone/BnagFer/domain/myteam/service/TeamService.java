@@ -27,13 +27,29 @@ public class TeamService {
         return CUTeamResponseDto.from(team);
     }
 
-    public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request) {
+    public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamRepository.findById(user.getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        if(team.getLeader().getId() != user.getId()) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
         team.updateTeam(request);
         Team updatedTeam = teamRepository.save(team);
         return CUTeamResponseDto.from(updatedTeam);
     }
 
-    public void deleteMyTeam(Long teamId) { teamRepository.deleteById(teamId); }
+    public void deleteMyTeam(Long teamId) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        else if(team.getLeader().getId()!= user.getId()) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
+        teamRepository.deleteById(teamId); }
 }

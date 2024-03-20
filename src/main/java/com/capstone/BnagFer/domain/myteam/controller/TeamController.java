@@ -31,8 +31,8 @@ public class TeamController {
     }
 
     @PutMapping("/{teamId}")
-    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable Long teamId, String userEmail, @RequestBody CUTeamRequestDto request) {
-        CUTeamResponseDto updatedTeam = teamService.updateMyTeam(request);
+    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable Long teamId, @RequestBody CUTeamRequestDto request) {
+        CUTeamResponseDto updatedTeam = teamService.updateMyTeam(request, teamId);
         return ApiResponse.onSuccess(updatedTeam);
     }
 
