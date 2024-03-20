@@ -20,6 +20,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TacticService {
     private final TacticRepository tacticRepository;
+    private final UserJpaRepository userRepository;
     private final AccountsServiceUtils accountsServiceUtils;
 
     public TacticResponse createTactic(TacticRequest.CreateDTO request){
@@ -30,12 +31,22 @@ public class TacticService {
     }
 
     public void deleteTactic(Long tacticId) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Tactic tactic = tacticRepository.findById(user.getId()).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        if(tactic.getUser() != user)
+            throw new TacticExceptionHandler(ErrorCode.UPDATE_AUTHORIZED_ERROR);
+
         tacticRepository.deleteById(tacticId);
     }
 
     public TacticResponse updateTactic(TacticRequest.UpdateDTO request) {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(user.getId()).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        if(tactic.getUser() != user)
+            throw new TacticExceptionHandler(ErrorCode.UPDATE_AUTHORIZED_ERROR);
+
         tactic.updateTactic(request);
         Tactic updatedTactic = tacticRepository.save(tactic);
         return TacticResponse.from(updatedTactic);

@@ -22,6 +22,8 @@ public enum ErrorCode implements BaseErrorCode {
 
     // Tactic 관련 에러
     TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC4001", "전술이 없습니다."),
+    TACTIC_EMPTY_ID(HttpStatus.BAD_REQUEST, "USER4002", "전술 아이디 값을 확인해주세요."),
+    UPDATE_AUTHORIZED_ERROR(HttpStatus.BAD_REQUEST, "USER4003", "해당 글에 대한 수정 및 삭제 권한이 없습니다."),
 
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM4001", "팀이 없습니다.");
