@@ -15,11 +15,14 @@ public enum ErrorCode implements BaseErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
     // 멤버 관련 에러
+
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER401", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER402", "닉네임은 필수 입니다."),
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER403", "비밀번호가 일치하지 않습니다."),
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER404", "사용자가 이미 존재합니다."),
     USER_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER405", "사용자가 맞지 않습니다. 권한이 없습니다."),
+    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER406", "사용자 이메일이 존재하지 않습니다."),
+    PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER407", "사용자 프로필이 존재하지 않습니다."),
 
     // Tactic 관련 에러
     TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "전술이 없습니다."),
@@ -27,7 +30,6 @@ public enum ErrorCode implements BaseErrorCode {
 
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다.");
-
 
     private final HttpStatus httpStatus;
     private final String code;
