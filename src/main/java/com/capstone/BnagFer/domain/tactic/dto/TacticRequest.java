@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,9 +19,10 @@ public record TacticRequest() {
             String attackDetails,
             String defenseDetails
     ) {
-        public Tactic toEntity() {
+        public Tactic toEntity(User user) {
             return Tactic.builder()
                     .tacticName(tacticName)
+                    .user(user)
                     .anonymous(anonymous)
                     .famousCoachName(famousCoachName)
                     .mainFormation(mainFormation)
