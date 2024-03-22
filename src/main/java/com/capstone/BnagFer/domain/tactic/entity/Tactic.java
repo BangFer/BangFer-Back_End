@@ -14,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -71,4 +70,35 @@ public class Tactic extends BaseEntity {
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Team> teams;
+
+    public void setTacticName(String name){
+        tacticName = name;
+    }
+    public void setUser(User users){
+        user = users;
+    }
+    public void setAnonymous(Boolean status){
+        anonymous = status;
+    }
+    public void setFamousCoachName(String name){
+        famousCoachName = name;
+    }
+    public void setMainFormation(String formation){
+        mainFormation = formation;
+    }
+    public void setAttackFormation(byte[] formation){
+        attackFormation = formation;
+    }
+    public void setDefenseFormation(byte[] formation){
+        defenseFormation = formation;
+    }
+    public void setTacticDetails(String details){
+        tacticDetails = details;
+    }
+    public void setAttackDetails(String details){
+        attackDetails = details;
+    }
+    public void setDefenseDetails(String details){
+        defenseDetails = details;
+    }
 }
