@@ -1,10 +1,11 @@
-package com.capstone.BnagFer.domain.accounts.jwt.config;
+package com.capstone.BnagFer.global.config;
 
 import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtAuthenticationFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAccessDeniedHandler;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAuthenticationEntryPoint;
 import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtExceptionFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.global.config.CorsConfig;
 import com.capstone.BnagFer.global.config.encoder.Pbkdf2PasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtProvider jwtProvider;
+    private final RedisUtil redisUtil;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -70,7 +72,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
