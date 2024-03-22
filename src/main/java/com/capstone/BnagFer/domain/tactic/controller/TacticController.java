@@ -36,7 +36,7 @@ public class TacticController {
     }
 
     @PutMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> updateMyTeam(@PathVariable Long tacticId, @RequestBody TacticRequest.UpdateDTO request) {
+    public ApiResponse<TacticResponse> updateTactic(@PathVariable Long tacticId, @RequestBody TacticRequest.UpdateDTO request) {
         TacticResponse tacticDetail = tacticService.updateTactic(tacticId, request);
         return ApiResponse.onSuccess(tacticDetail);
     }
