@@ -1,7 +1,8 @@
 package com.capstone.BnagFer.domain.tactic.controller;
 
-import com.capstone.BnagFer.domain.tactic.dto.TacticRequest;
+import com.capstone.BnagFer.domain.tactic.dto.TacticCreateRequest;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
+import com.capstone.BnagFer.domain.tactic.dto.TacticUpdateRequest;
 import com.capstone.BnagFer.domain.tactic.service.TacticQueryService;
 import com.capstone.BnagFer.domain.tactic.service.TacticService;
 import com.capstone.BnagFer.global.common.ApiResponse;
@@ -30,13 +31,13 @@ public class TacticController {
     }
 
     @PostMapping
-    public ApiResponse<TacticResponse> createTactic(@RequestBody TacticRequest.CreateDTO request){
+    public ApiResponse<TacticResponse> createTactic(@RequestBody TacticCreateRequest request){
         TacticResponse tacticDetail = tacticService.createTactic(request);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
     @PutMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> updateMyTeam(@PathVariable Long tacticId, @RequestBody TacticRequest.UpdateDTO request) {
+    public ApiResponse<TacticResponse> updateTactic(@PathVariable Long tacticId, @RequestBody TacticUpdateRequest request) {
         TacticResponse tacticDetail = tacticService.updateTactic(tacticId, request);
         return ApiResponse.onSuccess(tacticDetail);
     }
