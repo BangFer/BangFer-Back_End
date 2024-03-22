@@ -14,7 +14,7 @@ public record TacticRequest() {
             String famousCoachName,
             @NotBlank(message = "[ERROR] 주 포메이션은 필수입니다.")
             String mainFormation,
-            @NotBlank(message = "[ERROR] 이메일 입력은 필수입니다.")
+            @NotBlank(message = "[ERROR] 전술 설명은 필수입니다.")
             String tacticDetails,
             String attackDetails,
             String defenseDetails
