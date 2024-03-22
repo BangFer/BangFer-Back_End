@@ -55,7 +55,7 @@ public class TacticService {
         tactic.setDefenseFormation(request.defenseFormation());
         tactic.setTacticDetails(request.tacticDetails());
         tactic.setAttackDetails(request.attackDetails());
-        tactic.setAttackDetails(request.attackDetails());
+        tactic.setDefenseDetails(request.attackDetails());
         Tactic updatedTactic = tacticRepository.save(tactic);
         return TacticResponse.from(updatedTactic);
     }
