@@ -6,7 +6,6 @@ import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAuthenticationEntry
 import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtExceptionFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
-import com.capstone.BnagFer.global.config.CorsConfig;
 import com.capstone.BnagFer.global.config.encoder.Pbkdf2PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
