@@ -53,7 +53,7 @@ public class AccountsController {
     @GetMapping("/reissue")
     public ApiResponse<JwtDto> reissueToken(@RequestHeader("RefreshToken") String refreshToken) {
         try {
-            jwtProvider.validationToken(refreshToken);
+            jwtProvider.validateRefreshToken(refreshToken);
             return ApiResponse.onSuccess(
                     jwtProvider.reissueToken(refreshToken)
             );
