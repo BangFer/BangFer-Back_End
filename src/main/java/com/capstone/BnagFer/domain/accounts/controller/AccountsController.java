@@ -1,9 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.controller;
 
-import com.capstone.BnagFer.domain.accounts.dto.UserLoginRequestDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
+import com.capstone.BnagFer.domain.accounts.dto.*;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.entity.User;
@@ -11,15 +8,16 @@ import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
 import com.capstone.BnagFer.domain.accounts.service.AccountsService;
 import com.capstone.BnagFer.domain.accounts.service.KakaoService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AccountsController {
 
-    private final UserJpaRepository userJpaRepository;
     private final AccountsService accountsService;
     private final AccountsQueryService accountsQueryService;
     private final JwtProvider jwtProvider;
@@ -44,10 +41,31 @@ public class AccountsController {
         return ApiResponse.onSuccess(accountsService.signup(requestDto));
     }
 
+    @PostMapping("/logout")
+    public ApiResponse<String> logout(HttpServletRequest request) {
+        accountsService.logout(request);
+        return ApiResponse.onSuccess("로그아웃 성공");
+    }
+
     @GetMapping("/{email}")
     public ApiResponse<User> getUserByEmail(@PathVariable String email) {
         User user = accountsQueryService.getUserByEmail(email);
         return ApiResponse.onSuccess(user);
+    }
+
+    @PostMapping("/changePw")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            HttpServletRequest request,
+            @Valid @RequestBody ChangePwRequestDto requestDto) {
+        accountsService.changePassword(request, requestDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호 변경 성공"));
+    }
+
+    @PostMapping("/forgotPw")
+    public ResponseEntity<ApiResponse<String>> forgotPassword(
+            @Valid @RequestBody ForgotPwRequestDto requestDto) {
+        accountsService.forgotPassword(requestDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호 변경 성공"));
     }
 
     @GetMapping("/reissue")
@@ -73,5 +91,4 @@ public class AccountsController {
     public ApiResponse<UserLoginResponseDto> loginByKakao(@Valid @RequestBody UserSocialLoginRequestDto requestDto) {
         return ApiResponse.onSuccess(kakaoService.loginByKakao(requestDto));
     }
-
 }
