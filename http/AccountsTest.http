@@ -6,7 +6,9 @@ Content-Type: application/json
   "name": "퍼거슨",
   "email": "test1234@naver.com",
   "password": "test1234!!",
-  "passwordCheck": "test1234!!"
+  "passwordCheck": "test1234!!",
+  "nickName": "Bangfer",
+  "provider": "Kakao"
 }
 
 ### 로그인

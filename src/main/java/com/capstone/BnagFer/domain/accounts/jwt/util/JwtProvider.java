@@ -1,6 +1,8 @@
 package com.capstone.BnagFer.domain.accounts.jwt.util;
 
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
+import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
+import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetailService;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import io.jsonwebtoken.*;
@@ -16,6 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -25,17 +28,20 @@ public class JwtProvider {
     private final SecretKey secretKey;
     private final Long accessExpMs;
     private final Long refreshExpMs;
+    private final RedisUtil redisUtil;
 
     public JwtProvider(
             CustomUserDetailService customUserDetailService, @Value("${spring.jwt.secret}") String secret,
             @Value("${spring.jwt.token.access-expiration-time}") Long access,
-            @Value("${spring.jwt.token.refresh-expiration-time}") Long refresh) {
+            @Value("${spring.jwt.token.refresh-expiration-time}") Long refresh,
+            RedisUtil redis) {
         this.customUserDetailService = customUserDetailService;
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm());
         accessExpMs = access;
         refreshExpMs = refresh;
+        redisUtil = redis;
     }
 
     // Jwt 생성
@@ -72,8 +78,12 @@ public class JwtProvider {
                 .signWith(secretKey)
                 .compact();
 
-        // 추가 매서드
-
+        redisUtil.save(
+                customUserDetails.getUsername(),
+                refreshToken,
+                refreshExpMs,
+                TimeUnit.MILLISECONDS
+        );
         return refreshToken;
     }
 
@@ -88,19 +98,16 @@ public class JwtProvider {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getSubject();
     }
 
-    // HTTP Request 의 Header 에서 Token Parsing -> "X-AUTH-TOKEN: jwt"
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
-    }
 
-    // jwt 의 유효성 및 만료일자 확인
-    public boolean validationToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
-            return !claimsJws.getPayload().getExpiration().before(new Date()); // 만료 날짜가 현재에 비해 전이면 false
-        } catch (Exception e) {
-            return false;
+    public boolean validateRefreshToken(String refreshToken) {
+        // refreshToken validate
+        String username = getUserEmail(refreshToken);
+
+        //redis 확인
+        if (!redisUtil.hasKey(username)) {
+            throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN);
         }
+        return true;
     }
 
     public String resolveAccessToken(HttpServletRequest request) {

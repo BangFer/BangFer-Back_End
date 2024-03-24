@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.accounts.jwt.filter;
 
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+    private final RedisUtil redisUtil;
 
     @Override
     protected void doFilterInternal(
@@ -37,6 +39,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // accessToken 없이 접근할 경우
             if (accessToken == null) {
                 filterChain.doFilter(request, response);
+                return;
+            }
+
+            // logout 처리된 accessToken
+            if (redisUtil.get(accessToken) != null && redisUtil.get(accessToken).equals("logout")) {
+                log.info("[*] Logout accessToken");
+                // TODO InsufficientAuthenticationException 예외 처리
+                log.info("==================");
+                filterChain.doFilter(request, response);
+                log.info("==================");
                 return;
             }
 
