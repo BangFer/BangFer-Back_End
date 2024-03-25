@@ -26,5 +26,6 @@ public record GetTeamResponseDto (
                 .createdAt(team.getCreatedAt())
                 .build();
     }
+
 }
 

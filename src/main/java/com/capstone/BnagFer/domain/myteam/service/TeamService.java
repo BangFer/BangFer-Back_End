@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.myteam.service;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
@@ -21,6 +20,9 @@ public class TeamService {
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
         Team team = request.toEntity();
         team.setLeader(user);
         teamRepository.save(team);
