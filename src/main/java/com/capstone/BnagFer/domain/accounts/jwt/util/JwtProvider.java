@@ -154,4 +154,9 @@ public class JwtProvider {
                 createJwtRefreshToken((CustomUserDetails)userDetails)
         );
     }
+
+    public Long getExpTime(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
+                .getTime();
+    }
 }
