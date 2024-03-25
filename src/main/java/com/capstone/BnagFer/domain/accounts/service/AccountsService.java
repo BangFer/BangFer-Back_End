@@ -1,19 +1,23 @@
 package com.capstone.BnagFer.domain.accounts.service;
 
-import com.capstone.BnagFer.domain.accounts.dto.UserLoginRequestDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
+import com.capstone.BnagFer.domain.accounts.dto.*;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
+import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
+import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
+import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Transactional
@@ -23,6 +27,8 @@ public class AccountsService {
     private final UserJpaRepository userJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final RedisUtil redisUtil;
+    private final AccountsServiceUtils accountsServiceUtils;
 
     public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
 
@@ -68,5 +74,49 @@ public class AccountsService {
         ) throw new AccountsExceptionHandler(ErrorCode.USER_ALREADY_EXIST);
         User user = userJpaRepository.save(userSignupRequestDto.toEntity());
         return UserSignupResponseDto.from(user);
+    }
+
+
+    public void logout(HttpServletRequest request) {
+        try {
+            String accessToken = jwtProvider.resolveAccessToken(request);
+
+            redisUtil.save(
+                    accessToken,
+                    "logout",
+                    jwtProvider.getExpTime(accessToken),
+                    TimeUnit.MILLISECONDS
+            );
+
+            redisUtil.delete(
+                    jwtProvider.getUserEmail(accessToken)
+            );
+        } catch (ExpiredJwtException e) {
+            throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);
+        }
+    }
+
+    public void changePassword(HttpServletRequest request, ChangePwRequestDto requestDto) {
+        if (!requestDto.password().equals(requestDto.passwordCheck())) {
+            throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
+        }
+
+        User user = accountsServiceUtils.getCurrentUser();
+        user.setPassword(passwordEncoder.encode(requestDto.password()));
+        userJpaRepository.save(user);
+
+        logout(request);
+    }
+
+    public void forgotPassword(ForgotPwRequestDto requestDto) {
+        User user = userJpaRepository.findByEmail(requestDto.email())
+                .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
+
+        if (!requestDto.password().equals(requestDto.passwordCheck())) {
+            throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
+        }
+
+        user.setPassword(passwordEncoder.encode(requestDto.password()));
+        userJpaRepository.save(user);
     }
 }
