@@ -20,6 +20,9 @@ public class TeamService {
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
+        if(user.getId()==null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
         Team team = request.toEntity();
         team.setLeader(user);
         teamRepository.save(team);
@@ -32,7 +35,9 @@ public class TeamService {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
+        if(team.getLeader().getId() != user.getId()) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
         team.updateTeam(request);
         Team updatedTeam = teamRepository.save(team);
         return CUTeamResponseDto.from(updatedTeam);
