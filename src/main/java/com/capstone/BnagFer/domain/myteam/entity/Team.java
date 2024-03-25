@@ -1,6 +1,4 @@
 package com.capstone.BnagFer.domain.myteam.entity;
-
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -44,6 +42,8 @@ public class Team extends BaseEntity {
     public void setLeader(User leader) {
         this.leader = leader;
     }
+
+    public void setTactic(Tactic tactic) { this.tactic = tactic; }
 
     public void updateTeam(CUTeamRequestDto updateDTO) {
         this.teamName = updateDTO.teamName();}
