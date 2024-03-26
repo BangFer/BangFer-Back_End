@@ -28,11 +28,15 @@ public class TeamTacticService {
         }
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        team.setLeader(user);
         team.setTactic(tactic);
         if(team.getLeader().getId() != user.getId()) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         teamRepository.save(team);
-        return CreateTeamTacticResponseDto.from(team, tactic);
+        return CreateTeamTacticResponseDto.from(teamId, team.getLeader().getId(),team.getLeader().getName(), team.getTeamName(), team.getTeamMembers(), team.getCreatedAt(),
+                CreateTeamTacticResponseDto.TacticDto.from(tactic.getTacticId(), tactic.getTacticName(), tactic.isAnonymous(), tactic.getFamousCoachName(), tactic.getMainFormation()
+                , tactic.getAttackFormation(), tactic.getDefenseFormation(), tactic.getTacticDetails(), tactic.getAttackDetails(), tactic.getDefenseDetails(),
+                        tactic.getCreatedAt(), tactic.getUpdatedAt()));
     }
 }
