@@ -27,6 +27,10 @@ public enum ErrorCode implements BaseErrorCode {
     TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "전술이 없습니다."),
     TACTIC_EMPTY_ID(HttpStatus.BAD_REQUEST, "TACTIC402", "전술 아이디 값을 확인해주세요."),
 
+    // Comment 관련 에러
+    Comment_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
+    USERANDTACTIC_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER402", "사용자와 전술게시물이 맞지 않습니다. 권한이 없습니다."),
+
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다.");
 
