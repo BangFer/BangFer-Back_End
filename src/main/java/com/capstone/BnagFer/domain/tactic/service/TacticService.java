@@ -71,29 +71,26 @@ public class TacticService {
         return CommentResponse.from(tacticComment);
     }
 
-    public CommentResponse updateComment(Long tacticId, Long commentId, CommentUpdateRequest request) {
+    public CommentResponse updateComment(Long commentId, CommentUpdateRequest request) {
         User user = accountsServiceUtils.getCurrentUser();
-        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user || tacticComment.getTactic() != tactic)
-            throw new TacticExceptionHandler(ErrorCode.USERANDTACTIC_NOT_MATCHED);
+        if(tacticComment.getUser() != user)
+            throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticComment.setUser(user);
-        tacticComment.setTactic(tactic);
         tacticComment.setComment(request.comment());
         TacticComment updateComment = commentRepository.save(tacticComment);
         return CommentResponse.from(updateComment);
 
     }
 
-    public void deleteComment(Long tacticId, Long commentId) {
+    public void deleteComment(Long commentId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user || tacticComment.getTactic() != tactic)
-            throw new TacticExceptionHandler(ErrorCode.USERANDTACTIC_NOT_MATCHED);
+        if(tacticComment.getUser() != user)
+            throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
     }
