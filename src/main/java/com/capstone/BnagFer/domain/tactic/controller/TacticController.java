@@ -52,15 +52,15 @@ public class TacticController {
         return ApiResponse.onSuccess(commentDetail);
     }
 
-    @PutMapping("/{tacticId}/comment/{commentId}")
-    public ApiResponse<CommentResponse> updateComment(@PathVariable Long tacticId, @PathVariable Long commentId, @RequestBody CommentUpdateRequest request) {
-        CommentResponse commentDetail = tacticService.updateComment(tacticId, commentId, request);
+    @PutMapping("/comment/{commentId}")
+    public ApiResponse<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest request) {
+        CommentResponse commentDetail = tacticService.updateComment(commentId, request);
         return ApiResponse.onSuccess(commentDetail);
     }
 
-    @DeleteMapping("/{tacticId}/comment/{commentId}")
-    public ApiResponse<Object> deleteComment(@PathVariable Long tacticId, @PathVariable Long commentId){
-        tacticService.deleteComment(tacticId, commentId);
+    @DeleteMapping("/comment/{commentId}")
+    public ApiResponse<Object> deleteComment(@PathVariable Long commentId){
+        tacticService.deleteComment(commentId);
         return ApiResponse.noContent();
     }
 
