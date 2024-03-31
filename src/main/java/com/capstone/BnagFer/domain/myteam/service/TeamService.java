@@ -10,7 +10,6 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -42,7 +41,6 @@ public class TeamService {
         Team updatedTeam = teamRepository.save(team);
         return CUTeamResponseDto.from(updatedTeam);
     }
-
     public void deleteMyTeam(Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));

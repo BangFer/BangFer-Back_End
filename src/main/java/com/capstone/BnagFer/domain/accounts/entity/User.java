@@ -78,4 +78,5 @@ public class User extends BaseEntity {
     public void setPassword(String pw) {
         password = pw;
     }
+
 }
