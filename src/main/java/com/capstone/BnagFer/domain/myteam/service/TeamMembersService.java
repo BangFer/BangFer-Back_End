@@ -26,7 +26,7 @@ public class TeamMembersService {
     private final UserJpaRepository userJpaRepository;
 
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-//        User user = userJpaRepository.findById(accountsServiceUtils.getCurrentUser().getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userJpaRepository.findById(accountsServiceUtils.getCurrentUser().getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -38,10 +38,24 @@ public class TeamMembersService {
             // 이미 초대된 사용자이므로 예외 처리
             throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
         }
+
         TeamMember teamMember = request.toEntity(invitedUser, team);
         teamMember.setRole(Role.MEMBER);
         teamMember.setUser(invitedUser);
             teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
+    }
+
+    public void kickOutMembers(Long memberId) {
+        //User user = userJpaRepository.findById(accountsServiceUtils.getCurrentUser().getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+        Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        if(teamMember.getId()==null) {
+            throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
+        }
+        else if (teamMember.getRole()==Role.LEADER)
+            throw new TeamExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+            teamMembersRepository.deleteById(memberId);
     }
 }

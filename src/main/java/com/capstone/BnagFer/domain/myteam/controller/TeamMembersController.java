@@ -20,4 +20,10 @@ public class TeamMembersController {
         return ApiResponse.onSuccess(myTeam);
 
     }
+
+    @DeleteMapping("/kickout/{memberId}")
+    public ApiResponse<Object> kickOutMembers(@PathVariable Long memberId) {
+        teamMembersService.kickOutMembers(memberId);
+        return ApiResponse.noContent();
+    }
 }
