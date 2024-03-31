@@ -36,10 +36,6 @@ public class TeamMember extends BaseEntity {
         this.user = user;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public void setRole(Role role) {
         this.role = role;
     }
