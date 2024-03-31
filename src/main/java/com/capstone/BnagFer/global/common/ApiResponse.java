@@ -42,4 +42,12 @@ public class ApiResponse<T> {
     public String toJsonString() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
     }
+
+    public static <T> ApiResponse<T> SUCCESS_LIKE() {
+        return new ApiResponse<>(HttpStatus.OK.name(), "좋아요 성공", null);
+    }
+
+    public static <T> ApiResponse<T> CANCELED_LIKE() {
+        return new ApiResponse<>(HttpStatus.OK.name(), "좋아요 취소", null);
+    }
 }
