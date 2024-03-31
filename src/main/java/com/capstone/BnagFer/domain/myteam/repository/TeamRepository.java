@@ -11,6 +11,4 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
-    @Query("SELECT t FROM Team t WHERE t.tactic.tacticId = :tacticId")
-    Optional<Team> findTeamsByTacticId(@Param("tacticId") Long tacticId);
 }

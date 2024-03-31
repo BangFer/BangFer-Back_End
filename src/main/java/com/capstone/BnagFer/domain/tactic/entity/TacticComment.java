@@ -26,4 +26,8 @@ public class TacticComment extends BaseEntity {
 
     @Column(name = "comment", nullable = false)
     private String comment;
+
+    public void setUser(User users) {user = users;}
+    public void setTactic(Tactic tactics) {tactic = tactics;}
+    public void setComment(String comments){comment = comments;}
 }
