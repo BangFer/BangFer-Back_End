@@ -64,4 +64,9 @@ public class TacticController {
         return ApiResponse.noContent();
     }
 
+    @PostMapping("/{tacticId}/like")
+    public ApiResponse<Object> likeToggle(@PathVariable Long tacticId) {
+        return tacticService.likeButton(tacticId);
+    }
+
 }
