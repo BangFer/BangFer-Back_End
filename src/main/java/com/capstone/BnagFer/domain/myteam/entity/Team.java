@@ -47,6 +47,8 @@ public class Team extends BaseEntity {
 
     public void updateTeam(CUTeamRequestDto updateDTO) {
         this.teamName = updateDTO.teamName();}
+
+
     //캘린더
     @OneToMany(mappedBy = "team")
     private List<CalendarEvent> calendarEvents;

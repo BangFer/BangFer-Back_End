@@ -32,4 +32,16 @@ public class TeamMember extends BaseEntity {
     @Column(name = "position")
     private String position;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
 }
