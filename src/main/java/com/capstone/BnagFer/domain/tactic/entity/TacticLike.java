@@ -24,7 +24,7 @@ public class TacticLike extends BaseEntity {
     @JoinColumn(name = "community")
     private Tactic tactic;
 
-    public void LikeEntity(User user, Tactic tactic) {
+    public TacticLike(User user, Tactic tactic) {
         this.user = user;
         this.tactic = tactic;
     }
