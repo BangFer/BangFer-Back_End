@@ -1,5 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
@@ -14,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TeamQueryService {
     private final TeamRepository teamRepository;
+    private final AccountsServiceUtils accountsServiceUtils;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
+        User user = accountsServiceUtils.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
         return GetTeamResponseDto.from(team);
     }
 

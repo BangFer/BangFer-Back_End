@@ -20,7 +20,7 @@ public record GetTeamResponseDto (
     public static GetTeamResponseDto from(Team team) {
         return GetTeamResponseDto.builder()
                 .id(team.getId())
-                .leaderId(null) //null로 넣어두고 service단에서 id값 추가해주기
+                .leaderId(team.getLeader().getId()) //null로 넣어두고 service단에서 id값 추가해주기
                 .leaderName(team.getLeader().getName())
                 .teamName(team.getTeamName())
 //                .tacticDto(TacticResponse.from(tactic))
