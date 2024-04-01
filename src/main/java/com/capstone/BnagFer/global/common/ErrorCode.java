@@ -32,7 +32,14 @@ public enum ErrorCode implements BaseErrorCode {
     USERANDTACTIC_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER402", "사용자와 전술게시물이 맞지 않습니다. 권한이 없습니다."),
 
     //TEAM 관련 에러
-    TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다.");
+    TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다."),
+    NO_AUTHORIZATION(HttpStatus.BAD_REQUEST,"TEAM402", "권한이 없습니다."),
+    //TEAM_MEMBER 관련 에러
+    CANNOT_INVITE(HttpStatus.BAD_REQUEST, "TEAMMEMBER401", "팀원을 초대할 수 없습니다."),
+    TEAMMEMBER_EXISTS(HttpStatus.BAD_REQUEST, "TEAMMEMBER402", "이미 초대된 인원입니다."),
+    CANNOT_FIND_TEAMMEMBER(HttpStatus.BAD_REQUEST, "TEAMMEMBER403", "해당 팀원이 존재하지 않습니다."),
+    ALREAY_KICKED_OUT(HttpStatus.BAD_REQUEST, "TEAMMEMBER404", "이미 강퇴된 회원입니다."),
+    NO_TEAMMEMBER(HttpStatus.BAD_REQUEST, "TEAMEMBER405", "팀원이 존재하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final String code;
