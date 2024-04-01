@@ -16,6 +16,9 @@ import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,36 +29,48 @@ public class TeamMembersService {
     private final UserJpaRepository userJpaRepository;
 
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-        User user = userJpaRepository.findById(accountsServiceUtils.getCurrentUser().getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
+        User user = accountsServiceUtils.getCurrentUser();
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if (team.getLeader().getId() == invitedUser.getId()) {
-            throw new TeamExceptionHandler(ErrorCode._BAD_REQUEST);
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        //방장이 자기 자신을 초대 못하게 해주는 예외처리
+        if (user.getId().equals(invitedUser.getId())) {
+            throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
         }
+        // 이미 초대된 사용자이므로 예외 처리
         TeamMember existingMember = teamMembersRepository.findByTeamAndUser(team, invitedUser);
         if (existingMember != null) {
-            // 이미 초대된 사용자이므로 예외 처리
             throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
         }
 
         TeamMember teamMember = request.toEntity(invitedUser, team);
         teamMember.setRole(Role.MEMBER);
         teamMember.setUser(invitedUser);
+       //방장이 아니면 초대 권한 x
+       if(team.getLeader().getId() == user.getId())
             teamMembersRepository.save(teamMember);
+        else
+            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+
         return TeamMembersResponseDto.from(teamMember);
     }
 
     public void kickOutMembers(Long memberId) {
-        //User user = userJpaRepository.findById(accountsServiceUtils.getCurrentUser().getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = accountsServiceUtils.getCurrentUser();
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
-        if(teamMember.getId()==null) {
-            throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
+        //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
+        if (user.getId().equals(memberId)) {
+            throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
         }
-        else if (teamMember.getRole()==Role.LEADER)
-            throw new TeamExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+        //이미 강퇴당한 팀원 예외처리
+        if(teamMember.getId()==null)
+            throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
+        //방장에게만 강퇴 권한
+        if(team.getLeader().getId() == user.getId())
             teamMembersRepository.deleteById(memberId);
+
+        else
+            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 }

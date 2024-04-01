@@ -6,6 +6,7 @@ import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
+import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
@@ -27,7 +28,10 @@ public class TeamMembersQueryService {
 
     public List<TeamMembersResponseDto> getMembers(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-         List<TeamMember> teamMembers = teamMembersRepository.findByTeam(team);
+        List<TeamMember> teamMembers = teamMembersRepository.findByTeam(team);
+        if(teamMembers.isEmpty()) {
+            throw new TeamMemberExceptionHandler(ErrorCode.NO_TEAMMEMBER);
+        }
         List<TeamMembersResponseDto> teamMemberResponseDtos = teamMembers.stream()
                 .map(TeamMembersResponseDto::from)
                 .toList();
