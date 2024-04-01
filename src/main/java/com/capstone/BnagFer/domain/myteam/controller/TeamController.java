@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.myteam.controller;
-
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
