@@ -8,6 +8,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 public record CreateTeamTacticResponseDto (
@@ -63,6 +64,23 @@ public record CreateTeamTacticResponseDto (
                     .createdAt(createdAt)
                     .updatedAt(updatedAt)
                     .build();
+        }
+    }
+    @Builder
+    public record MyTacticList(
+            Long tacticId,
+            String title,
+            String formation
+    ){
+        public static MyTacticList from(Tactic tactic) {
+            return MyTacticList.builder()
+                    .tacticId(tactic.getTacticId())
+                    .title(tactic.getTacticName())
+                    .formation(tactic.getMainFormation())
+                    .build();
+        }
+        public static List<MyTacticList> from(List<Tactic> tactics) {
+            return tactics.stream().map(MyTacticList::from).collect(Collectors.toList());
         }
     }
 }
