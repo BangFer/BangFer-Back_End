@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
-import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -16,7 +15,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
