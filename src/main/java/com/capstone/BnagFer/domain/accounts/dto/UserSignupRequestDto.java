@@ -10,6 +10,7 @@ import lombok.Builder;
 @Builder
 public record UserSignupRequestDto(
 
+        @Size(max = 10, message = "이름은 최대 10자까지 입력 가능합니다.")
         @NotBlank(message = "[ERROR] 이름 입력은 필수 입니다.")
         String name,
 
@@ -25,36 +26,36 @@ public record UserSignupRequestDto(
         @NotBlank(message = "[ERROR] 비밀번호 재확인 입력은 필수 입니다.")
         String passwordCheck,
 
-        String nickName,
+//        String nickName,
 
         String provider
 ) {
         public User toEntity(String encodedPw) {
-                Profile profile = Profile.builder()
-                        .nickname(nickName)
-                        .build();
-                User user = User.builder()
+//                Profile profile = Profile.builder()
+//                        .nickname(nickName)
+//                        .build();
+                return User.builder()
                         .email(email)
                         .password(encodedPw)
                         .name(name)
                         .build();
-                profile.setUser(user);
-                user.setProfile(profile);
-                return user;
+//                profile.setUser(user);
+//                user.setProfile(profile);
+//                return user;
         }
 
         public User toEntity() {
-                Profile profile = Profile.builder()
-                        .nickname(nickName)
-                        .build();
-                User user = User.builder()
+//                Profile profile = Profile.builder()
+//                        .nickname(nickName)
+//                        .build();
+                return User.builder()
                         .email(email)
                         .name(name)
                         .provider(provider)
                         .build();
-                profile.setUser(user);
-                user.setProfile(profile);
-
-                return user;
+//                profile.setUser(user);
+//                user.setProfile(profile);
+//
+//                return user;
         }
 }
