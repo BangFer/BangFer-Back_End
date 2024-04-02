@@ -28,6 +28,12 @@ public class TacticController {
         return ApiResponse.onSuccess(tacticDetail);
     }
 
+    @GetMapping("/mylist")
+    public ApiResponse<List<TacticResponse.TacticList>> getUserTactic() {
+        List<TacticResponse.TacticList> userTacticLists = tacticQueryService.getUserTactics();
+        return ApiResponse.onSuccess(userTacticLists);
+    }
+
     @PostMapping
     public ApiResponse<TacticResponse> createTactic(@RequestBody TacticCreateRequest request){
         TacticResponse tacticDetail = tacticService.createTactic(request);
