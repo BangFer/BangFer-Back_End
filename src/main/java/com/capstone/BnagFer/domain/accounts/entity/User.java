@@ -73,7 +73,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<TacticLike> tacticLikes;
 
-
     public void setProfile(Profile inform) {
         profile = inform;
     }
@@ -82,5 +81,11 @@ public class User extends BaseEntity {
         password = pw;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
