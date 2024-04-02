@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -17,10 +18,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TacticQueryService {
 
+    private final AccountsServiceUtils accountsServiceUtils;
     private final TacticRepository tacticRepository;
 
     public List<TacticResponse.TacticList> getTactics() {
         List<Tactic> tactics = tacticRepository.findAll();
+        return TacticResponse.TacticList.from(tactics);
+    }
+
+    public List<TacticResponse.TacticList> getUserTactics() {
+        User user = accountsServiceUtils.getCurrentUser();
+        List<Tactic> tactics = user.getTactics();
         return TacticResponse.TacticList.from(tactics);
     }
 
