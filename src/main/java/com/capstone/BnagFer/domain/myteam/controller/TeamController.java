@@ -11,11 +11,12 @@ import com.capstone.BnagFer.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/team")
 public class TeamController {
-    private final UserJpaRepository userJpaRepository;
     private final TeamQueryService teamQueryService;
     private final TeamService teamService;
     private final TeamTacticService teamTacticService;
@@ -24,6 +25,13 @@ public class TeamController {
     public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable Long teamId) {
         GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId);
         return ApiResponse.onSuccess(myTeam);
+    }
+
+    @GetMapping("/list")
+    public ApiResponse<List<GetTeamResponseDto.TeamList>> getMyTeamList() {
+        List<GetTeamResponseDto.TeamList> teamList = teamQueryService.getMyTeamList();
+        return ApiResponse.onSuccess(teamList);
+
     }
 
     @PostMapping
