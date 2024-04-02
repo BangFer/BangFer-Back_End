@@ -22,6 +22,7 @@ public record TacticDetailResponse(
         String attackDetails,
         String defenseDetails,
         List<CommentList> comments,
+        int likeCnt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -39,6 +40,7 @@ public record TacticDetailResponse(
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
                 .comments(CommentList.from(tactic.getComments()))
+                .likeCnt(tactic.getLikes().size())
                 .createdAt(tactic.getCreatedAt())
                 .updatedAt(tactic.getUpdatedAt())
                 .build();
