@@ -6,24 +6,34 @@ import com.capstone.BnagFer.domain.myteam.dto.CreateTeamTacticResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamService;
+import com.capstone.BnagFer.domain.myteam.service.TeamTacticQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamTacticService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/team")
 public class TeamController {
-    private final UserJpaRepository userJpaRepository;
     private final TeamQueryService teamQueryService;
     private final TeamService teamService;
     private final TeamTacticService teamTacticService;
+    private final TeamTacticQueryService teamTacticQueryService;
 
     @GetMapping("/{teamId}")
     public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable Long teamId) {
         GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId);
         return ApiResponse.onSuccess(myTeam);
+    }
+
+    @GetMapping("/list")
+    public ApiResponse<List<GetTeamResponseDto.TeamList>> getMyTeamList() {
+        List<GetTeamResponseDto.TeamList> teamList = teamQueryService.getMyTeamList();
+        return ApiResponse.onSuccess(teamList);
+
     }
 
     @PostMapping
@@ -48,5 +58,14 @@ public class TeamController {
     public ApiResponse<CreateTeamTacticResponseDto> addTacticOnTeam(@PathVariable Long teamId, Long tacticId) {
         CreateTeamTacticResponseDto tacticAddedTeam = teamTacticService.addTactic(teamId, tacticId);
         return ApiResponse.onSuccess(tacticAddedTeam);
+    }
+
+    @GetMapping("/tactic/list")
+    public ApiResponse<List<CreateTeamTacticResponseDto.MyTacticList>> getMyTactic() {
+        List<CreateTeamTacticResponseDto.MyTacticList> myTacticList = teamTacticQueryService.getMyTacticList();
+        return ApiResponse.onSuccess(myTacticList);
+
+
+
     }
 }

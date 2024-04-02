@@ -33,10 +33,17 @@ public class TeamTacticService {
         if(team.getLeader().getId() != user.getId()) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
-        teamRepository.save(team);
+        if(!user.getTactics().contains(tactic)) {
+            throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_ALLOWED);
+        }
+        else
+            teamRepository.save(team);
+
         return CreateTeamTacticResponseDto.from(teamId, team.getLeader().getId(),team.getLeader().getName(), team.getTeamName(), team.getTeamMembers(), team.getCreatedAt(),
                 CreateTeamTacticResponseDto.TacticDto.from(tactic.getTacticId(), tactic.getTacticName(), tactic.isAnonymous(), tactic.getFamousCoachName(), tactic.getMainFormation()
                 , tactic.getAttackFormation(), tactic.getDefenseFormation(), tactic.getTacticDetails(), tactic.getAttackDetails(), tactic.getDefenseDetails(),
                         tactic.getCreatedAt(), tactic.getUpdatedAt()));
     }
+
+
 }

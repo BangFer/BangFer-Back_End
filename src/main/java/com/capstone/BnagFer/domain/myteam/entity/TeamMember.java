@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,7 +31,7 @@ public class TeamMember extends BaseEntity {
     private Role role; //LEADER(1) or MEMBER(2)
 
     @Column(name = "position")
-    private String position;
+    private Position position;
 
     public void setUser(User user) {
         this.user = user;
@@ -39,5 +40,4 @@ public class TeamMember extends BaseEntity {
     public void setRole(Role role) {
         this.role = role;
     }
-
 }
