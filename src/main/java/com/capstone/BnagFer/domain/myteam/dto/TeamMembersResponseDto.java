@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.dto;
 
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import lombok.Builder;
 
 @Builder
@@ -9,7 +10,7 @@ public record TeamMembersResponseDto(
         Long memberId,
         Long userId,
         Role role,
-        String position
+        Position position
 
 
 ) {
@@ -21,4 +22,7 @@ public record TeamMembersResponseDto(
                 .position(teamMember.getPosition())
                 .build();
     }
+
+
+
 }
