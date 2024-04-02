@@ -26,6 +26,7 @@ public class TeamQueryService {
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        return GetTeamResponseDto.from(team.getId(), team.getLeader().getId(), team.getLeader().getName(), team.getTeamName(), GetTeamResponseDto.TeamMembersList.from(team.getTeamMembers()), team.getTactic(), team.getCreatedAt());
+        //return GetTeamResponseDto.from(team.getId(), team.getLeader().getId(), team.getLeader().getName(), team.getTeamName(), GetTeamResponseDto.TeamMembersList.from(team.getTeamMembers()), team.getTactic(), team.getCreatedAt());
+        return GetTeamResponseDto.from(team);
     }
 }

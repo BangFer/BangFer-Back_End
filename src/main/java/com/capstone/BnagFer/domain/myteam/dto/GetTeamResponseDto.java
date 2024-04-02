@@ -26,15 +26,27 @@ public record GetTeamResponseDto (
 
 
     //DTO에서 다른 객체가 참조되면 null값으로 넣어두고 Service단에서 처리해주는 식으로~
-    public static GetTeamResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMembersList> teamMembers, Tactic tacticDto, LocalDateTime createdAt) {
+//    public static GetTeamResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMembersList> teamMembers, Tactic tacticDto, LocalDateTime createdAt) {
+//        return GetTeamResponseDto.builder()
+//                .id(teamId)
+//                .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
+//                .leaderName(leaderName)
+//                .teamName(teamName)
+//                .teamMembers(teamMembers)
+//                .tacticDto(TacticResponse.from(tacticDto))
+//                .createdAt(createdAt)
+//                .build();
+//    }
+
+    public static GetTeamResponseDto from(Team team) {
         return GetTeamResponseDto.builder()
-                .id(teamId)
-                .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
-                .leaderName(leaderName)
-                .teamName(teamName)
-                .teamMembers(teamMembers)
-                .tacticDto(TacticResponse.from(tacticDto))
-                .createdAt(createdAt)
+                .id(team.getId())
+                .leaderId(team.getLeader().getId())
+                .leaderName(team.getLeader().getName())
+                .teamName(team.getTeamName())
+                .teamMembers(TeamMembersList.from(team.getTeamMembers()))
+                .tacticDto(TacticResponse.from(team.getTactic()))
+                .createdAt(team.getCreatedAt())
                 .build();
     }
 
