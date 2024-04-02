@@ -15,10 +15,8 @@ public record CreateTeamTacticResponseDto (
         Long leaderId, //leader_id
         String leaderName, //leader_name
         String teamName,
-        List<TeamMember> teamMembers,
         LocalDateTime createdAt,
         TacticDto tacticDto
-
 ) {
     public static CreateTeamTacticResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMember> teamMembers
     , LocalDateTime createdAt, TacticDto tacticDto) {
@@ -27,8 +25,6 @@ public record CreateTeamTacticResponseDto (
                 .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
                 .leaderName(leaderName)
                 .teamName(teamName)
-//                .tacticDto(TacticResponse.from(tactic))
-                .teamMembers(null)
                 .createdAt(createdAt)
                 .tacticDto(tacticDto)
                 .build();
