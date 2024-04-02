@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
@@ -32,8 +33,8 @@ public class TacticQueryService {
         return TacticResponse.TacticList.from(tactics);
     }
 
-    public TacticResponse getTacticById(Long tacticId) {
+    public TacticDetailResponse getTacticById(Long tacticId) {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-        return TacticResponse.from(tactic);
+        return TacticDetailResponse.from(tactic);
     }
 }
