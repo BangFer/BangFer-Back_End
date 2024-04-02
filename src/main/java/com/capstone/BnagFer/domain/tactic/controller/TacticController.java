@@ -23,8 +23,8 @@ public class TacticController {
     }
 
     @GetMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> getTacticDetail(@PathVariable Long tacticId) {
-        TacticResponse tacticDetail = tacticQueryService.getTacticById(tacticId);
+    public ApiResponse<TacticDetailResponse> getTacticDetail(@PathVariable Long tacticId) {
+        TacticDetailResponse tacticDetail = tacticQueryService.getTacticById(tacticId);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
