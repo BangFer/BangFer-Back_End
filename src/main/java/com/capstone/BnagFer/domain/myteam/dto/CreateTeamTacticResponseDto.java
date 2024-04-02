@@ -17,7 +17,6 @@ public record CreateTeamTacticResponseDto (
         String teamName,
         LocalDateTime createdAt,
         TacticDto tacticDto
-
 ) {
     public static CreateTeamTacticResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMember> teamMembers
     , LocalDateTime createdAt, TacticDto tacticDto) {
