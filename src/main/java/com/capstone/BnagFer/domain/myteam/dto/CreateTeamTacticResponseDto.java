@@ -26,7 +26,6 @@ public record CreateTeamTacticResponseDto (
                 .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
                 .leaderName(leaderName)
                 .teamName(teamName)
-//                .tacticDto(TacticResponse.from(tactic))
                 .createdAt(createdAt)
                 .tacticDto(tacticDto)
                 .build();
