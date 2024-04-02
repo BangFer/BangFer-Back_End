@@ -15,7 +15,6 @@ public record CreateTeamTacticResponseDto (
         Long leaderId, //leader_id
         String leaderName, //leader_name
         String teamName,
-        List<TeamMember> teamMembers,
         LocalDateTime createdAt,
         TacticDto tacticDto
 
@@ -28,7 +27,6 @@ public record CreateTeamTacticResponseDto (
                 .leaderName(leaderName)
                 .teamName(teamName)
 //                .tacticDto(TacticResponse.from(tactic))
-                .teamMembers(null)
                 .createdAt(createdAt)
                 .tacticDto(tacticDto)
                 .build();
