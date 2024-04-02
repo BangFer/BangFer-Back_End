@@ -4,12 +4,9 @@ import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import com.capstone.BnagFer.domain.tactic.entity.Tactic;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,20 +21,6 @@ public record GetTeamResponseDto (
         LocalDateTime createdAt
 ) {
 
-
-    //DTO에서 다른 객체가 참조되면 null값으로 넣어두고 Service단에서 처리해주는 식으로~
-//    public static GetTeamResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMembersList> teamMembers, Tactic tacticDto, LocalDateTime createdAt) {
-//        return GetTeamResponseDto.builder()
-//                .id(teamId)
-//                .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
-//                .leaderName(leaderName)
-//                .teamName(teamName)
-//                .teamMembers(teamMembers)
-//                .tacticDto(TacticResponse.from(tacticDto))
-//                .createdAt(createdAt)
-//                .build();
-//    }
-
     public static GetTeamResponseDto from(Team team) {
         return GetTeamResponseDto.builder()
                 .id(team.getId())
@@ -49,8 +32,6 @@ public record GetTeamResponseDto (
                 .createdAt(team.getCreatedAt())
                 .build();
     }
-
-
     @Builder
     public record TeamMembersList(
             Long userId,
@@ -68,10 +49,25 @@ public record GetTeamResponseDto (
         public static List<TeamMembersList> from(List<TeamMember> teamMembers) {
             return teamMembers.stream().map(TeamMembersList::from).collect(Collectors.toList());
         }
+    }
 
-
-
-
+    @Builder
+    public record TeamList(
+            Long teamId,
+            String teamName,
+            String leaderName
+    )
+    {
+        public static TeamList from(Team team) {
+            return TeamList.builder()
+                    .teamId(team.getId())
+                    .teamName(team.getTeamName())
+                    .leaderName(team.getLeader().getName())
+                    .build();
+        }
+        public static List<TeamList> from(List<Team> teams) {
+            return teams.stream().map(TeamList::from).collect(Collectors.toList());
+        }
     }
 }
 
