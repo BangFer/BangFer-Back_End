@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
-import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -16,7 +15,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -73,7 +71,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<TacticLike> tacticLikes;
 
-
     public void setProfile(Profile inform) {
         profile = inform;
     }
@@ -82,5 +79,11 @@ public class User extends BaseEntity {
         password = pw;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

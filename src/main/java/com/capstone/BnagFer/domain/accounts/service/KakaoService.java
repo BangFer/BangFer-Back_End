@@ -117,7 +117,7 @@ public class KakaoService {
         UserSignupRequestDto signupRequestDto = UserSignupRequestDto.builder()
                 .email(requestDto.email())
                 .name(kakaoProfile.getProperties().getNickname())
-                .nickName(kakaoProfile.getProperties().getNickname())
+//                .nickName(kakaoProfile.getProperties().getNickname())
                 .provider("kakao")
                 .build();
 
