@@ -47,4 +47,20 @@ public class Profile extends BaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }
