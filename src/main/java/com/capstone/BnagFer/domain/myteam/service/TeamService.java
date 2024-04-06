@@ -1,3 +1,4 @@
+
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
@@ -5,7 +6,9 @@ import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
+import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +24,17 @@ import java.util.Collections;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final AccountsServiceUtils accountsServiceUtils;
+    private final TeamMembersRepository teamMembersRepository;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
         Team team = request.toEntity();
         team.setLeader(user);
+        TeamMember teamMember = TeamMember.createTeamMember();
+        teamMember.setTeam(team);
+        teamMember.setUser(user);
+        teamMember.setRole(Role.LEADER);
+        teamMembersRepository.save(teamMember);
         teamRepository.save(team);
         return CUTeamResponseDto.from(team);
     }

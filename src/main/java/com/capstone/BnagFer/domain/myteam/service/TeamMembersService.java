@@ -35,7 +35,7 @@ public class TeamMembersService {
         if (user.getId().equals(invitedUser.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
         }
-         //이미 초대된 사용자이므로 예외 처리
+        //이미 초대된 사용자이므로 예외 처리
         TeamMember existingMember = teamMembersRepository.findByTeamAndUser(team, invitedUser);
         if (existingMember != null) {
             throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
@@ -44,18 +44,16 @@ public class TeamMembersService {
         TeamMember teamMember = request.toEntity(invitedUser, team);
         teamMember.setRole(Role.MEMBER);
         //팀 리더 생성
-        TeamMember leader = request.toEntity(user, team);
-        //만약 teamMemberRepository에 leader.getUser().getId() 값 없으면
-        if(teamMembersRepository.findById(leader.getUser().getId()).isEmpty()) {
-            //Role -> Leader로하고
-            leader.setRole(Role.LEADER);
-            //저장
-            teamMembersRepository.save(leader);
-        }
+//        TeamMember leader = request.toEntity(user, team);
+//        //만약 teamMemberRepository에 leader.getUser().getId(0 값 없으면
+//        if(teamMembersRepository.findById(leader.getUser().getId()).isEmpty()) {
+//            leader.setRole(Role.LEADER);
+//            teamMembersRepository.save(leader);
+//        }
         teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
     }
-    
+
 
     public void kickOutMembers(Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();

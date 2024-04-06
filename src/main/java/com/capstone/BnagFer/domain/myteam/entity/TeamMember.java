@@ -40,4 +40,12 @@ public class TeamMember extends BaseEntity {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public static TeamMember createTeamMember() {
+        return new TeamMember();
+    }
 }
