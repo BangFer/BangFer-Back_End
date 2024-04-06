@@ -1,9 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.dto;
-
-import  com.capstone.BnagFer.domain.myteam.entity.Team;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import com.capstone.BnagFer.domain.myteam.entity.Team;
 
 public record CUTeamRequestDto (String teamName) {
     public Team toEntity() {
