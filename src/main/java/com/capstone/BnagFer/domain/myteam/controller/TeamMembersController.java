@@ -24,11 +24,9 @@ public class TeamMembersController {
     }
 
     @PostMapping("/invite")
-    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody TeamMemberRequestDto request)
-     {
+    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody TeamMemberRequestDto request) {
         TeamMembersResponseDto myTeam = teamMembersService.addTeamMembers(request);
         return ApiResponse.onSuccess(myTeam);
-
     }
 
     @DeleteMapping("/kickout/{memberId}")
