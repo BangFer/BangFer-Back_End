@@ -19,4 +19,8 @@ public interface TeamMembersRepository extends JpaRepository<TeamMember, Long> {
             "from TeamMember m " +
             "where m.team = :team")
     List<TeamMember> findByTeam(@Param("team") Team team);
+
+    // leader의 userId가 null인 경우를 조회하는 메서드
+    @Query("SELECT tm FROM TeamMember tm WHERE tm.user.id IS NULL")
+    List<TeamMember> findByLeaderUserIdIsNull();
 }
