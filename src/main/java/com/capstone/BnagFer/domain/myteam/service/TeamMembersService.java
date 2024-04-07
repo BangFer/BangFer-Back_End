@@ -14,10 +14,9 @@ import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -36,23 +35,25 @@ public class TeamMembersService {
         if (user.getId().equals(invitedUser.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
         }
-        // 이미 초대된 사용자이므로 예외 처리
+        //이미 초대된 사용자이므로 예외 처리
         TeamMember existingMember = teamMembersRepository.findByTeamAndUser(team, invitedUser);
         if (existingMember != null) {
             throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
         }
-
+        //팀원 생성
         TeamMember teamMember = request.toEntity(invitedUser, team);
         teamMember.setRole(Role.MEMBER);
-        teamMember.setUser(invitedUser);
-       //방장이 아니면 초대 권한 x
-       if(team.getLeader().getId() == user.getId())
-            teamMembersRepository.save(teamMember);
-        else
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-
+        //팀 리더 생성
+//        TeamMember leader = request.toEntity(user, team);
+//        //만약 teamMemberRepository에 leader.getUser().getId(0 값 없으면
+//        if(teamMembersRepository.findById(leader.getUser().getId()).isEmpty()) {
+//            leader.setRole(Role.LEADER);
+//            teamMembersRepository.save(leader);
+//        }
+        teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
     }
+
 
     public void kickOutMembers(Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();
@@ -69,7 +70,6 @@ public class TeamMembersService {
         //방장에게만 강퇴 권한
         if(team.getLeader().getId() == user.getId())
             teamMembersRepository.deleteById(memberId);
-
         else
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
