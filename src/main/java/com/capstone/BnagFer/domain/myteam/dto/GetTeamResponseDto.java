@@ -28,7 +28,7 @@ public record GetTeamResponseDto (
                 .leaderName(team.getLeader().getName())
                 .teamName(team.getTeamName())
                 .teamMembers(TeamMembersList.from(team.getTeamMembers()))
-                .tacticDto(TacticResponse.from(team.getTactic()))
+                .tacticDto(team.getTactic() != null ? TacticResponse.from(team.getTactic()) : null)
                 .createdAt(team.getCreatedAt())
                 .build();
     }
