@@ -43,13 +43,6 @@ public class TeamMembersService {
         //팀원 생성
         TeamMember teamMember = request.toEntity(invitedUser, team);
         teamMember.setRole(Role.MEMBER);
-        //팀 리더 생성
-//        TeamMember leader = request.toEntity(user, team);
-//        //만약 teamMemberRepository에 leader.getUser().getId(0 값 없으면
-//        if(teamMembersRepository.findById(leader.getUser().getId()).isEmpty()) {
-//            leader.setRole(Role.LEADER);
-//            teamMembersRepository.save(leader);
-//        }
         teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
     }
