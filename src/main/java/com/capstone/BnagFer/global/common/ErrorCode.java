@@ -47,7 +47,9 @@ public enum ErrorCode implements BaseErrorCode {
     TEAMMEMBER_EXISTS(HttpStatus.BAD_REQUEST, "TEAMMEMBER402", "이미 초대된 인원입니다."),
     CANNOT_FIND_TEAMMEMBER(HttpStatus.BAD_REQUEST, "TEAMMEMBER403", "해당 팀원이 존재하지 않습니다."),
     ALREAY_KICKED_OUT(HttpStatus.BAD_REQUEST, "TEAMMEMBER404", "이미 강퇴된 회원입니다."),
-    NO_TEAMMEMBER(HttpStatus.BAD_REQUEST, "TEAMEMBER405", "팀원이 존재하지 않습니다");
+    NO_TEAMMEMBER(HttpStatus.BAD_REQUEST, "TEAMMEMBER405", "팀원이 존재하지 않습니다"),
+    POSITION_ALREADY_ALLOCATED(HttpStatus.BAD_REQUEST, "TEAMMEMBER406", "이미 포지션이 할당되었습니다."),
+    POSITION_CANNOT_BE_DUPLIACTED(HttpStatus.BAD_REQUEST, "TEAMMEMBER407", "포지션은 중복될 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -45,6 +45,8 @@ public class TeamMember extends BaseEntity {
         this.team = team;
     }
 
+    public void setPosition(Position position) { this.position = position; }
+
     public static TeamMember createTeamMember() {
         return new TeamMember();
     }
