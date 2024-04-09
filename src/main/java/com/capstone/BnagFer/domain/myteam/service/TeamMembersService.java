@@ -2,6 +2,8 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMemberRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
@@ -11,10 +13,10 @@ import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +49,6 @@ public class TeamMembersService {
         return TeamMembersResponseDto.from(teamMember);
     }
 
-
     public void kickOutMembers(Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
@@ -65,5 +66,26 @@ public class TeamMembersService {
             teamMembersRepository.deleteById(memberId);
         else
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+    }
+
+    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+        Position requestedPosition = request.position();
+        //이미 해당 멤버가 요청한 포지션을 가지고 있는지 확인
+        if(teamMember.getPosition()!=null) {
+            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_ALREADY_ALLOCATED);
+        }
+        /*포지션의 중복을 확인 -> 만약 position1이 user1에게 할당이 되었는데
+         * user2가 다시 position1 할당을 요청했을 때 예외처리해주는 것
+         */
+        boolean isAllocated = teamMembersRepository.existsByTeamAndPosition(team, requestedPosition);
+        if(isAllocated) {
+            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_CANNOT_BE_DUPLIACTED);
+        }
+        teamMember.setPosition(requestedPosition);
+        TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
+        return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
+
     }
 }

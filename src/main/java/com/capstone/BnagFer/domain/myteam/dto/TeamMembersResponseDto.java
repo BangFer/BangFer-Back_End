@@ -11,8 +11,6 @@ public record TeamMembersResponseDto(
         Long userId,
         Role role,
         Position position
-
-
 ) {
     public static TeamMembersResponseDto from(TeamMember teamMember) {
         return TeamMembersResponseDto.builder()
@@ -22,7 +20,4 @@ public record TeamMembersResponseDto(
                 .position(teamMember.getPosition())
                 .build();
     }
-
-
-
 }
