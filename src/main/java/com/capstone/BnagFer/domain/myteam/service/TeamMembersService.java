@@ -59,34 +59,45 @@ public class TeamMembersService {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
         }
         //이미 강퇴당한 팀원 예외처리
-        if(teamMember.getId()==null)
+        if (teamMember.getId() == null)
             throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
         //방장에게만 강퇴 권한
-        if(team.getLeader().getId() == user.getId())
+        if (team.getLeader().getId() == user.getId())
             teamMembersRepository.deleteById(memberId);
         else
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
+        User user = accountsServiceUtils.getCurrentUser();
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
         // 요청한 포지션(requestedPosition)이 이미 다른 멤버에게 할당되어 있는지 확인
         TeamMember existingMemberWithPosition = teamMembersRepository.findByTeamAndPosition(team, requestedPosition);
+        if (!user.getId().equals(teamMember.getUser().getId())) {
+            if (existingMemberWithPosition == null || !existingMemberWithPosition.equals(teamMember)) {
+                // 이미 다른 멤버가 요청한 포지션을 가지고 있으면 그 멤버의 포지션을 null로 설정
+                if (existingMemberWithPosition != null) {
+                    existingMemberWithPosition.setPosition(null);
+                    teamMembersRepository.save(existingMemberWithPosition);
+                }
 
-        if (existingMemberWithPosition != null && !existingMemberWithPosition.equals(teamMember)) {
-            // 이미 다른 멤버가 요청한 포지션을 가지고 있으면 그 멤버의 포지션을 null로 설정
-            existingMemberWithPosition.setPosition(null);
-            teamMembersRepository.save(existingMemberWithPosition);
-            // 변경사항 저장
+                // 요청한 멤버에게 포지션 할당
+                teamMember.setPosition(requestedPosition);
+                teamMembersRepository.save(teamMember);
+            }
+        } else {
+            throw new TeamMemberExceptionHandler(ErrorCode._UNAUTHORIZED);
         }
 
-        teamMember.setPosition(requestedPosition);
-        teamMembersRepository.save(teamMember);
-        teamMember.setPosition(requestedPosition);
         TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
         return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
 
     }
 }
+
+//    public TeamMemberPositionResponseDto dellocatePosition(TeamMemberPositionRequestDto request) {
+//        teamRepository.findById(request.teamId())
+//    }
+//}
