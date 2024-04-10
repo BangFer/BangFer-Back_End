@@ -5,14 +5,13 @@ import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "myteam_teammember")
-public class TeamMember extends BaseEntity {
+ public class TeamMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_member_id")
@@ -44,6 +43,8 @@ public class TeamMember extends BaseEntity {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public void setPosition(Position position) { this.position = position; }
 
     public static TeamMember createTeamMember() {
         return new TeamMember();
