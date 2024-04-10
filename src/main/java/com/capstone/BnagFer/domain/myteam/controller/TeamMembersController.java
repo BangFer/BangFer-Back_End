@@ -42,4 +42,9 @@ public class TeamMembersController {
         TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request);
         return ApiResponse.onSuccess(position);
     }
+//
+//    @DeleteMapping("/position/deallocate")
+//    public ApiResponse<TeamMemberPositionResponseDto> deallocatePosition(@RequestBody TeamMemberPositionRequestDto request) {
+//        team
+//    }
 }
