@@ -72,17 +72,25 @@ public class TeamMembersService {
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
-        //이미 해당 멤버가 요청한 포지션을 가지고 있는지 확인
-        if(teamMember.getPosition()!=null) {
-            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_ALREADY_ALLOCATED);
+        // 요청한 포지션(requestedPosition)이 이미 다른 멤버에게 할당되어 있는지 확인
+        TeamMember existingMemberWithPosition = teamMembersRepository.findByTeamAndPosition(team, requestedPosition);
+
+        if (existingMemberWithPosition != null && !existingMemberWithPosition.equals(teamMember)) {
+            // 이미 다른 멤버가 요청한 포지션을 가지고 있으면 그 멤버의 포지션을 null로 설정
+            existingMemberWithPosition.setPosition(null);
+            teamMembersRepository.save(existingMemberWithPosition);
+            // 변경사항 저장
         }
+
+        teamMember.setPosition(requestedPosition);
+        teamMembersRepository.save(teamMember);
         /*포지션의 중복을 확인 -> 만약 position1이 user1에게 할당이 되었는데
          * user2가 다시 position1 할당을 요청했을 때 예외처리해주는 것
          */
-        boolean isAllocated = teamMembersRepository.existsByTeamAndPosition(team, requestedPosition);
-        if(isAllocated) {
-            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_CANNOT_BE_DUPLIACTED);
-        }
+//        boolean isAllocated = teamMembersRepository.existsByTeamAndPosition(team, requestedPosition);
+//        if(isAllocated) {
+//            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_CANNOT_BE_DUPLIACTED);
+//        }
         teamMember.setPosition(requestedPosition);
         TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
         return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
