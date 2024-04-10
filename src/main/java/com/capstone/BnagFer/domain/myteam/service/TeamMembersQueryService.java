@@ -30,7 +30,7 @@ public class TeamMembersQueryService {
         List<TeamMember> teamMembers = teamMembersRepository.findByTeam(team);
 
         if(teamMembers.isEmpty()) {
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_TEAMMEMBER);
+            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         }
         List<TeamMembersResponseDto> teamMemberResponseDtos = teamMembers.stream()
                 .map(TeamMembersResponseDto::from)

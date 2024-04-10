@@ -84,13 +84,6 @@ public class TeamMembersService {
 
         teamMember.setPosition(requestedPosition);
         teamMembersRepository.save(teamMember);
-        /*포지션의 중복을 확인 -> 만약 position1이 user1에게 할당이 되었는데
-         * user2가 다시 position1 할당을 요청했을 때 예외처리해주는 것
-         */
-//        boolean isAllocated = teamMembersRepository.existsByTeamAndPosition(team, requestedPosition);
-//        if(isAllocated) {
-//            throw new TeamMemberExceptionHandler(ErrorCode.POSITION_CANNOT_BE_DUPLIACTED);
-//        }
         teamMember.setPosition(requestedPosition);
         TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
         return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
