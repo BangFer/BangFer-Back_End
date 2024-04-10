@@ -42,9 +42,11 @@ public class TeamMembersController {
         TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request);
         return ApiResponse.onSuccess(position);
     }
-//
-//    @DeleteMapping("/position/deallocate")
-//    public ApiResponse<TeamMemberPositionResponseDto> deallocatePosition(@RequestBody TeamMemberPositionRequestDto request) {
-//        team
-//    }
+
+    @DeleteMapping("/position/{teamId}/{memberId}")
+
+    public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, Long memberId) {
+        teamMembersService.deallocatePosition(teamId, memberId);
+        return ApiResponse.noContent();
+    }
 }
