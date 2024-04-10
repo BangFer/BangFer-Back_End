@@ -1,5 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.controller;
 
+import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMemberRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersQueryService;
@@ -33,5 +35,11 @@ public class TeamMembersController {
     public ApiResponse<Object> kickOutMembers(@PathVariable Long memberId) {
         teamMembersService.kickOutMembers(memberId);
         return ApiResponse.noContent();
+    }
+
+    @PostMapping("/position")
+    public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody TeamMemberPositionRequestDto request) {
+        TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request);
+        return ApiResponse.onSuccess(position);
     }
 }
