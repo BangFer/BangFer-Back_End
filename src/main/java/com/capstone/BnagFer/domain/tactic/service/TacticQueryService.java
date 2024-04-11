@@ -23,7 +23,7 @@ public class TacticQueryService {
     private final TacticRepository tacticRepository;
 
     public List<TacticResponse.TacticList> getTactics() {
-        List<Tactic> tactics = tacticRepository.findAll();
+        List<Tactic> tactics = tacticRepository.findAllByAnonymousFalse();
         return TacticResponse.TacticList.from(tactics);
     }
 
