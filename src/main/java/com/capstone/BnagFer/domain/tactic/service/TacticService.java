@@ -31,7 +31,15 @@ public class TacticService {
     public TacticResponse createTactic(TacticCreateRequest request){
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = request.toEntity(user);
-        tacticRepository.save(tactic);
+
+        try{
+            if(user.getProfile().getNickname() != null) {
+                tacticRepository.save(tactic);
+            }
+        }catch(NullPointerException e){
+            throw new TacticExceptionHandler(ErrorCode.NICKNAME_NOT_EXIST);
+        }
+
         return TacticResponse.from(tactic);
     }
 
@@ -71,7 +79,14 @@ public class TacticService {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         TacticComment tacticComment = request.toEntity(user, tactic);
-        commentRepository.save(tacticComment);
+
+        try{
+            if(user.getProfile().getNickname() != null) {
+                commentRepository.save(tacticComment);
+            }
+        }catch (NullPointerException e){
+            throw new TacticExceptionHandler(ErrorCode.NICKNAME_NOT_EXIST);
+        }
 
         return CommentResponse.from(tacticComment);
     }
