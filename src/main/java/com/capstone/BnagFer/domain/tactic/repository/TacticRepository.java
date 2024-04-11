@@ -9,4 +9,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TacticRepository extends JpaRepository<Tactic, Long> {
+    List<Tactic> findAllByAnonymousFalse();
 }
