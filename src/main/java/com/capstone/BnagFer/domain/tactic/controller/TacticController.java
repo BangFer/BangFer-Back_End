@@ -16,18 +16,21 @@ public class TacticController {
     private final TacticService tacticService;
     private final TacticQueryService tacticQueryService;
 
+    // 전체 전술 게시판 조회
     @GetMapping
     public ApiResponse<List<TacticResponse.TacticList>> getTacticList(){
         List<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics();
         return ApiResponse.onSuccess(tacticLists);
     }
 
+    // 개별 전술 게시판 조회
     @GetMapping("/{tacticId}")
     public ApiResponse<TacticDetailResponse> getTacticDetail(@PathVariable Long tacticId) {
         TacticDetailResponse tacticDetail = tacticQueryService.getTacticById(tacticId);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
+    // 자신의 전술 게시물 조회
     @GetMapping("/mylist")
     public ApiResponse<List<TacticResponse.TacticList>> getUserTactic() {
         List<TacticResponse.TacticList> userTacticLists = tacticQueryService.getUserTactics();
