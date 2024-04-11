@@ -76,8 +76,8 @@ public class TeamMembersService {
         // 요청한 포지션(requestedPosition)이 이미 다른 멤버에게 할당되어 있는지 확인
         TeamMember existingMemberWithPosition = teamMembersRepository.findByTeamAndPosition(team, requestedPosition);
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, request.memberId());
-        if (!user.getId().equals(teamMember.getUser().getId())) {
-            if(teamMemberInTeam) {
+        if (user.getId() == team.getLeader().getId()) {
+            if (teamMemberInTeam) {
                 if (existingMemberWithPosition == null || !existingMemberWithPosition.equals(teamMember)) {
                     // 이미 다른 멤버가 요청한 포지션을 가지고 있으면 그 멤버의 포지션을 null로 설정
                     if (existingMemberWithPosition != null) {
@@ -88,46 +88,29 @@ public class TeamMembersService {
                     teamMember.setPosition(requestedPosition);
                     teamMembersRepository.save(teamMember);
                 }
-            }
-            else
+            } else
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-
-
         TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
         return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
 
     }
+
     public void deallocatePosition(Long teamId, Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
-        if (!user.getId().equals(teamMember.getUser().getId())) {
+        if (user.getId() == team.getLeader().getId()) {
             if (teamMemberInTeam) {
                 if (teamMember.getPosition() != null)
                     teamMember.setPosition(null);
                 else
                     throw new TeamMemberExceptionHandler(ErrorCode.POSITION_ALREADY_DEALLOCATED);
-            }
-            else
+            } else
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
-        }
-        else
+        } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
     }
-//        User user = accountsServiceUtils.getCurrentUser();
-//        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
-//        if(user.getId() != teamMember.getUser().getId()) {
-//            if (teamMember.getPosition() != null)
-//                teamMember.setPosition(null);
-//            else
-//                throw new TeamMemberExceptionHandler(ErrorCode.POSITION_ALREADY_DEALLOCATED);
-//        }
-//
-//        else
-//            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_DEALLOCATE);
-//    }
 }
-
