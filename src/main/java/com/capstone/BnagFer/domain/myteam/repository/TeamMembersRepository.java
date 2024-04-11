@@ -25,8 +25,7 @@ public interface TeamMembersRepository extends JpaRepository<TeamMember, Long> {
             "from TeamMember m " +
             "where m.team = :team")
     List<TeamMember> findByTeam(@Param("team") Team team);
-
-    boolean existsByTeamAndPosition(Team team, Position position);
-
     TeamMember findByTeamAndPosition(Team team, Position position);
+
+    boolean existsByTeamAndId(Team team, Long id);
 }
