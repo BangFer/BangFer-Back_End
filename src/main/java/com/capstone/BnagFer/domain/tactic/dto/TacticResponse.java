@@ -40,6 +40,7 @@ public record TacticResponse(Long tacticId,
     @Builder
     public record TacticList(Long tacticId,
                              Long userId,
+                             String nickname,
                              String tacticName,
                              Boolean anonymous,
                              String famousCoachName,
@@ -48,6 +49,7 @@ public record TacticResponse(Long tacticId,
                 return TacticList.builder()
                         .tacticId(tactic.getTacticId())
                         .userId(tactic.getUser().getId())
+                        .nickname(tactic.getUser().getProfile().getNickname())
                         .tacticName(tactic.getTacticName())
                         .anonymous(tactic.isAnonymous())
                         .famousCoachName(tactic.getFamousCoachName())
