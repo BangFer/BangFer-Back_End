@@ -32,12 +32,10 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = request.toEntity(user);
 
-        try{
-            if(user.getProfile().getNickname() != null) {
-                tacticRepository.save(tactic);
-            }
-        }catch(NullPointerException e){
-            throw new TacticExceptionHandler(ErrorCode.NICKNAME_NOT_EXIST);
+        if(user.getProfile() != null){
+            tacticRepository.save(tactic);
+        }else{
+            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
         }
 
         return TacticResponse.from(tactic);
@@ -80,12 +78,10 @@ public class TacticService {
 
         TacticComment tacticComment = request.toEntity(user, tactic);
 
-        try{
-            if(user.getProfile().getNickname() != null) {
-                commentRepository.save(tacticComment);
-            }
-        }catch (NullPointerException e){
-            throw new TacticExceptionHandler(ErrorCode.NICKNAME_NOT_EXIST);
+        if(user.getProfile() != null){
+            commentRepository.save(tacticComment);
+        }else{
+            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
         }
 
         return CommentResponse.from(tacticComment);
