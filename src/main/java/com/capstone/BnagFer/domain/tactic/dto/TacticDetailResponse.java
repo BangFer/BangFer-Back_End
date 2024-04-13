@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public record TacticDetailResponse(
         Long tacticId,
         Long userId,
+        String nickname,
         String tacticName,
         Boolean anonymous,
         String famousCoachName,
@@ -30,6 +31,7 @@ public record TacticDetailResponse(
         return TacticDetailResponse.builder()
                 .tacticId(tactic.getTacticId())
                 .userId(tactic.getUser().getId())
+                .nickname(tactic.getUser().getProfile().getNickname())
                 .tacticName(tactic.getTacticName())
                 .anonymous(tactic.isAnonymous())
                 .famousCoachName(tactic.getFamousCoachName())
@@ -50,6 +52,7 @@ public record TacticDetailResponse(
             Long tacticCommentId,
             Long tacticId,
             Long userId,
+            String nickname,
             String comment,
             LocalDateTime createdAt,
             LocalDateTime updateAt
@@ -59,6 +62,7 @@ public record TacticDetailResponse(
                     .tacticCommentId(comment.getCommentId())
                     .tacticId(comment.getTactic().getTacticId())
                     .userId(comment.getUser().getId())
+                    .nickname(comment.getUser().getProfile().getNickname())
                     .comment(comment.getComment())
                     .createdAt(comment.getCreatedAt())
                     .updateAt(comment.getUpdatedAt())
