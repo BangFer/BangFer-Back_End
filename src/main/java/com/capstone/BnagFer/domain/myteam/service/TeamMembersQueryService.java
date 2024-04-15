@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
+import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
@@ -28,7 +29,6 @@ public class TeamMembersQueryService {
     public List<TeamMembersResponseDto> getMembers(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         List<TeamMember> teamMembers = teamMembersRepository.findByTeam(team);
-
         if(teamMembers.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         }
