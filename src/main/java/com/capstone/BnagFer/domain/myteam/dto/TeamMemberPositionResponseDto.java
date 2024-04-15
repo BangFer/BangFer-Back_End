@@ -8,6 +8,7 @@ import lombok.Builder;
 public record TeamMemberPositionResponseDto (
         Long teamId,
         Long memberId,
+        String memberNickName,
         Long leaderId,
         Position position
 ) {
@@ -15,6 +16,7 @@ public record TeamMemberPositionResponseDto (
         return TeamMemberPositionResponseDto.builder()
                 .teamId(teamMember.getTeam().getId())
                 .memberId(teamMember.getId())
+                .memberNickName(teamMember.getUser().getProfile().getNickname())
                 .leaderId(teamMember.getTeam().getLeader().getId())
                 .position(teamMember.getPosition())
                 .build();
