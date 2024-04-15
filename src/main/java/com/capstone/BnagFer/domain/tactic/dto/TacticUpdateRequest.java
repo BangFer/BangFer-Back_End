@@ -18,4 +18,19 @@ public record TacticUpdateRequest(
         String tacticDetails,
         String attackDetails,
         String defenseDetails
-) {}
+) {
+        public Tactic toEntity(User user){
+                return Tactic.builder()
+                        .tacticName(tacticName)
+                        .user(user)
+                        .anonymous(true)
+                        .famousCoachName(famousCoachName)
+                        .mainFormation(mainFormation)
+                        .attackFormation(attackFormation)
+                        .defenseFormation(defenseFormation)
+                        .tacticDetails(tacticDetails)
+                        .attackDetails(attackDetails)
+                        .defenseDetails(defenseDetails)
+                        .build();
+        }
+}
