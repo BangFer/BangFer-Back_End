@@ -10,8 +10,6 @@ public record TeamMemberPositionResponseDto (
         Long memberId,
         String memberNickName,
         Long leaderId,
-        String leaderNickName,
-
         Position position
 ) {
     public static TeamMemberPositionResponseDto from(TeamMember teamMember) {
@@ -20,7 +18,6 @@ public record TeamMemberPositionResponseDto (
                 .memberId(teamMember.getId())
                 .memberNickName(teamMember.getUser().getProfile().getNickname())
                 .leaderId(teamMember.getTeam().getLeader().getId())
-                .leaderNickName(teamMember.getUser().getProfile().getNickname())
                 .position(teamMember.getPosition())
                 .build();
     }

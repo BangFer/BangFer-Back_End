@@ -1,6 +1,7 @@
 
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
@@ -31,6 +32,8 @@ public class TeamService {
         Team team = request.toEntity();
         team.setLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
+        if (team.getLeader().getProfile()== null)
+            throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
         teamMember.setTeam(team);
         teamMember.setUser(user);
         teamMember.setRole(Role.LEADER);
