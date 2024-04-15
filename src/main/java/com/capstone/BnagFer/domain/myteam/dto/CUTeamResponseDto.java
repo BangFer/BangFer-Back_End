@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public record CUTeamResponseDto (
         Long id,
         Long leaderId, //leader_id
-        String leaderName, //leader_name
+        String leaderNickName, //leader_name
         String teamName,
         LocalDateTime createdAt
 ) {
@@ -17,7 +17,7 @@ public record CUTeamResponseDto (
         return CUTeamResponseDto.builder()
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
-                .leaderName(team.getLeader().getName())
+                .leaderNickName(team.getLeader().getProfile().getNickname())
                 .teamName(team.getTeamName())
                 .createdAt(team.getCreatedAt())
                 .build();

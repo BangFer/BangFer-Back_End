@@ -1,5 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.dto;
 
+import com.capstone.BnagFer.domain.accounts.entity.Profile;
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
@@ -13,6 +15,7 @@ public record TeamMemberPositionRequestDto(
         return TeamMember.builder()
                 .team(teamMember.getTeam())
                 .id(teamMember.getId())
+                //.user(User.builder().profile(Profile.builder().nickname(memberNickName).build()).build())
                 .position(teamMember.getPosition())
                 .build();
     }

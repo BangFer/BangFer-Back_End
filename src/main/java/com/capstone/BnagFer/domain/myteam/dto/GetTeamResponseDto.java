@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public record GetTeamResponseDto (
         Long id,
         Long leaderId, //leader_id
-        String leaderName, //leader_name
+        String leaderNickName, //leader_name
         String teamName,
         TacticResponse tacticDto,
         List<TeamMembersList> teamMembers,
@@ -25,7 +25,7 @@ public record GetTeamResponseDto (
         return GetTeamResponseDto.builder()
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
-                .leaderName(team.getLeader().getName())
+                .leaderNickName(team.getLeader().getProfile().getNickname())
                 .teamName(team.getTeamName())
                 .teamMembers(TeamMembersList.from(team.getTeamMembers()))
                 .tacticDto(team.getTactic() != null ? TacticResponse.from(team.getTactic()) : null)
@@ -35,6 +35,7 @@ public record GetTeamResponseDto (
     @Builder
     public record TeamMembersList(
             Long userId,
+            String memberNickName,
             Role role,
             Position position
 
@@ -42,6 +43,7 @@ public record GetTeamResponseDto (
         public static TeamMembersList from(TeamMember teamMember) {
             return TeamMembersList.builder()
                     .userId(teamMember.getUser().getId())
+                    .memberNickName(teamMember.getUser().getProfile().getNickname())
                     .role(teamMember.getRole())
                     .position(teamMember.getPosition())
                     .build();
@@ -55,14 +57,14 @@ public record GetTeamResponseDto (
     public record TeamList(
             Long teamId,
             String teamName,
-            String leaderName
+            String leaderNickName
     )
     {
         public static TeamList from(Team team) {
             return TeamList.builder()
                     .teamId(team.getId())
                     .teamName(team.getTeamName())
-                    .leaderName(team.getLeader().getName())
+                    .leaderNickName(team.getLeader().getProfile().getNickname())
                     .build();
         }
         public static List<TeamList> from(List<Team> teams) {
