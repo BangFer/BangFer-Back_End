@@ -72,6 +72,24 @@ public class TacticService {
         return TacticResponse.from(updatedTactic);
     }
 
+    public TacticResponse repostTactic(Long tacticId, TacticUpdateRequest request) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        if(tactic.getUser() == user)
+            throw new TacticExceptionHandler(ErrorCode.CANNOT_REPOST_MYSELF);
+
+        Tactic repostTactic = request.toEntity(user);
+
+        if(user.getProfile() != null){
+            tacticRepository.save(repostTactic);
+        }else{
+            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
+        }
+
+        return TacticResponse.from(repostTactic);
+    }
+
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request){
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
