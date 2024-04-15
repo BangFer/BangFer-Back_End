@@ -34,6 +34,7 @@ public enum ErrorCode implements BaseErrorCode {
     TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "전술이 없습니다."),
     TACTIC_EMPTY_ID(HttpStatus.BAD_REQUEST, "TACTIC402", "전술 아이디 값을 확인해주세요."),
     TACTIC_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "TACTIC403", "본인 전술만 적용할 수 있습니다."),
+    CANNOT_REPOST_MYSELF(HttpStatus.BAD_REQUEST, "TACTIC404", "본인이 직접 작성한 전술은 리포스트가 아닌 수정 기능을 사용하십시오."),
 
     // Comment 관련 에러
     Comment_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
