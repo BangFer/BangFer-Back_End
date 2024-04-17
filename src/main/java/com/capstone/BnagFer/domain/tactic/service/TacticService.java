@@ -72,22 +72,22 @@ public class TacticService {
         return TacticResponse.from(updatedTactic);
     }
 
-    public TacticResponse repostTactic(Long tacticId, TacticUpdateRequest request) {
+    public TacticResponse copyTactic(Long tacticId) {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         if(tactic.getUser() == user)
-            throw new TacticExceptionHandler(ErrorCode.CANNOT_REPOST_MYSELF);
+            throw new TacticExceptionHandler(ErrorCode.CANNOT_COPY_MYSELF);
 
-        Tactic repostTactic = request.toEntity(user);
+        Tactic copyTactic = new Tactic();
+        copyTactic.setCopyDetail(user, tactic);
 
         if(user.getProfile() != null){
-            tacticRepository.save(repostTactic);
+            tacticRepository.save(copyTactic);
         }else{
             throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
         }
-
-        return TacticResponse.from(repostTactic);
+        return TacticResponse.from(copyTactic);
     }
 
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request){
