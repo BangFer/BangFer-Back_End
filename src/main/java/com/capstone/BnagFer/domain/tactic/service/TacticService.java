@@ -72,6 +72,24 @@ public class TacticService {
         return TacticResponse.from(updatedTactic);
     }
 
+    public TacticResponse copyTactic(Long tacticId) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        if(tactic.getUser() == user)
+            throw new TacticExceptionHandler(ErrorCode.CANNOT_COPY_MYSELF);
+
+        Tactic copyTactic = Tactic.createTactic();
+        copyTactic.setCopyDetail(user, tactic);
+
+        if(user.getProfile() != null){
+            tacticRepository.save(copyTactic);
+        }else{
+            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
+        }
+        return TacticResponse.from(copyTactic);
+    }
+
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request){
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
