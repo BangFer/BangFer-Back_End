@@ -43,9 +43,17 @@ public class TacticController {
         return ApiResponse.onSuccess(tacticDetail);
     }
 
+    // 자신의 전술 게시물 수정
     @PutMapping("/{tacticId}")
     public ApiResponse<TacticResponse> updateTactic(@PathVariable Long tacticId, @RequestBody TacticUpdateRequest request) {
         TacticResponse tacticDetail = tacticService.updateTactic(tacticId, request);
+        return ApiResponse.onSuccess(tacticDetail);
+    }
+
+    // 다른 사람의 전술 게시물을 그대로 복사하여 자기 전술 리스트에 새로 생성
+    @PostMapping("/{tacticId}")
+    public ApiResponse<TacticResponse> copyTactic(@PathVariable Long tacticId){
+        TacticResponse tacticDetail = tacticService.copyTactic(tacticId);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
