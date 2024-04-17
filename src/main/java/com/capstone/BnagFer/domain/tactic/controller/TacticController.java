@@ -50,10 +50,10 @@ public class TacticController {
         return ApiResponse.onSuccess(tacticDetail);
     }
 
-    // 다른 사람의 전술 게시물을 수정 후, 자기 전술 리스트에 새로 생성
+    // 다른 사람의 전술 게시물을 그대로 복사하여 자기 전술 리스트에 새로 생성
     @PostMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> repostTactic(@PathVariable Long tacticId, @RequestBody TacticUpdateRequest request){
-        TacticResponse tacticDetail = tacticService.repostTactic(tacticId, request);
+    public ApiResponse<TacticResponse> copyTactic(@PathVariable Long tacticId){
+        TacticResponse tacticDetail = tacticService.copyTactic(tacticId);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
