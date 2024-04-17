@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public record TacticResponse(Long tacticId,
                              Long userId,
+                             String nickname,
                              String tacticName,
                              Boolean anonymous,
                              String famousCoachName,
@@ -24,6 +25,7 @@ public record TacticResponse(Long tacticId,
             return new TacticResponse(
                     tactic.getTacticId(),
                     tactic.getUser().getId(),
+                    tactic.getUser().getProfile().getNickname(),
                     tactic.getTacticName(),
                     tactic.isAnonymous(),
                     tactic.getFamousCoachName(),
