@@ -79,7 +79,7 @@ public class TacticService {
         if(tactic.getUser() == user)
             throw new TacticExceptionHandler(ErrorCode.CANNOT_COPY_MYSELF);
 
-        Tactic copyTactic = new Tactic();
+        Tactic copyTactic = Tactic.createTactic();
         copyTactic.setCopyDetail(user, tactic);
 
         if(user.getProfile() != null){

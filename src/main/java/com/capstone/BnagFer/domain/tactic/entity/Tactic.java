@@ -15,8 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tactic_tactic")
 public class Tactic extends BaseEntity {
 
@@ -112,5 +112,9 @@ public class Tactic extends BaseEntity {
         tacticDetails = tactic.getTacticDetails();
         attackDetails = tactic.getAttackDetails();
         defenseDetails = tactic.getDefenseDetails();
+    }
+
+    public static Tactic createTactic() {
+        return new Tactic();
     }
 }
