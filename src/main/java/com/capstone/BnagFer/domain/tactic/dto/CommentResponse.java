@@ -8,6 +8,7 @@ public record CommentResponse(
         Long tacticCommentId,
         Long tacticId,
         Long userId,
+        String nickname,
         String comment,
         LocalDateTime createdAt,
         LocalDateTime updateAt
@@ -17,6 +18,7 @@ public record CommentResponse(
                 tacticComment.getCommentId(),
                 tacticComment.getTactic().getTacticId(),
                 tacticComment.getUser().getId(),
+                tacticComment.getUser().getProfile().getNickname(),
                 tacticComment.getComment(),
                 tacticComment.getCreatedAt(),
                 tacticComment.getUpdatedAt()
