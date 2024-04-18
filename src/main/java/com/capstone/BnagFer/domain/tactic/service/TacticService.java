@@ -32,11 +32,9 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = request.toEntity(user);
 
-        if(user.getProfile() != null){
-            tacticRepository.save(tactic);
-        }else{
-            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
-        }
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(user);
+        tacticRepository.save(tactic);
 
         return TacticResponse.from(tactic);
     }
@@ -82,11 +80,10 @@ public class TacticService {
         Tactic copyTactic = Tactic.createTactic();
         copyTactic.setCopyDetail(user, tactic);
 
-        if(user.getProfile() != null){
-            tacticRepository.save(copyTactic);
-        }else{
-            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
-        }
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(user);
+        tacticRepository.save(copyTactic);
+
         return TacticResponse.from(copyTactic);
     }
 
@@ -96,11 +93,9 @@ public class TacticService {
 
         TacticComment tacticComment = request.toEntity(user, tactic);
 
-        if(user.getProfile() != null){
-            commentRepository.save(tacticComment);
-        }else{
-            throw new TacticExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
-        }
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(user);
+        commentRepository.save(tacticComment);
 
         return CommentResponse.from(tacticComment);
     }

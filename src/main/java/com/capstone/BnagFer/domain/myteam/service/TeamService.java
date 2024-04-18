@@ -32,8 +32,10 @@ public class TeamService {
         Team team = request.toEntity();
         team.setLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
-        if (team.getLeader().getProfile()== null)
-            throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
+
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(team.getLeader());
+
         teamMember.setTeam(team);
         teamMember.setUser(user);
         teamMember.setRole(Role.LEADER);
