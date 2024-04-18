@@ -1,7 +1,6 @@
 
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
@@ -15,9 +14,6 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
