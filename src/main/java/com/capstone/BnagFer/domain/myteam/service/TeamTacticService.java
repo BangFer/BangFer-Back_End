@@ -40,6 +40,7 @@ public class TeamTacticService {
         else
             teamRepository.save(team);
 
+        // TODO: 매개 변수 수정 필요
         return CreateTeamTacticResponseDto.from(teamId, team.getLeader().getId(),team.getLeader().getName(), team.getTeamName(), team.getTeamMembers(), team.getCreatedAt(),
                 CreateTeamTacticResponseDto.TacticDto.from(tactic.getTacticId(), tactic.getTacticName(), tactic.isAnonymous(), tactic.getFamousCoachName(), tactic.getMainFormation()
                 , tactic.getAttackFormation(), tactic.getDefenseFormation(), tactic.getTacticDetails(), tactic.getAttackDetails(), tactic.getDefenseDetails(),
