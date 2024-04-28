@@ -94,10 +94,6 @@ public class User extends BaseEntity {
         email = UserEmail;
     }
 
-    public void setDeleted(Boolean UserDeleted) {
-        deleted = UserDeleted;
-    }
-
     public void softDelete() {
         deleted = true;
         deletedAt = LocalDateTime.now();
