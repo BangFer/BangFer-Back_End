@@ -47,6 +47,18 @@ public class AccountsController {
         return ApiResponse.onSuccess("로그아웃 성공");
     }
 
+    @DeleteMapping("/delete/{email}")
+    public ApiResponse<String> deleteAccount(@PathVariable String email) {
+        accountsService.deleteAccount(email);
+        return ApiResponse.onSuccess("회원 탈퇴 성공");
+    }
+
+    @PostMapping("/recover/{email}")
+    public ApiResponse<String> recoverAccount(@PathVariable String email) {
+        accountsService.recoverAccount(email);
+        return ApiResponse.onSuccess("회원 복구 성공");
+    }
+
     @GetMapping("/{email}")
     public ApiResponse<User> getUserByEmail(@PathVariable String email) {
         User user = accountsQueryService.getUserByEmail(email);
