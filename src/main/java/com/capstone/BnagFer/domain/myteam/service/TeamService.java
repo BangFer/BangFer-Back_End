@@ -1,7 +1,6 @@
 
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
@@ -16,9 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,8 +28,10 @@ public class TeamService {
         Team team = request.toEntity();
         team.setLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
-        if (team.getLeader().getProfile()== null)
-            throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
+
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(team.getLeader());
+
         teamMember.setTeam(team);
         teamMember.setUser(user);
         teamMember.setRole(Role.LEADER);

@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionRequestDto;
@@ -47,9 +46,8 @@ public class TeamMembersService {
 
         //팀원 생성
         TeamMember teamMember = request.toEntity(invitedUser, team);
-        if(teamMember.getUser().getProfile()==null) {
-            throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
-        }
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(teamMember.getUser());
 
         teamMember.setRole(Role.MEMBER);
         teamMembersRepository.save(teamMember);
@@ -60,9 +58,8 @@ public class TeamMembersService {
         User user = accountsServiceUtils.getCurrentUser();
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        if(teamMember.getUser().getProfile()==null) {
-            throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
-        }
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(teamMember.getUser());
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
         if (user.getId().equals(memberId)) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
