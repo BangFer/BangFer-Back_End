@@ -13,10 +13,13 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -35,6 +38,11 @@ public class AccountsService {
         // 회원 정보 존재 하는지 확인
         User user = userJpaRepository.findByEmail(requestDto.email())
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
+
+        // 소프트 딜리트된 사용자인지 확인
+        if (user.getDeleted()) {
+            throw new AccountsExceptionHandler(ErrorCode.USER_IS_DELETED);
+        }
 
         // 회원 pw 일치 여부
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
@@ -118,5 +126,43 @@ public class AccountsService {
 
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         userJpaRepository.save(user);
+    }
+
+    // 회원 soft delete
+    public void deleteAccount(String email) {
+        User user = accountsServiceUtils.getCurrentUser();
+        Optional<User> deleteUserOpt = userJpaRepository.findByEmail(email);
+
+        if (deleteUserOpt.isPresent()) {
+            User deleteUser = deleteUserOpt.get();
+
+            if (!user.getId().equals(deleteUser.getId())) {
+                throw new AccountsExceptionHandler(ErrorCode.NO_USER_AUTHORIZATION);
+            }
+
+            deleteUser.softDelete();
+            userJpaRepository.save(deleteUser);
+        } else {
+            throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+    }
+
+    // 매일 자정에 실행되도록 설정, soft delete 후 30 지나면 삭제
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void purgeDeletedUsers() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        userJpaRepository.deleteByDeletedIsTrueAndDeletedAtBefore(thirtyDaysAgo);
+    }
+
+    public void recoverAccount(String email) {
+        Optional<User> recoverUserOpt = userJpaRepository.findByEmail(email);
+
+        if (recoverUserOpt.isPresent()) {
+            User recoverUser = recoverUserOpt.get();
+            recoverUser.recoverDelete();
+            userJpaRepository.save(recoverUser);
+        } else {
+            throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
     }
 }
