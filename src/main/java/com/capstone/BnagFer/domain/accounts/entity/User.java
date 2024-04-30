@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
+import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -71,19 +72,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<TacticLike> tacticLikes;
 
-    public void setProfile(Profile inform) {
-        profile = inform;
-    }
-
     public void setPassword(String pw) {
         password = pw;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void updateUser(UpdateProfileRequestDto requestDto) {
+        name = requestDto.name();
+        email = requestDto.email();
     }
 }
