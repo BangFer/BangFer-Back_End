@@ -57,6 +57,13 @@ public class User extends BaseEntity {
     @Column(length = 100) // provider 추가 (kakao)
     private String provider;
 
+    @Column(name = "deleted")
+    @ColumnDefault("false")
+    private Boolean deleted; // Soft delete 를 위한 필드
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // Soft delete된 회원의 삭제 시간을 저장하는 필드
+
     @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
     private List<Team> team;
 
@@ -79,5 +86,15 @@ public class User extends BaseEntity {
     public void updateUser(UpdateProfileRequestDto requestDto) {
         name = requestDto.name();
         email = requestDto.email();
+    }
+
+    public void softDelete() {
+        deleted = true;
+        deletedAt = LocalDateTime.now();
+    }
+
+    public void recoverDelete() {
+        deleted = false;
+        deletedAt = null;
     }
 }
