@@ -94,7 +94,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user)
+        if(!tacticComment.getUser().equals(user))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticComment.updateComment(user, request);
