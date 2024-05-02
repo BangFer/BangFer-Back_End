@@ -52,20 +52,11 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() != user)
+        if(!tactic.getUser().equals(user))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tactic.setTacticName(request.tacticName());
-        tactic.setUser(user);
-        tactic.setAnonymous(request.anonymous());
-        tactic.setFamousCoachName(request.famousCoachName());
-        tactic.setMainFormation(request.mainFormation());
-        tactic.setAttackFormation(request.attackFormation());
-        tactic.setDefenseFormation(request.defenseFormation());
-        tactic.setTacticDetails(request.tacticDetails());
-        tactic.setAttackDetails(request.attackDetails());
-        tactic.setDefenseDetails(request.attackDetails());
-        Tactic updatedTactic = tacticRepository.save(tactic);
+        tactic.updateTactic(user, request);
+        Tactic updatedTactic = tacticRepository.saveAndFlush(tactic);
         return TacticResponse.from(updatedTactic);
     }
 
