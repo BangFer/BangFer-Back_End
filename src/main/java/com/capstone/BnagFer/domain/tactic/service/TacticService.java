@@ -97,8 +97,7 @@ public class TacticService {
         if(tacticComment.getUser() != user)
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tacticComment.setUser(user);
-        tacticComment.setComment(request.comment());
+        tacticComment.updateComment(user, request);
         TacticComment updateComment = commentRepository.save(tacticComment);
         return CommentResponse.from(updateComment);
 
