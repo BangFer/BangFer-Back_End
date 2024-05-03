@@ -42,7 +42,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() != user)
+        if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticRepository.deleteById(tacticId);
@@ -52,7 +52,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(!tactic.getUser().equals(user))
+        if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tactic.updateTactic(user, request);
@@ -64,7 +64,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() == user)
+        if(tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.CANNOT_COPY_MYSELF);
 
         Tactic copyTactic = Tactic.createTactic();
@@ -94,7 +94,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(!tacticComment.getUser().equals(user))
+        if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticComment.updateComment(user, request);
@@ -107,7 +107,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user)
+        if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
