@@ -46,7 +46,7 @@ public class ProfileService {
         Profile profile = profileJpaRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileExceptionHandler(ErrorCode.PROFILE_NOT_FOUND));
 
-        if (!profile.getUser().equals(user)) {
+        if (!profile.getUser().getId().equals(user.getId())) {
             throw new ProfileExceptionHandler(ErrorCode.PROFILE_AND_USER_NOT_MATCHED);
         }
 
@@ -61,12 +61,8 @@ public class ProfileService {
             throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
         }
 
-        profile.setNickname(requestDto.nickname());
-        user.setName(requestDto.name());
-        profile.setDescription(requestDto.description());
-        user.setEmail(requestDto.email());
-        profile.setDateOfBirth(requestDto.dateOfBirth());
-        profile.setGender(requestDto.gender());
+        user.updateUser(requestDto);
+        profile.updateProfile(requestDto);
 
         return ProfileResponseDto.from(profileJpaRepository.save(profile), userJpaRepository.save(user));
     }

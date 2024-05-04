@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
+import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -44,23 +45,14 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User account) {
+        user = account;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void updateProfile(UpdateProfileRequestDto requestDto) {
+        nickname = requestDto.nickname();
+        description = requestDto.description();
+        dateOfBirth = requestDto.dateOfBirth();
+        gender = requestDto.gender();
     }
 }
