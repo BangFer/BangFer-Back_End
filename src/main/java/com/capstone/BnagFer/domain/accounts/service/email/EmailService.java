@@ -1,10 +1,8 @@
 package com.capstone.BnagFer.domain.accounts.service.email;
 
 import com.capstone.BnagFer.domain.accounts.dto.email.EmailVerifyDto;
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.common.exception.CustomException;
 import jakarta.mail.MessagingException;
