@@ -24,6 +24,8 @@ public enum ErrorCode implements BaseErrorCode {
     PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER407", "사용자 프로필이 존재하지 않습니다."),
     NO_USER_AUTHORIZATION(HttpStatus.BAD_REQUEST, "USER408", "사용자 권한이 없습니다."),
     USER_IS_DELETED(HttpStatus.BAD_REQUEST, "USER409", "탈퇴된 회원입니다."),
+    UNABLE_TO_SEND_EMAIL(HttpStatus.BAD_REQUEST, "USER410", "이메일을 전송할 수 없습니다."),
+    CODE_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "USER411", "유효하지 않은 코드입니다."),
 
     // Profile 관련 에러
     NICKNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE401", "해당 닉네임이 이미 존재합니다."),
