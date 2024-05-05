@@ -2,11 +2,8 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
-import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +16,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TeamQueryService {
     private final TeamRepository teamRepository;
-    private final TeamMembersRepository teamMembersRepository;
     private final AccountsServiceUtils accountsServiceUtils;
+    private final TeamServiceUtils teamServiceUtils;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        Team team = teamServiceUtils.checkValidTeam(teamId);
         return GetTeamResponseDto.from(team);
     }
     public List<GetTeamResponseDto.TeamList> getMyTeamList() {
