@@ -19,17 +19,6 @@ public record CreateTeamTacticResponseDto (
         LocalDateTime createdAt,
         TacticDto tacticDto
 ) {
-//    public static CreateTeamTacticResponseDto from(Long teamId, Long leaderId, String leaderName, String teamName, List<TeamMember> teamMembers
-//    , LocalDateTime createdAt, TacticDto tacticDto) {
-//        return CreateTeamTacticResponseDto.builder()
-//                .id(teamId)
-//                .leaderId(leaderId) //null로 넣어두고 service단에서 id값 추가해주기
-//                .leaderName(leaderName)
-//                .teamName(teamName)
-//                .createdAt(createdAt)
-//                .tacticDto(tacticDto)
-//                .build();
-//    }
 
     public static CreateTeamTacticResponseDto from(Team team, TacticDto tacticDto){
         return CreateTeamTacticResponseDto.builder()
