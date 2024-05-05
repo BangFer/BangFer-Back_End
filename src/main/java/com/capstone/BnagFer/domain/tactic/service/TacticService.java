@@ -42,7 +42,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() != user)
+        if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticRepository.deleteById(tacticId);
@@ -52,20 +52,11 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() != user)
+        if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tactic.setTacticName(request.tacticName());
-        tactic.setUser(user);
-        tactic.setAnonymous(request.anonymous());
-        tactic.setFamousCoachName(request.famousCoachName());
-        tactic.setMainFormation(request.mainFormation());
-        tactic.setAttackFormation(request.attackFormation());
-        tactic.setDefenseFormation(request.defenseFormation());
-        tactic.setTacticDetails(request.tacticDetails());
-        tactic.setAttackDetails(request.attackDetails());
-        tactic.setDefenseDetails(request.attackDetails());
-        Tactic updatedTactic = tacticRepository.save(tactic);
+        tactic.updateTactic(user, request);
+        Tactic updatedTactic = tacticRepository.saveAndFlush(tactic);
         return TacticResponse.from(updatedTactic);
     }
 
@@ -73,7 +64,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        if(tactic.getUser() == user)
+        if(tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.CANNOT_COPY_MYSELF);
 
         Tactic copyTactic = Tactic.createTactic();
@@ -103,11 +94,10 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user)
+        if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tacticComment.setUser(user);
-        tacticComment.setComment(request.comment());
+        tacticComment.updateComment(user, request);
         TacticComment updateComment = commentRepository.save(tacticComment);
         return CommentResponse.from(updateComment);
 
@@ -117,7 +107,7 @@ public class TacticService {
         User user = accountsServiceUtils.getCurrentUser();
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
-        if(tacticComment.getUser() != user)
+        if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);

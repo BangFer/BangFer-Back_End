@@ -3,6 +3,7 @@ package com.capstone.BnagFer.domain.tactic.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.tactic.dto.TacticUpdateRequest;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ public class Tactic extends BaseEntity {
     @Column(name = "tactic_id")
     private Long tacticId;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
@@ -71,36 +72,6 @@ public class Tactic extends BaseEntity {
     @JsonIgnore
     private List<Team> teams;
 
-    public void setTacticName(String name){
-        tacticName = name;
-    }
-    public void setUser(User users){
-        user = users;
-    }
-    public void setAnonymous(Boolean status){
-        anonymous = status;
-    }
-    public void setFamousCoachName(String name){
-        famousCoachName = name;
-    }
-    public void setMainFormation(String formation){
-        mainFormation = formation;
-    }
-    public void setAttackFormation(byte[] formation){
-        attackFormation = formation;
-    }
-    public void setDefenseFormation(byte[] formation){
-        defenseFormation = formation;
-    }
-    public void setTacticDetails(String details){
-        tacticDetails = details;
-    }
-    public void setAttackDetails(String details){
-        attackDetails = details;
-    }
-    public void setDefenseDetails(String details){
-        defenseDetails = details;
-    }
     public void setCopyDetail(User users, Tactic tactic){
         tacticName = tactic.getTacticName();
         user = users;
@@ -112,6 +83,19 @@ public class Tactic extends BaseEntity {
         tacticDetails = tactic.getTacticDetails();
         attackDetails = tactic.getAttackDetails();
         defenseDetails = tactic.getDefenseDetails();
+    }
+
+    public void updateTactic(User users, TacticUpdateRequest request){
+        tacticName = request.tacticName();
+        user = users;
+        anonymous = request.anonymous();
+        famousCoachName = request.famousCoachName();
+        mainFormation = request.mainFormation();
+        attackFormation = request.attackFormation();
+        defenseFormation = request.defenseFormation();
+        tacticDetails = request.tacticDetails();
+        attackDetails = request.attackDetails();
+        defenseDetails = request.defenseDetails();
     }
 
     public static Tactic createTactic() {

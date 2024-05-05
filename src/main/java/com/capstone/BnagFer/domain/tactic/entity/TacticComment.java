@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.tactic.dto.CommentUpdateRequest;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,8 @@ public class TacticComment extends BaseEntity {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    public void setUser(User users) {user = users;}
-    public void setTactic(Tactic tactics) {tactic = tactics;}
-    public void setComment(String comments){comment = comments;}
+    public void updateComment(User users, CommentUpdateRequest request){
+        user = users;
+        comment = request.comment();
+    }
 }
