@@ -5,7 +5,6 @@ import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
-import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

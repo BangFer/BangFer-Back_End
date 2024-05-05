@@ -3,7 +3,6 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
