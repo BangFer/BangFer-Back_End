@@ -54,6 +54,7 @@ public class TeamService {
         Team team = teamServiceUtils.checkValidTeam(teamId);
         //방장만이 강퇴 가능
         if (team.getLeader().getId().equals(user.getId()))
-            teamRepository.deleteById(teamId);
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        teamRepository.deleteById(teamId);
     }
 }
