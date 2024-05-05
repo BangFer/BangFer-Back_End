@@ -21,9 +21,10 @@ public class TeamQueryService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final AccountsServiceUtils accountsServiceUtils;
+    private final TeamServiceUtils teamServiceUtils;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        Team team = teamServiceUtils.checkValidTeam(teamId);
         return GetTeamResponseDto.from(team);
     }
     public List<GetTeamResponseDto.TeamList> getMyTeamList() {
