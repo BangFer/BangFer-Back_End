@@ -32,19 +32,17 @@ import lombok.*;
     @Column(name = "position")
     private Position position;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+   public void updateRole(Role upateRole) {
+      role = upateRole;
+   }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+   public void updateUserRoleAndTeam(User updateUser, Team updateTeam) {
+      user = updateUser;
+      role = Role.LEADER;
+      team  = updateTeam;
+   }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void setPosition(Position position) { this.position = position; }
+   public void updatePosition(Position updatePosition) { position = updatePosition; }
 
     public static TeamMember createTeamMember() {
         return new TeamMember();
