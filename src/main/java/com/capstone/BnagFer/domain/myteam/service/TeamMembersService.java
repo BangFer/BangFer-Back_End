@@ -69,7 +69,7 @@ public class TeamMembersService {
         if (teamMember.getId() == null)
             throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
         //방장에게만 강퇴 권한
-        if (team.getLeader().getId().equals(user.getId()))
+        if (!team.getLeader().getId().equals(user.getId()))
             teamMembersRepository.deleteById(memberId);
         else
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
