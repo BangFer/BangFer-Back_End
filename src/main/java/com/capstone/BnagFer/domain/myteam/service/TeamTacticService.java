@@ -20,6 +20,7 @@ public class TeamTacticService {
     private final TeamRepository teamRepository;
     private final TacticRepository tacticRepository;
     private final AccountsServiceUtils accountsServiceUtils;
+    private final TeamServiceUtils teamServiceUtils;
 
     public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId) {
         User user = accountsServiceUtils.getCurrentUser();
@@ -27,10 +28,12 @@ public class TeamTacticService {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        team.setLeader(user);
-        team.setTactic(tactic);
-        if(team.getLeader().getId() != user.getId()) {
+        CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
+        Team team = teamServiceUtils.checkValidTeam(teamId);
+        team.updateLeader(user);
+        team.updateTactic(tactic);
+        //방장만이 전술 생성 가능
+        if(!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         if(!user.getTactics().contains(tactic)) {
@@ -38,12 +41,7 @@ public class TeamTacticService {
         }
         else
             teamRepository.save(team);
-
-        // TODO: 매개 변수 수정 필요
-        return CreateTeamTacticResponseDto.from(teamId, team.getLeader().getId(),team.getLeader().getName(), team.getTeamName(), team.getTeamMembers(), team.getCreatedAt(),
-                CreateTeamTacticResponseDto.TacticDto.from(tactic.getTacticId(), tactic.getTacticName(), tactic.isAnonymous(), tactic.getFamousCoachName(), tactic.getMainFormation()
-                , tactic.getAttackFormation(), tactic.getDefenseFormation(), tactic.getTacticDetails(), tactic.getAttackDetails(), tactic.getDefenseDetails(),
-                        tactic.getCreatedAt(), tactic.getUpdatedAt()));
+        return CreateTeamTacticResponseDto.from(team, tacticDto);
     }
 
 

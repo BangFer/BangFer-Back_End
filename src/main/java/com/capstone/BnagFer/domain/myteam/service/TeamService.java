@@ -22,19 +22,20 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamMembersRepository teamMembersRepository;
+    private final TeamServiceUtils teamServiceUtils;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
         Team team = request.toEntity();
-        team.setLeader(user);
+        team.updateLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
 
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(team.getLeader());
 
-        teamMember.setTeam(team);
-        teamMember.setUser(user);
-        teamMember.setRole(Role.LEADER);
+        teamMember.updateTeam(team);
+        teamMember.updateUser(user);
+        teamMember.updateRole(Role.LEADER);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
         return CUTeamResponseDto.from(team);
@@ -42,8 +43,9 @@ public class TeamService {
 
     public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        if(team.getLeader().getId() != user.getId()) {
+        Team team = teamServiceUtils.checkValidTeam(teamId);
+        //방장만 팀의 업데이트를 할 수 있다
+        if(!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         team.updateTeam(request);
@@ -52,10 +54,9 @@ public class TeamService {
     }
     public void deleteMyTeam(Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
-        if(team.getLeader().getId()!= user.getId()) {
-            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
-        }
-        teamRepository.deleteById(teamId); }
+        Team team = teamServiceUtils.checkValidTeam(teamId);
+        //방장만이 강퇴 가능
+        if (team.getLeader().getId().equals(user.getId()))
+            teamRepository.deleteById(teamId);
+    }
 }
