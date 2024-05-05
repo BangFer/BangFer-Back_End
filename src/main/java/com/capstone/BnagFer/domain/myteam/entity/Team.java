@@ -38,18 +38,22 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "tactic_id")
     private Tactic tactic;
 
-    //Leader Setter
-    public void setLeader(User leader) {
-        this.leader = leader;
+    //캘린더
+    @OneToMany(mappedBy = "team")
+    private List<CalendarEvent> calendarEvents;
+
+    public void updateLeader(User updateLeader) {
+        leader = updateLeader;
     }
 
-    public void setTactic(Tactic tactic) { this.tactic = tactic; }
+    public void updateTactic(Tactic updateTactic) { tactic = updateTactic; }
+
+    public void updateLeaderAndTeam(User updateLeader, Tactic updateTactic) {
+        leader = updateLeader;
+        tactic = updateTactic;
+    }
 
     public void updateTeam(CUTeamRequestDto updateDTO) {
         this.teamName = updateDTO.teamName();}
 
-
-    //캘린더
-    @OneToMany(mappedBy = "team")
-    private List<CalendarEvent> calendarEvents;
 }
