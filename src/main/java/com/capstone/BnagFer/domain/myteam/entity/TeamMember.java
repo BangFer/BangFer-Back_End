@@ -45,9 +45,9 @@ import lombok.*;
         team = updateTeam;
     }
 
-    public void updateUserRoleAndTeam(User updateUser, Role updateRole, Team updateTeam) {
+    public void updateUserRoleAndTeam(User updateUser, Team updateTeam) {
         user = updateUser;
-        role = updateRole;
+        role = Role.LEADER;
         team  = updateTeam;
     }
 
