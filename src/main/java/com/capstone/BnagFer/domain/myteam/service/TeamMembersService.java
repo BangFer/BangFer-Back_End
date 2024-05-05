@@ -9,7 +9,6 @@ import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
-import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamMembersService {
 
     private final AccountsServiceUtils accountsServiceUtils;
-    private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamServiceUtils teamServiceUtils;

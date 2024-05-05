@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
-import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
@@ -19,7 +18,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TeamMembersQueryService {
 
-    private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final TeamServiceUtils teamServiceUtils;
 
@@ -29,10 +27,9 @@ public class TeamMembersQueryService {
         if(teamMembers.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         }
-        List<TeamMembersResponseDto> teamMemberResponseDtos = teamMembers.stream()
+
+        return teamMembers.stream()
                 .map(TeamMembersResponseDto::from)
                 .toList();
-
-        return teamMemberResponseDtos;
     }
 }
