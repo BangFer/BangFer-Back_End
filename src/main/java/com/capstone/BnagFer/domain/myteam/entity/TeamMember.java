@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.myteam.dto.TeamMemberRequestDto;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -32,19 +33,23 @@ import lombok.*;
     @Column(name = "position")
     private Position position;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void updateUser(User updateUser) {
+        user = updateUser;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void updateRole(Role upateRole) {
+        role = upateRole;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void updateTeam(Team updateTeam) {
+        team = updateTeam;
     }
 
-    public void setPosition(Position position) { this.position = position; }
+    public void updatePosition(Position updatePosition) { position = updatePosition; }
+
+   public void updateTeamMember(TeamMember teamMember, TeamMemberRequestDto request) {
+
+   }
 
     public static TeamMember createTeamMember() {
         return new TeamMember();
