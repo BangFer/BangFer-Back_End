@@ -53,9 +53,6 @@ import lombok.*;
 
     public void updatePosition(Position updatePosition) { position = updatePosition; }
 
-   public void updateTeamMember(TeamMember teamMember, TeamMemberRequestDto request) {
-
-   }
 
     public static TeamMember createTeamMember() {
         return new TeamMember();
