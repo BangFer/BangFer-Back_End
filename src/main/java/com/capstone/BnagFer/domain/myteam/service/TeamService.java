@@ -53,6 +53,7 @@ public class TeamService {
         User user = accountsServiceUtils.getCurrentUser();
         Team team = teamServiceUtils.checkValidTeam(teamId);
         //방장만이 강퇴 가능
+
         if (!team.getLeader().getId().equals(user.getId()))
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         teamRepository.deleteById(teamId);
