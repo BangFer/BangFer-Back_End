@@ -26,7 +26,7 @@ public class Tactic extends BaseEntity {
     @Column(name = "tactic_id")
     private Long tacticId;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
