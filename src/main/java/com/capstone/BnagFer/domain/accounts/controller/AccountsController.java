@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.accounts.controller;
 
 import com.capstone.BnagFer.domain.accounts.dto.*;
+import com.capstone.BnagFer.domain.accounts.dto.email.EmailVerifyDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
 import com.capstone.BnagFer.domain.accounts.entity.User;
@@ -11,12 +12,14 @@ import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
 import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
 import com.capstone.BnagFer.domain.accounts.service.AccountsService;
 import com.capstone.BnagFer.domain.accounts.service.KakaoService;
+import com.capstone.BnagFer.domain.accounts.service.email.EmailService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +33,7 @@ public class AccountsController {
     private final AccountsQueryService accountsQueryService;
     private final JwtProvider jwtProvider;
     private final KakaoService kakaoService;
+    private final EmailService emailService;
 
     @PostMapping("/login")
     public ApiResponse<UserLoginResponseDto> login(@Valid @RequestBody UserLoginRequestDto requestDto) {
@@ -102,5 +106,21 @@ public class AccountsController {
     @PostMapping("/social/login/kakao")
     public ApiResponse<UserLoginResponseDto> loginByKakao(@Valid @RequestBody UserSocialLoginRequestDto requestDto) {
         return ApiResponse.onSuccess(kakaoService.loginByKakao(requestDto));
+    }
+
+    @PostMapping("/email/send-email")
+    public ApiResponse<String> sendEmail(@RequestParam String email) throws Exception {
+        return ApiResponse.onSuccess(emailService.sendMessage(email));
+    }
+
+    @PostMapping("/email/verify")
+    public ApiResponse<String> verifyCode(@RequestBody EmailVerifyDto requestDto) {
+        boolean check = emailService.verifyCode(requestDto);
+        if (check) {
+            return ApiResponse.onSuccess("인증 완료!");
+        }
+        else {
+            return ApiResponse.onFailure(HttpStatus.BAD_REQUEST.name(), "인증 실패");
+        }
     }
 }

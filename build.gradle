@@ -62,6 +62,9 @@ dependencies {
 	implementation 'com.google.guava:guava:33.0.0-jre'
 
 	implementation 'com.google.code.gson:gson'
+
+	// email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
