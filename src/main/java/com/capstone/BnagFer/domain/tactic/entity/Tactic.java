@@ -60,15 +60,15 @@ public class Tactic extends BaseEntity {
     @Column(name = "defense_details", columnDefinition = "TEXT")
     private String defenseDetails;
 
-    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticComment> comments = new ArrayList<TacticComment>();
 
-    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticLike> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Team> teams;
 
