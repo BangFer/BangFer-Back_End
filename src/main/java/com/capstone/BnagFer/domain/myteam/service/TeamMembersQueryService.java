@@ -21,12 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamMembersQueryService {
+    private final AccountsServiceUtils accountsServiceUtils;
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
-    private final TeamServiceUtils teamServiceUtils;
+    private final UserJpaRepository userJpaRepository;
 
     public List<TeamMembersResponseDto> getMembers(Long teamId) {
-        Team team = teamServiceUtils.checkValidTeam(teamId);
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         List<TeamMember> teamMembers = teamMembersRepository.findByTeam(team);
         if(teamMembers.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
