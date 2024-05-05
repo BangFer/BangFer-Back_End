@@ -45,6 +45,11 @@ public class Team extends BaseEntity {
 
     public void updateTactic(Tactic updateTactic) { tactic = updateTactic; }
 
+    public void updateLeaderAndTeam(User updateLeader, Tactic updateTactic) {
+        leader = updateLeader;
+        tactic = updateTactic;
+    }
+
     public void updateTeam(CUTeamRequestDto updateDTO) {
         this.teamName = updateDTO.teamName();}
 

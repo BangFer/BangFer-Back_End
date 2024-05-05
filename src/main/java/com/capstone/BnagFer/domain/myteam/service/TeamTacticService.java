@@ -30,8 +30,7 @@ public class TeamTacticService {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
         Team team = teamServiceUtils.checkValidTeam(teamId);
-        team.updateLeader(user);
-        team.updateTactic(tactic);
+        team.updateLeaderAndTeam(user, tactic);
         //방장만이 전술 생성 가능
         if(!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
