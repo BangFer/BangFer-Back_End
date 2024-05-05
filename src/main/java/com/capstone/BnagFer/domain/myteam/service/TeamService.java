@@ -32,7 +32,7 @@ public class TeamService {
 
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(team.getLeader());
-        teamMember.updateUserRoleAndTeam(user, Role.LEADER, team);
+        teamMember.updateUserRoleAndTeam(user, team);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
         return CUTeamResponseDto.from(team);
