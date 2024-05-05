@@ -29,7 +29,6 @@ public record CreateTeamTacticResponseDto (
                 .createdAt(team.getCreatedAt())
                 .tacticDto(tacticDto)
                 .build();
-
     }
 
     @Builder
