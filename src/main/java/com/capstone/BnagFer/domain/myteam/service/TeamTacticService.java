@@ -27,6 +27,7 @@ public class TeamTacticService {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+        CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         team.setLeader(user);
         team.setTactic(tactic);
@@ -40,10 +41,7 @@ public class TeamTacticService {
             teamRepository.save(team);
 
         // TODO: 매개 변수 수정 필요
-        return CreateTeamTacticResponseDto.from(teamId, team.getLeader().getId(),team.getLeader().getName(), team.getTeamName(), team.getTeamMembers(), team.getCreatedAt(),
-                CreateTeamTacticResponseDto.TacticDto.from(tactic.getTacticId(), tactic.getTacticName(), tactic.isAnonymous(), tactic.getFamousCoachName(), tactic.getMainFormation()
-                , tactic.getAttackFormation(), tactic.getDefenseFormation(), tactic.getTacticDetails(), tactic.getAttackDetails(), tactic.getDefenseDetails(),
-                        tactic.getCreatedAt(), tactic.getUpdatedAt()));
+        return CreateTeamTacticResponseDto.from(team, tacticDto);
     }
 
 
