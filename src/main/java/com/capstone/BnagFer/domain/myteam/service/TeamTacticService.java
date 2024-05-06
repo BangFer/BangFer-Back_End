@@ -30,7 +30,7 @@ public class TeamTacticService {
         CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         team.updateLeaderAndTactic(user, tactic);
-        if(team.getLeader().getId() != user.getId()) {
+        if(!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         if(!user.getTactics().contains(tactic)) {
