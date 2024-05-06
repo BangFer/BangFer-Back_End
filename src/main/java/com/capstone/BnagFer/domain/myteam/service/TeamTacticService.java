@@ -29,8 +29,7 @@ public class TeamTacticService {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        team.setLeader(user);
-        team.setTactic(tactic);
+        team.updateLeaderAndTactic(user, tactic);
         if(team.getLeader().getId() != user.getId()) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
@@ -40,7 +39,6 @@ public class TeamTacticService {
         else
             teamRepository.save(team);
 
-        // TODO: 매개 변수 수정 필요
         return CreateTeamTacticResponseDto.from(team, tacticDto);
     }
 
