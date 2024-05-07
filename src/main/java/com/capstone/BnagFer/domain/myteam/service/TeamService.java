@@ -21,7 +21,6 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamMembersRepository teamMembersRepository;
-    private final TeamServiceUtils teamServiceUtils;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();

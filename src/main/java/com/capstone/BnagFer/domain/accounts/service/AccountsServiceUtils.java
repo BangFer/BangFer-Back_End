@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class AccountsServiceUtils {
-
     private final UserJpaRepository userRepository;
-
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName(); // 현재 로그인한 사용자의 이메일
