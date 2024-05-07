@@ -100,8 +100,7 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-        TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
-        return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
+        return TeamMemberPositionResponseDto.from(request.toEntity(team, teamMember, requestedPosition));
 
     }
 
