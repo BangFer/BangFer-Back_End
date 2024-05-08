@@ -9,8 +9,10 @@ import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
+import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
+import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.common.exception.CustomException;
@@ -26,12 +28,13 @@ public class TeamMembersService {
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
-    private final TeamServiceUtils teamServiceUtils;
+    private final TeamRepository teamRepository;
 
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Team team = teamServiceUtils.checkValidTeam(request.teamId());
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
         //방장이 자기 자신을 초대 못하게 해주는 예외처리
         if (user.getId().equals(invitedUser.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
@@ -56,7 +59,7 @@ public class TeamMembersService {
     public void kickOutMembers(Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
-        Team team = teamServiceUtils.checkValidTeam(teamMember.getTeam().getId());
+        Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(teamMember.getUser());
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
@@ -75,7 +78,7 @@ public class TeamMembersService {
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamServiceUtils.checkValidTeam(request.teamId());
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
         // 요청한 포지션(requestedPosition)이 이미 다른 멤버에게 할당되어 있는지 확인
@@ -97,14 +100,13 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-        TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
-        return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
+        return TeamMemberPositionResponseDto.from(request.toEntity(team, teamMember, requestedPosition));
 
     }
 
     public void deallocatePosition(Long teamId, Long memberId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamServiceUtils.checkValidTeam(teamId);
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
         if(team.getLeader().getId().equals(user.getId())) {

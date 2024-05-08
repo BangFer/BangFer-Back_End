@@ -21,7 +21,6 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamMembersRepository teamMembersRepository;
-    private final TeamServiceUtils teamServiceUtils;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
@@ -40,7 +39,7 @@ public class TeamService {
 
     public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamServiceUtils.checkValidTeam(teamId);
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         //방장만 팀의 업데이트를 할 수 있다
         if(!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
@@ -51,7 +50,7 @@ public class TeamService {
     }
     public void deleteMyTeam(Long teamId) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamServiceUtils.checkValidTeam(teamId);
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
         //방장만이 강퇴 가능
         if (!team.getLeader().getId().equals(user.getId())) {

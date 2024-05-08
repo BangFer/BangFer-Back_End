@@ -14,8 +14,8 @@ public record TeamMemberPositionRequestDto(
     public TeamMember toEntity(Team team, TeamMember teamMember, Position position) {
         return TeamMember.builder()
                 .team(teamMember.getTeam())
+                .user(teamMember.getUser())
                 .id(teamMember.getId())
-                //.user(User.builder().profile(Profile.builder().nickname(memberNickName).build()).build())
                 .position(teamMember.getPosition())
                 .build();
     }

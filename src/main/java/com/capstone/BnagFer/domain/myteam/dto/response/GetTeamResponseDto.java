@@ -32,11 +32,13 @@ public record GetTeamResponseDto (
                 .createdAt(team.getCreatedAt())
                 .build();
     }
+
     @Builder
     public record TeamMembersList(
             Long userId,
             String memberNickName,
             Role role,
+            Long memberId,
             Position position
 
     ) {
@@ -44,6 +46,7 @@ public record GetTeamResponseDto (
             return TeamMembersList.builder()
                     .userId(teamMember.getUser().getId())
                     .memberNickName(teamMember.getUser().getProfile().getNickname())
+                    .memberId(teamMember.getId())
                     .role(teamMember.getRole())
                     .position(teamMember.getPosition())
                     .build();
