@@ -1,0 +1,45 @@
+package com.capstone.BnagFer.domain.myteam.controller;
+
+import com.capstone.BnagFer.domain.myteam.dto.request.TeamCalendarRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamCalendarResponseDto;
+import com.capstone.BnagFer.domain.myteam.service.TeamCalendarQueryService;
+import com.capstone.BnagFer.domain.myteam.service.TeamCalendarService;
+import com.capstone.BnagFer.global.common.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/team/calendar")
+public class TeamCalendarController {
+    private final TeamCalendarService teamCalendarService;
+    private final TeamCalendarQueryService teamCalendarQueryService;
+
+    @PostMapping("")
+    public ApiResponse<TeamCalendarResponseDto> createEvent(@RequestBody TeamCalendarRequestDto request) {
+        TeamCalendarResponseDto myEvent = teamCalendarService.createMatchEvent(request);
+        return ApiResponse.onSuccess(myEvent);
+    }
+
+    @GetMapping("{teamId}")
+    public ApiResponse<List<TeamCalendarResponseDto>> getEvents(@PathVariable Long teamId) {
+        List<TeamCalendarResponseDto> myEvents = teamCalendarQueryService.getMatchEvent(teamId);
+        return ApiResponse.onSuccess(myEvents);
+    }
+
+    @PutMapping("{calendarId}")
+    public ApiResponse<TeamCalendarResponseDto> updateEvent(@PathVariable Long calendarId, @RequestBody UpdateTeamCalendarRequestDto request) {
+        TeamCalendarResponseDto myEvent = teamCalendarService.updateMatchEvent(request, calendarId);
+        return ApiResponse.onSuccess(myEvent);
+    }
+
+    @DeleteMapping("{calendarId}")
+    public ApiResponse<Void> deleteEvent(@PathVariable Long calendarId) {
+        teamCalendarService.deleteMatchEvent(calendarId);
+        return ApiResponse.noContent();
+    }
+
+}
