@@ -18,9 +18,9 @@ public class TeamCalendarController {
     private final TeamCalendarService teamCalendarService;
     private final TeamCalendarQueryService teamCalendarQueryService;
 
-    @PostMapping("")
-    public ApiResponse<TeamCalendarResponseDto> createEvent(@RequestBody TeamCalendarRequestDto request) {
-        TeamCalendarResponseDto myEvent = teamCalendarService.createMatchEvent(request);
+    @PostMapping("{teamId}")
+    public ApiResponse<TeamCalendarResponseDto> createEvent(@PathVariable Long teamId, @RequestBody TeamCalendarRequestDto request) {
+        TeamCalendarResponseDto myEvent = teamCalendarService.createMatchEvent(teamId, request);
         return ApiResponse.onSuccess(myEvent);
     }
 

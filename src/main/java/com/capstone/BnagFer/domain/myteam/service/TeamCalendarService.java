@@ -24,9 +24,9 @@ public class TeamCalendarService {
     private final TeamCalendarRepository teamCalendarRepository;
     private final TeamRepository teamRepository;
     private final  AccountsServiceUtils accountsServiceUtils;
-    public TeamCalendarResponseDto createMatchEvent(TeamCalendarRequestDto request) {
+    public TeamCalendarResponseDto createMatchEvent(Long teamId, TeamCalendarRequestDto request) {
         User user = accountsServiceUtils.getCurrentUser();
-        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         if(user.getId().equals(team.getLeader().getId())) {
             CalendarEvent calendarEvent = request.toEntity(team);
             teamCalendarRepository.save(calendarEvent);
