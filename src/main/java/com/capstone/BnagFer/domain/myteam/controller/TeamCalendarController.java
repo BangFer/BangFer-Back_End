@@ -24,15 +24,15 @@ public class TeamCalendarController {
         return ApiResponse.onSuccess(myEvent);
     }
 
-    @GetMapping("/all/{teamId}")
+    @GetMapping("/{teamId}")
     public ApiResponse<List<TeamCalendarResponseDto>> getAllEvents(@PathVariable Long teamId) {
         List<TeamCalendarResponseDto> myEvents = teamCalendarQueryService.getMatchEvents(teamId);
         return ApiResponse.onSuccess(myEvents);
     }
 
-    @GetMapping("/{teamId}")
-    public ApiResponse<TeamCalendarResponseDto> getEvent(@PathVariable Long teamId) {
-        TeamCalendarResponseDto myEvent = teamCalendarQueryService.getOneMatchEvent(teamId);
+    @GetMapping("/{teamId}/{calendarId}")
+    public ApiResponse<TeamCalendarResponseDto> getEvent(@PathVariable Long teamId, @PathVariable Long calendarId) {
+        TeamCalendarResponseDto myEvent = teamCalendarQueryService.getOneMatchEvent(teamId, calendarId);
         return ApiResponse.onSuccess(myEvent);
     }
 
