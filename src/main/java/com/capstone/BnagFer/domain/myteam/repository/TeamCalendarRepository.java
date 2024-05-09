@@ -8,12 +8,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeamCalendarRepository extends JpaRepository<CalendarEvent, Long> {
     @Query("select c " +
             "from CalendarEvent c " +
             "where c.team = :team")
-    List<CalendarEvent> findByTeam(@Param("team") Team team);
+    List<CalendarEvent> findAllByTeam(@Param("team") Team team);
+
+    @Query("select c " +
+            "from CalendarEvent c " +
+            "where c.team = :team")
+     CalendarEvent findOneByTeam(@Param("team") Team team);
 
 }
