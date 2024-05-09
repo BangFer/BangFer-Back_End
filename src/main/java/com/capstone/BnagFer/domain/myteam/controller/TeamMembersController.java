@@ -44,7 +44,6 @@ public class TeamMembersController {
     }
 
     @DeleteMapping("/position/{teamId}/{memberId}")
-
     public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, Long memberId) {
         teamMembersService.deallocatePosition(teamId, memberId);
         return ApiResponse.noContent();

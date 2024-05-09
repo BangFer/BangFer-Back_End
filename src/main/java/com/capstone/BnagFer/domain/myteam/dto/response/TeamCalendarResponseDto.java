@@ -10,22 +10,14 @@ import java.time.LocalTime;
 @Builder
 public record TeamCalendarResponseDto  (
         Long id,
-        String matchTitle,
-        String matchDescription,
-        String teamName1,
-        String teamName2,
-        LocalDate matchDate,
-        LocalTime matchTime
+        String matchInfo,
+        Long teamId
 ) {
-    public static TeamCalendarResponseDto from(CalendarEvent calendarEvent, Team team) {
+    public static TeamCalendarResponseDto from(CalendarEvent calendarEvent) {
         return TeamCalendarResponseDto.builder()
                 .id(calendarEvent.getId())
-                .matchTitle(calendarEvent.getMatchTitle())
-                .matchDescription(calendarEvent.getMatchDescription())
-                .teamName1(team.getTeamName())
-                .teamName2(team.getTeamName())
-                .matchDate(calendarEvent.getMatchtDate())
-                .matchTime(calendarEvent.getMatchTime())
+                .matchInfo(calendarEvent.getMatchInfo())
+                .teamId(calendarEvent.getTeam().getId())
                 .build();
     }
 }

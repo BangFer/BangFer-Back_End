@@ -4,9 +4,6 @@ import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Entity
 @Builder
 @Getter
@@ -23,21 +20,10 @@ public class CalendarEvent extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @Column(name = "event_title", nullable = false)
-    private String matchTitle;
+    @Column(name = "event_info", nullable = false)
+    private String matchInfo;
 
-    @Column(name = "event_description")
-    private String matchDescription;
-
-    @Column(nullable = false)
-    private LocalDate matchDate;
-
-    @Column(nullable = false)
-    private LocalTime matchTime;
-
-
-
-
-
-
+    public void updateMatchInfo(String updatedMatchInfo) {
+        matchInfo = updatedMatchInfo;
+    }
 }

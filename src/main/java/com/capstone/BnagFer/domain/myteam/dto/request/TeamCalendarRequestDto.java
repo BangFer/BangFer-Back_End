@@ -10,28 +10,14 @@ import javax.net.ssl.SSLSession;
 import java.time.LocalDate;
 import java.time.LocalTime;
 public record TeamCalendarRequestDto (
-        Long calendarId,
-        @NotBlank(message = "매치 제목 입력은 필수입니다.")
-        String matchTitle,
-        @NotBlank(message = "매치 설명 입력은 필수입니다.")
-        String matchDescription,
-        @NotNull(message = "매치 날짜 입력은 필수입니다.")
-        LocalDate matchDate,
-        @NotNull(message = "매치 시간 입력은 필수입니다.")
-        LocalTime matchTime,
-
-        Team team1,
-        Team team2
+        @NotBlank(message = "매치 정보 입력은 필수입니다.")
+        String matchInfo,
+        Long teamId
 ) {
     public CalendarEvent toEntity(Team team) {
         return CalendarEvent.builder()
-                .team(team1)
-                .team(team2)
-                .id(calendarId)
-                .matchTitle(matchTitle)
-                .matchDescription(matchDescription)
-                .matchDate(matchDate)
-                .matchTime(matchTime)
+                .team(team)
+                .matchInfo(matchInfo)
                 .build();
     }
 
