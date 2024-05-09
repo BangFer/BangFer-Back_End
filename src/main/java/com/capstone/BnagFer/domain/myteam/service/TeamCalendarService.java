@@ -41,7 +41,7 @@ public class TeamCalendarService {
         User user = accountsServiceUtils.getCurrentUser();
         CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
         if(user.getId().equals(event.getTeam().getLeader().getId())) {
-            event.updateMatchInfo(request.getMatchInfo());
+            event.updateMatchInfo(request);
             teamCalendarRepository.save(event);
             return TeamCalendarResponseDto.from(event);
         }
