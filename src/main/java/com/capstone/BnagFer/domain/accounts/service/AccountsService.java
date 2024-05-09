@@ -31,7 +31,6 @@ public class AccountsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
-    private final AccountsServiceUtils accountsServiceUtils;
 
     public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
 
@@ -104,12 +103,11 @@ public class AccountsService {
         }
     }
 
-    public void changePassword(HttpServletRequest request, ChangePwRequestDto requestDto) {
+    public void changePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
         if (!requestDto.password().equals(requestDto.passwordCheck())) {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
         }
 
-        User user = accountsServiceUtils.getCurrentUser();
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         userJpaRepository.save(user);
 
@@ -129,8 +127,8 @@ public class AccountsService {
     }
 
     // 회원 soft delete
-    public void deleteAccount(String email) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public void deleteAccount(String email, User user) {
+
         Optional<User> deleteUserOpt = userJpaRepository.findByEmail(email);
 
         if (deleteUserOpt.isPresent()) {
