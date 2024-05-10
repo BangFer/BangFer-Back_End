@@ -2,8 +2,8 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.CUTeamRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.CUTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;

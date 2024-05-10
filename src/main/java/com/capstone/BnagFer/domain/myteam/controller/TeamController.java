@@ -1,9 +1,8 @@
 package com.capstone.BnagFer.domain.myteam.controller;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.CUTeamResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.CreateTeamTacticResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.GetTeamResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.CUTeamRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.CUTeamResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamService;
 import com.capstone.BnagFer.domain.myteam.service.TeamTacticQueryService;
