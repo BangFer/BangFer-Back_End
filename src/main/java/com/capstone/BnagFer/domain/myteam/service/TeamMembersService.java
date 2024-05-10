@@ -24,14 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class TeamMembersService {
-
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
 
-    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request, User user) {
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
@@ -56,8 +54,7 @@ public class TeamMembersService {
         return TeamMembersResponseDto.from(teamMember);
     }
 
-    public void kickOutMembers(Long memberId) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public void kickOutMembers(Long memberId, User user) {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
@@ -76,8 +73,7 @@ public class TeamMembersService {
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 
-    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, User user) {
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
@@ -104,8 +100,7 @@ public class TeamMembersService {
 
     }
 
-    public void deallocatePosition(Long teamId, Long memberId) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public void deallocatePosition(Long teamId, Long memberId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);

@@ -21,8 +21,7 @@ public class TeamTacticService {
     private final TacticRepository tacticRepository;
     private final AccountsServiceUtils accountsServiceUtils;
 
-    public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId, User user) {
         if(user.getId()==null) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
@@ -36,11 +35,9 @@ public class TeamTacticService {
         if(!user.getTactics().contains(tactic)) {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_ALLOWED);
         }
+
         else
             teamRepository.save(team);
-
         return CreateTeamTacticResponseDto.from(team, tacticDto);
     }
-
-
 }

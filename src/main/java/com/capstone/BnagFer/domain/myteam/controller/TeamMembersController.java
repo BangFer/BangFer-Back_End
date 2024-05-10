@@ -1,11 +1,13 @@
 package com.capstone.BnagFer.domain.myteam.controller;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersService;
+import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,26 +28,26 @@ public class TeamMembersController {
     }
 
     @PostMapping("/invite")
-    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody TeamMemberRequestDto request) {
-        TeamMembersResponseDto myTeam = teamMembersService.addTeamMembers(request);
+    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody TeamMemberRequestDto request, @LoginUser User user) {
+        TeamMembersResponseDto myTeam = teamMembersService.addTeamMembers(request, user);
         return ApiResponse.onSuccess(myTeam);
     }
 
     @DeleteMapping("/kickout/{memberId}")
-    public ApiResponse<Object> kickOutMembers(@PathVariable Long memberId) {
-        teamMembersService.kickOutMembers(memberId);
+    public ApiResponse<Object> kickOutMembers(@PathVariable Long memberId, @LoginUser User user) {
+        teamMembersService.kickOutMembers(memberId, user);
         return ApiResponse.noContent();
     }
 
     @PostMapping("/position")
-    public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody TeamMemberPositionRequestDto request) {
-        TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request);
+    public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody TeamMemberPositionRequestDto request, @LoginUser User user) {
+        TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request, user);
         return ApiResponse.onSuccess(position);
     }
 
     @DeleteMapping("/position/{teamId}/{memberId}")
-    public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, Long memberId) {
-        teamMembersService.deallocatePosition(teamId, memberId);
+    public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, Long memberId, @LoginUser User user) {
+        teamMembersService.deallocatePosition(teamId, memberId, user);
         return ApiResponse.noContent();
     }
 }

@@ -17,8 +17,7 @@ import java.util.List;
 public class TeamTacticQueryService {
     private final AccountsServiceUtils accountsServiceUtils;
     private final TeamRepository teamRepository;
-    public List<CreateTeamTacticResponseDto.MyTacticList> getMyTacticList(){
-        User user = accountsServiceUtils.getCurrentUser();
+    public List<CreateTeamTacticResponseDto.MyTacticList> getMyTacticList(User user){
         List<Tactic> tactics = user.getTactics();
         return CreateTeamTacticResponseDto.MyTacticList.from(tactics);
     }
