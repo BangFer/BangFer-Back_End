@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.myteam.dto;
+package com.capstone.BnagFer.domain.myteam.dto.response;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
