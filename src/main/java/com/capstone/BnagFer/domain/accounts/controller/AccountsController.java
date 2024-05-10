@@ -13,6 +13,7 @@ import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
 import com.capstone.BnagFer.domain.accounts.service.AccountsService;
 import com.capstone.BnagFer.domain.accounts.service.KakaoService;
 import com.capstone.BnagFer.domain.accounts.service.email.EmailService;
+import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -52,8 +52,8 @@ public class AccountsController {
     }
 
     @DeleteMapping("/delete/{email}")
-    public ApiResponse<String> deleteAccount(@PathVariable String email) {
-        accountsService.deleteAccount(email);
+    public ApiResponse<String> deleteAccount(@PathVariable String email, @LoginUser User user) {
+        accountsService.deleteAccount(email, user);
         return ApiResponse.onSuccess("회원 탈퇴 성공");
     }
 
@@ -70,18 +70,19 @@ public class AccountsController {
     }
 
     @PostMapping("/changePw")
-    public ResponseEntity<ApiResponse<String>> changePassword(
+    public ApiResponse<String> changePassword(
+            @LoginUser User user,
             HttpServletRequest request,
             @Valid @RequestBody ChangePwRequestDto requestDto) {
-        accountsService.changePassword(request, requestDto);
-        return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호 변경 성공"));
+        accountsService.changePassword(request, requestDto, user);
+        return ApiResponse.onSuccess("비밀번호 변경 성공");
     }
 
     @PostMapping("/forgotPw")
-    public ResponseEntity<ApiResponse<String>> forgotPassword(
+    public ApiResponse<String> forgotPassword(
             @Valid @RequestBody ForgotPwRequestDto requestDto) {
         accountsService.forgotPassword(requestDto);
-        return ResponseEntity.ok(ApiResponse.onSuccess("비밀번호 변경 성공"));
+        return ApiResponse.onSuccess("비밀번호 변경 성공");
     }
 
     @GetMapping("/reissue")

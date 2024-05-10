@@ -8,7 +8,6 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.ProfileExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final ProfileJpaRepository profileJpaRepository;
-    private final AccountsServiceUtils accountsServiceUtils;
     private final UserJpaRepository userJpaRepository;
 
-    public ProfileResponseDto createProfile(CreateProfileRequestDto requestDto) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public ProfileResponseDto createProfile(CreateProfileRequestDto requestDto, User user) {
         Profile profile = requestDto.toEntity();
         // 닉네임 이미 존재
         if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
@@ -41,8 +38,7 @@ public class ProfileService {
         return ProfileResponseDto.from(profileJpaRepository.save(profile), user);
     }
 
-    public ProfileResponseDto updateProfile(Long profileId, UpdateProfileRequestDto requestDto) {
-        User user = accountsServiceUtils.getCurrentUser();
+    public ProfileResponseDto updateProfile(Long profileId, UpdateProfileRequestDto requestDto, User user) {
         Profile profile = profileJpaRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileExceptionHandler(ErrorCode.PROFILE_NOT_FOUND));
 

@@ -6,7 +6,6 @@ import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.ProfileExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileQueryService {
 
     private final ProfileJpaRepository profileJpaRepository;
-    private final AccountsServiceUtils accountsServiceUtils;
 
-    public ProfileResponseDto getMyProfile() {
-        User user = accountsServiceUtils.getCurrentUser();
+    public ProfileResponseDto getMyProfile(User user) {
         Profile profile = profileJpaRepository.findByUser(user)
                 .orElseThrow(() -> new ProfileExceptionHandler(ErrorCode.PROFILE_NOT_FOUND));
 
