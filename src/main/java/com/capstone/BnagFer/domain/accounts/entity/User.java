@@ -2,10 +2,7 @@ package com.capstone.BnagFer.domain.accounts.entity;
 
 import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
-import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
-import com.capstone.BnagFer.domain.tactic.entity.TacticLike;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -51,7 +48,7 @@ public class User extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isStaff;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     private Profile profile;
 
     @Column(length = 100) // provider 추가 (kakao)
@@ -68,16 +65,7 @@ public class User extends BaseEntity {
     private List<Team> team;
 
     @OneToMany(mappedBy = "user")
-    private List<TeamMember> teamMember;
-
-    @OneToMany(mappedBy = "user")
     private List<Tactic> tactics;
-
-    @OneToMany(mappedBy = "user")
-    private List<TacticComment> tacticComments;
-
-    @OneToMany(mappedBy = "user")
-    private List<TacticLike> tacticLikes;
 
     public void setPassword(String pw) {
         password = pw;
