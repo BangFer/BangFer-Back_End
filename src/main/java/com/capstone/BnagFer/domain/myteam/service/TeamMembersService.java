@@ -2,10 +2,10 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
@@ -100,8 +100,7 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-        TeamMember teamMemberWithPosition = request.toEntity(team, teamMember, requestedPosition);
-        return TeamMemberPositionResponseDto.from(teamMemberWithPosition);
+        return TeamMemberPositionResponseDto.from(request.toEntity(team, teamMember, requestedPosition));
 
     }
 

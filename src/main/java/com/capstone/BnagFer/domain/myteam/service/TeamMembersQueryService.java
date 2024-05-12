@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
-import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;

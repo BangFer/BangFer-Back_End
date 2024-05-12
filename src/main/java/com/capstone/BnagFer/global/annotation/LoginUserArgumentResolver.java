@@ -35,5 +35,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = accountsQueryService.getUserByEmail(((CustomUserDetails)userDetails).getUsername());
         return user;
+
     }
 }

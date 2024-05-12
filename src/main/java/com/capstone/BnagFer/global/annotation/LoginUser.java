@@ -10,5 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Parameter(hidden = true)
+
 public @interface LoginUser {
 }

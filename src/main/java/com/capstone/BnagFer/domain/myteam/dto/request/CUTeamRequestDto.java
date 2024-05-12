@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.myteam.dto;
+package com.capstone.BnagFer.domain.myteam.dto.request;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 
 public record CUTeamRequestDto (String teamName) {

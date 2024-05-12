@@ -56,7 +56,11 @@ public enum ErrorCode implements BaseErrorCode {
     POSITION_CANNOT_BE_DUPLIACTED(HttpStatus.BAD_REQUEST, "TEAMMEMBER407", "포지션은 중복될 수 없습니다."),
     POSITION_ALREADY_DEALLOCATED(HttpStatus.BAD_REQUEST, "TEAMMEMBER408", "이미 포지션이 할당 해제되었습니다."),
     CANNOT_ALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER409", "포지션 할당 권한이 없습니다."),
-    CANNOT_DEALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER410", "포지션 할당 해제 권한이 없습니다.");
+    CANNOT_DEALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER410", "포지션 할당 해제 권한이 없습니다."),
+    //CALENDAR_EVENT 관련 에러
+    MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
+    MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

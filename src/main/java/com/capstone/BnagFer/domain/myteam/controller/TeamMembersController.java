@@ -1,9 +1,9 @@
 package com.capstone.BnagFer.domain.myteam.controller;
 
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberPositionResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMemberRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.TeamMembersResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
+import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
+import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersService;
 import com.capstone.BnagFer.global.common.ApiResponse;
@@ -44,7 +44,6 @@ public class TeamMembersController {
     }
 
     @DeleteMapping("/position/{teamId}/{memberId}")
-
     public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, Long memberId) {
         teamMembersService.deallocatePosition(teamId, memberId);
         return ApiResponse.noContent();
