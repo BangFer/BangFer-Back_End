@@ -40,6 +40,7 @@ public class Profile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender; // MALE | FEMALE
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", unique = true)
     private User user;
