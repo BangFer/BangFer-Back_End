@@ -22,7 +22,7 @@ public class ProfileService {
     private final UserJpaRepository userJpaRepository;
 
     public ProfileResponseDto createProfile(CreateProfileRequestDto requestDto, User user) {
-        Profile profile = requestDto.toEntity();
+        Profile profile = requestDto.toEntity(user);
         // 닉네임 이미 존재
         if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
             throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
@@ -32,8 +32,6 @@ public class ProfileService {
         if (profileJpaRepository.existsByUser(user)) {
             throw new ProfileExceptionHandler(ErrorCode.PROFILE_ALREADY_EXIST);
         }
-
-        profile.setUser(user);
 
         return ProfileResponseDto.from(profileJpaRepository.save(profile), user);
     }
