@@ -1,13 +1,11 @@
 package com.capstone.BnagFer.global.annotation;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
-import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
-import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
+import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -20,8 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Transactional
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtProvider jwtProvider;
-    private final UserJpaRepository userJpaRepository;
+    private final AccountsQueryService accountsQueryService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -34,11 +31,10 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public Object resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = jwtProvider.resolveAccessToken(httpServletRequest);
-        String email = jwtProvider.getUserEmail(token);
-        return userJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new SecurityCustomException(TokenErrorCode.TOKEN_NOT_FOUND));
+                                  WebDataBinderFactory binderFactory) {
+        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = accountsQueryService.getUserByEmail(((CustomUserDetails)userDetails).getUsername());
+        return user;
+
     }
 }
