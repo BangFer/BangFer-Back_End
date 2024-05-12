@@ -51,7 +51,7 @@ public class User extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isStaff;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     private Profile profile;
 
     @Column(length = 100) // provider 추가 (kakao)
@@ -68,16 +68,7 @@ public class User extends BaseEntity {
     private List<Team> team;
 
     @OneToMany(mappedBy = "user")
-    private List<TeamMember> teamMember;
-
-    @OneToMany(mappedBy = "user")
     private List<Tactic> tactics;
-
-    @OneToMany(mappedBy = "user")
-    private List<TacticComment> tacticComments;
-
-    @OneToMany(mappedBy = "user")
-    private List<TacticLike> tacticLikes;
 
     public void setPassword(String pw) {
         password = pw;
