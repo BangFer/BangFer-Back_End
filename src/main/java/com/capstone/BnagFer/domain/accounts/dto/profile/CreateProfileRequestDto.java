@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.accounts.dto.profile;
 
 import com.capstone.BnagFer.domain.accounts.entity.Gender;
 import com.capstone.BnagFer.domain.accounts.entity.Profile;
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -20,12 +21,13 @@ public record CreateProfileRequestDto(
 
         Gender gender
 ) {
-        public Profile toEntity() {
+        public Profile toEntity(User user) {
                 return Profile.builder()
                         .nickname(nickname)
                         .description(description)
                         .dateOfBirth(dateOfBirth)
                         .gender(gender)
+                        .user(user)
                         .build();
         }
 }
