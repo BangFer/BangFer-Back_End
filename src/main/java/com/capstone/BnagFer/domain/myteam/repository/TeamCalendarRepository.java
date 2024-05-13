@@ -11,9 +11,12 @@ import java.util.List;
 
 @Repository
 public interface TeamCalendarRepository extends JpaRepository<CalendarEvent, Long> {
-    @Query("select c " +
-            "from CalendarEvent c " +
-            "where c.team = :team")
+//    @Query("select c " +
+//            "from CalendarEvent c " +
+//            "where c.team = :team")
+//    List<CalendarEvent> findByTeam(@Param("team") Team team);
+
+    @Query("select c from CalendarEvent c join fetch c.team t where c.team = :team")
     List<CalendarEvent> findByTeam(@Param("team") Team team);
 
     boolean existsByTeamAndId(Team team, Long id);

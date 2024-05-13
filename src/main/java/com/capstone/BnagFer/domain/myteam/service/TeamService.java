@@ -26,10 +26,8 @@ public class TeamService {
         Team team = request.toEntity();
         team.updateLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
-
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(team.getLeader());
-
         teamMember.updateUserRoleAndTeam(user, team);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
