@@ -1,9 +1,8 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseDto;
-import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamTacticQueryService {
-    private final AccountsServiceUtils accountsServiceUtils;
-    private final TeamRepository teamRepository;
+
+    private final AccountsCommonService accountsCommonService;
+
     public List<CreateTeamTacticResponseDto.MyTacticList> getMyTacticList(){
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         List<Tactic> tactics = user.getTactics();
         return CreateTeamTacticResponseDto.MyTacticList.from(tactics);
     }

@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class AccountsServiceUtils {
+public class AccountsCommonService {
+
     private final UserJpaRepository userRepository;
+
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName(); // 현재 로그인한 사용자의 이메일
@@ -25,5 +27,11 @@ public class AccountsServiceUtils {
     public void checkUserProfile(User user) {
         if (user.getProfile() == null)
             throw new AccountsExceptionHandler(ErrorCode.PROFILE_NOT_EXIST);
+    }
+
+    public void validateStaffAccess(User user) {
+        if (!user.getIsStaff()) {
+            throw new AccountsExceptionHandler(ErrorCode.USER_IS_NOT_STAFF);
+        }
     }
 }

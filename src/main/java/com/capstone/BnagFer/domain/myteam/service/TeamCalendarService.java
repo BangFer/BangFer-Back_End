@@ -2,7 +2,7 @@ package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamCalendarResponseDto;
@@ -21,11 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class TeamCalendarService {
+
     private final TeamCalendarRepository teamCalendarRepository;
     private final TeamRepository teamRepository;
-    private final  AccountsServiceUtils accountsServiceUtils;
+    private final AccountsCommonService accountsCommonService;
+
     public TeamCalendarResponseDto createMatchEvent(Long teamId, TeamCalendarRequestDto request) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         if(user.getId().equals(team.getLeader().getId())) {
             CalendarEvent calendarEvent = request.toEntity(team);
@@ -38,7 +40,7 @@ public class TeamCalendarService {
     }
 
     public TeamCalendarResponseDto updateMatchEvent(UpdateTeamCalendarRequestDto request, Long calendarId) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
         if(user.getId().equals(event.getTeam().getLeader().getId())) {
             event.updateMatchInfo(request);
@@ -51,7 +53,7 @@ public class TeamCalendarService {
     }
 
     public void deleteMatchEvent(Long calendarId) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
         if(user.getId().equals(event.getTeam().getLeader().getId())) {
             teamCalendarRepository.deleteById(calendarId);

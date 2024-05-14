@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamQueryService {
-    private final AccountsServiceUtils accountsServiceUtils;
+    private final AccountsCommonService accountsCommonService;
     private final TeamRepository teamRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
@@ -23,7 +23,7 @@ public class TeamQueryService {
         return GetTeamResponseDto.from(team);
     }
     public List<GetTeamResponseDto.TeamList> getMyTeamList() {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         List<Team> teams = user.getTeam();
         return GetTeamResponseDto.TeamList.from(teams);
     }
