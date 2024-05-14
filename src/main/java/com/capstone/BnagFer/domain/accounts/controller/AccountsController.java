@@ -115,7 +115,7 @@ public class AccountsController {
     }
 
     @PostMapping("/email/verify")
-    public ApiResponse<String> verifyCode(@RequestBody EmailVerifyDto requestDto) {
+    public ApiResponse<String> verifyCode(@Valid @RequestBody EmailVerifyDto requestDto) {
         boolean check = emailService.verifyCode(requestDto);
         if (check) {
             return ApiResponse.onSuccess("인증 완료!");
