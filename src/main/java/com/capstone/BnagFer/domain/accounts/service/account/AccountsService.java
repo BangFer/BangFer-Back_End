@@ -172,7 +172,7 @@ public class AccountsService {
     @Scheduled(cron = "0 0 0 * * ?")
     public void purgeDeletedUsers() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
-        userJpaRepository.deleteByDeletedIsTrueAndDeletedAtBefore(thirtyDaysAgo);
+        userJpaRepository.deleteInactiveUsers(thirtyDaysAgo);
     }
 
     public void recoverAccount(String email) {
