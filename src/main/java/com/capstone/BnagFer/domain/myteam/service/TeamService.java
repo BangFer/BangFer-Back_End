@@ -1,7 +1,7 @@
 
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsCommonService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.CUTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;

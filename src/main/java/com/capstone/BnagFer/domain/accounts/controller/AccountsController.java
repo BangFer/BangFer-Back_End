@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.controller;
 
-import com.capstone.BnagFer.domain.accounts.dto.*;
+import com.capstone.BnagFer.domain.accounts.dto.account.*;
 import com.capstone.BnagFer.domain.accounts.dto.email.EmailVerifyDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
@@ -9,9 +9,9 @@ import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
-import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
-import com.capstone.BnagFer.domain.accounts.service.AccountsService;
-import com.capstone.BnagFer.domain.accounts.service.KakaoService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsQueryService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsService;
+import com.capstone.BnagFer.domain.accounts.service.account.KakaoService;
 import com.capstone.BnagFer.domain.accounts.service.email.EmailService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;

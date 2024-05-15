@@ -2,7 +2,7 @@ package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.domain.accounts.service.AccountsCommonService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamCalendarResponseDto;

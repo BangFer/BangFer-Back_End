@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.service;
+package com.capstone.BnagFer.domain.accounts.service.account;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;

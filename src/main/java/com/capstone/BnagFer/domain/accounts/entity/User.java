@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
-import com.capstone.BnagFer.domain.accounts.dto.ChangeEmailRequestDto;
+import com.capstone.BnagFer.domain.accounts.dto.account.ChangeEmailRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
