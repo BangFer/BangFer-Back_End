@@ -45,7 +45,7 @@ public class AccountsService {
 
         // 회원 pw 일치 여부
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
-            throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
+            throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_MATCH);
         }
 
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
@@ -103,12 +103,17 @@ public class AccountsService {
         }
     }
 
-    public void changePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
-        if (!requestDto.password().equals(requestDto.passwordCheck())) {
+    public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
+
+        if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
+            throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        if (!requestDto.newPassword().equals(requestDto.passwordCheck())) {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
         }
 
-        user.setPassword(passwordEncoder.encode(requestDto.password()));
+        user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));
         userJpaRepository.save(user);
 
         logout(request);
@@ -122,8 +127,26 @@ public class AccountsService {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
         }
 
-        user.setPassword(passwordEncoder.encode(requestDto.password()));
+        user.updatePassword(passwordEncoder.encode(requestDto.password()));
         userJpaRepository.save(user);
+    }
+
+    public void updateEmail(HttpServletRequest request, User user, ChangeEmailRequestDto requestDto) {
+
+        if (!requestDto.currentEmail().equals(user.getEmail())) {
+            throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_MATCH);
+        }
+
+        // 새 이메일이 이미 사용 중인지 확인
+        if (userJpaRepository.existsByEmail(requestDto.newEmail())) {
+            throw new AccountsExceptionHandler(ErrorCode.EMAIL_ALREADY_EXIST);
+        }
+
+        // 이메일 변경
+        user.updateEmail(requestDto);
+        userJpaRepository.save(user);
+
+        logout(request);
     }
 
     // 회원 soft delete

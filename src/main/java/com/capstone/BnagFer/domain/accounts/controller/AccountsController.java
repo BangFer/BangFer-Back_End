@@ -74,7 +74,7 @@ public class AccountsController {
             @LoginUser User user,
             HttpServletRequest request,
             @Valid @RequestBody ChangePwRequestDto requestDto) {
-        accountsService.changePassword(request, requestDto, user);
+        accountsService.updatePassword(request, requestDto, user);
         return ApiResponse.onSuccess("비밀번호 변경 성공");
     }
 
@@ -83,6 +83,15 @@ public class AccountsController {
             @Valid @RequestBody ForgotPwRequestDto requestDto) {
         accountsService.forgotPassword(requestDto);
         return ApiResponse.onSuccess("비밀번호 변경 성공");
+    }
+
+    @PostMapping("/changeEmail")
+    public ApiResponse<String> changeEmail(
+            @LoginUser User user,
+            HttpServletRequest request,
+            @Valid @RequestBody ChangeEmailRequestDto requestDto) {
+        accountsService.updateEmail(request, user, requestDto);
+        return ApiResponse.onSuccess("이메일 변경 성공");
     }
 
     @GetMapping("/reissue")
