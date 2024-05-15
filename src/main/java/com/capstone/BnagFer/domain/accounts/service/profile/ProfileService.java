@@ -46,13 +46,6 @@ public class ProfileService {
             throw new ProfileExceptionHandler(ErrorCode.PROFILE_AND_USER_NOT_MATCHED);
         }
 
-        // 이메일이 변경된 경우에만 중복 검사 수행
-        if (!requestDto.email().equals(user.getEmail())) {
-            if (userJpaRepository.existsByEmail(requestDto.email())) {
-                throw new ProfileExceptionHandler(ErrorCode.EMAIL_ALREADY_EXIST);
-            }
-        }
-
         if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
             throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
         }
