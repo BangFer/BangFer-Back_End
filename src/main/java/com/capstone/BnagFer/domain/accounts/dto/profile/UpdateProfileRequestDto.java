@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.accounts.dto.profile;
 
 import com.capstone.BnagFer.domain.accounts.entity.Gender;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
