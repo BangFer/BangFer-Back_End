@@ -28,7 +28,6 @@ public class TeamMembersQueryService {
         if(teamMembers.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         }
-
         return teamMembers.stream()
                 .map(TeamMembersResponseDto::from)
                 .toList();

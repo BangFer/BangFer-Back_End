@@ -32,7 +32,6 @@ public class TeamMembersService {
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request, User user) {
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
         //방장이 자기 자신을 초대 못하게 해주는 예외처리
         if (user.getId().equals(invitedUser.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
@@ -42,13 +41,10 @@ public class TeamMembersService {
         if (existingMember != null) {
             throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
         }
-
-
         //팀원 생성
         TeamMember teamMember = request.toEntity(invitedUser, team);
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(teamMember.getUser());
-
         teamMember.updateRole(Role.MEMBER);
         teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);

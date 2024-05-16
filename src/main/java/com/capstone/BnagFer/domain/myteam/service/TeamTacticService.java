@@ -19,25 +19,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamTacticService {
     private final TeamRepository teamRepository;
     private final TacticRepository tacticRepository;
-    private final AccountsServiceUtils accountsServiceUtils;
 
     public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId, User user) {
-        if(user.getId()==null) {
+        if (user.getId() == null) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
+        // 전술 찾기
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-        CreateTeamTacticResponseDto.TacticDto tacticDto = CreateTeamTacticResponseDto.TacticDto.from(tactic);
+        // 팀 찾기
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        team.updateLeaderAndTactic(user, tactic);
-        if(!team.getLeader().getId().equals(user.getId())) {
+        // 사용자 검증 및 전술 업데이트
+        validateAndUpdateTeam(team, user, tactic);
+        // 팀 저장
+        teamRepository.save(team);
+        return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
+    }
+
+    private void validateAndUpdateTeam(Team team, User user, Tactic tactic) {
+        // 팀 리더 검증
+        if (!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
-        if(!user.getTactics().contains(tactic)) {
+        // 사용자 전술 권한 검증
+        if (!user.getTactics().contains(tactic)) {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_ALLOWED);
         }
-
-        else
-            teamRepository.save(team);
-        return CreateTeamTacticResponseDto.from(team, tacticDto);
+        if (!(tactic.getTacticId() == null)) {
+            throw new TacticExceptionHandler(ErrorCode.TACTIC_EXISTS);
+        }
+        // 팀 정보 업데이트
+        team.updateLeaderAndTactic(user, tactic);
     }
 }

@@ -25,9 +25,9 @@ public class TeamService {
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request, User user) {
         Team team = request.toEntity();
         team.updateLeader(user);
-        TeamMember teamMember = TeamMember.createTeamMember();
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(team.getLeader());
+        TeamMember teamMember = TeamMember.createTeamMember();
         teamMember.updateUserRoleAndTeam(user, team);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
@@ -41,12 +41,10 @@ public class TeamService {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         team.updateTeam(request);
-        Team updatedTeam = teamRepository.save(team);
-        return CUTeamResponseDto.from(updatedTeam);
+        return CUTeamResponseDto.from(teamRepository.save(team));
     }
     public void deleteMyTeam(Long teamId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
         //방장만이 강퇴 가능
         if (!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
