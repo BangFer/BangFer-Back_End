@@ -67,8 +67,11 @@ public class TeamController {
     public ApiResponse<List<CreateTeamTacticResponseDto.MyTacticList>> getMyTactic(@LoginUser User user) {
         List<CreateTeamTacticResponseDto.MyTacticList> myTacticList = teamTacticQueryService.getMyTacticList(user);
         return ApiResponse.onSuccess(myTacticList);
+    }
 
-
-
+    @DeleteMapping("/tactic/{teamId}/{tacticId}")
+    public ApiResponse<Object>deallocateMyTactic(@PathVariable Long teamId, Long tacticId, @LoginUser User user) {
+        teamTacticService.deallocateMyTactic(teamId, tacticId, user);
+        return ApiResponse.noContent();
     }
 }

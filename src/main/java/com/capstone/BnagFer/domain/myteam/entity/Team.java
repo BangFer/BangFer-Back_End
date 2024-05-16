@@ -56,4 +56,8 @@ public class Team extends BaseEntity {
     public void updateTeam(CUTeamRequestDto updateDTO) {
         this.teamName = updateDTO.teamName();}
 
+    public void deleteMyTactic() {
+        tactic = null;
+    }
+
 }

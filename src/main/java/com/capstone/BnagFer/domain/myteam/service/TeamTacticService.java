@@ -34,6 +34,22 @@ public class TeamTacticService {
         teamRepository.save(team);
         return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
     }
+    public void deallocateMyTactic(Long teamId, Long tacticId, User user) {
+        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        if (user.getId() == null) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        if (!team.getLeader().getId().equals(user.getId())) {
+            throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+        }
+        if (team.getTactic() != null && team.getTactic().getTacticId().equals(tacticId)) {
+            team.deleteMyTactic();
+            teamRepository.save(team); // Update the team in the database
+        } else {
+            throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND);
+        }
+    }
 
     private void validateAndUpdateTeam(Team team, User user, Tactic tactic) {
         // 팀 리더 검증
