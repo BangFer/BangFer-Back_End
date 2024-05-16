@@ -2,7 +2,7 @@ package com.capstone.BnagFer.global.annotation;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
-import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;

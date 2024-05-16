@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.controller.oauth;
 
-import com.capstone.BnagFer.domain.accounts.service.KakaoService;
+import com.capstone.BnagFer.domain.accounts.service.account.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
