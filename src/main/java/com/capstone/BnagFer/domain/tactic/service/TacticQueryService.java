@@ -27,8 +27,7 @@ public class TacticQueryService {
         return TacticResponse.TacticList.from(tactics);
     }
 
-    public List<TacticResponse.TacticList> getUserTactics() {
-        User user = accountsServiceUtils.getCurrentUser();
+    public List<TacticResponse.TacticList> getUserTactics(User user) {
         List<Tactic> tactics = user.getTactics();
         return TacticResponse.TacticList.from(tactics);
     }
