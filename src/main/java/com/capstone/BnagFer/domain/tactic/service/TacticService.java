@@ -52,7 +52,7 @@ public class TacticService {
         if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tactic.updateTactic(user, request);
+        tactic.updateTactic(request);
         Tactic updatedTactic = tacticRepository.saveAndFlush(tactic);
         return TacticResponse.from(updatedTactic);
     }
@@ -91,7 +91,7 @@ public class TacticService {
         if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
-        tacticComment.updateComment(user, request);
+        tacticComment.updateComment(request);
         TacticComment updateComment = commentRepository.save(tacticComment);
         return CommentResponse.from(updateComment);
 

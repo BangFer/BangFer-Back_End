@@ -28,8 +28,7 @@ public class TacticComment extends BaseEntity {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    public void updateComment(User users, CommentUpdateRequest request){
-        user = users;
+    public void updateComment(CommentUpdateRequest request){
         comment = request.comment();
     }
 }

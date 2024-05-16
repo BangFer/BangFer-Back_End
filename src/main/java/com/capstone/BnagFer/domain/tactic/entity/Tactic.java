@@ -85,9 +85,8 @@ public class Tactic extends BaseEntity {
         defenseDetails = tactic.getDefenseDetails();
     }
 
-    public void updateTactic(User users, TacticUpdateRequest request){
+    public void updateTactic(TacticUpdateRequest request){
         tacticName = request.tacticName();
-        user = users;
         anonymous = request.anonymous();
         famousCoachName = request.famousCoachName();
         mainFormation = request.mainFormation();
