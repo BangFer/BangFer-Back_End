@@ -88,6 +88,13 @@ public class TacticController {
         return ApiResponse.noContent();
     }
 
+    // 전술 게시물 포지션 디테일 설명 추가하기
+    @PostMapping("/{tacticId}/positionDetail")
+    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId, @RequestBody DetailCreateRequest request, @LoginUser User user) {
+        DetailResponse detailResponse = tacticService.createDetail(tacticId, request, user);
+        return ApiResponse.onSuccess(detailResponse);
+    }
+
     // 좋아요 누르기 및 취소하기
     @PostMapping("/{tacticId}/like")
     public ApiResponse<Object> likeToggle(@PathVariable Long tacticId, @LoginUser User user) {

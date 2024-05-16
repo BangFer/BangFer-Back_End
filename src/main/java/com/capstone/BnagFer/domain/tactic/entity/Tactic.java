@@ -66,6 +66,10 @@ public class Tactic extends BaseEntity {
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
+    private List<TacticPositionDetail> tacticPositionDetails = new ArrayList<TacticPositionDetail>();
+
+    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TacticLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)

@@ -6,9 +6,11 @@ import com.capstone.BnagFer.domain.tactic.dto.*;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
 import com.capstone.BnagFer.domain.tactic.entity.TacticLike;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.CommentRepository;
 import com.capstone.BnagFer.domain.tactic.repository.LikeRepository;
+import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
@@ -25,6 +27,7 @@ public class TacticService {
     private final TacticRepository tacticRepository;
     private final AccountsServiceUtils accountsServiceUtils;
     private final CommentRepository commentRepository;
+    private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
@@ -104,6 +107,18 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
+    }
+
+    public DetailResponse createDetail(Long tacticId, DetailCreateRequest request, User user){
+        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        TacticPositionDetail tacticPositionDetail = request.toEntity(tactic);
+
+        // 프로필 존재 확인
+        accountsServiceUtils.checkUserProfile(user);
+        tacticPositionDetailRepository.save(tacticPositionDetail);
+
+        return DetailResponse.from(tacticPositionDetail);
     }
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
