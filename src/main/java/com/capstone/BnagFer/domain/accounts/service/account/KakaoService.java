@@ -1,8 +1,8 @@
-package com.capstone.BnagFer.domain.accounts.service;
+package com.capstone.BnagFer.domain.accounts.service.account;
 
-import com.capstone.BnagFer.domain.accounts.dto.UserLoginResponseDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupRequestDto;
-import com.capstone.BnagFer.domain.accounts.dto.UserSignupResponseDto;
+import com.capstone.BnagFer.domain.accounts.dto.account.UserLoginResponseDto;
+import com.capstone.BnagFer.domain.accounts.dto.account.UserSignupRequestDto;
+import com.capstone.BnagFer.domain.accounts.dto.account.UserSignupResponseDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.KakaoProfile;
 import com.capstone.BnagFer.domain.accounts.dto.social.RetKakaoOAuth;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
