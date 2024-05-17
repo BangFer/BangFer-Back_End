@@ -1,7 +1,9 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public record TacticDetailResponse(
         String attackDetails,
         String defenseDetails,
         List<CommentList> comments,
+        List<DetailList> detailpositions,
         int likeCnt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -42,6 +45,7 @@ public record TacticDetailResponse(
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
                 .comments(CommentList.from(tactic.getComments()))
+                .detailpositions(DetailList.from(tactic.getTacticPositionDetails()))
                 .likeCnt(tactic.getLikes().size())
                 .createdAt(tactic.getCreatedAt())
                 .updatedAt(tactic.getUpdatedAt())
@@ -70,6 +74,26 @@ public record TacticDetailResponse(
         }
         public static List<CommentList> from(List<TacticComment> comments){
             return comments.stream().map(CommentList::from).collect(Collectors.toList());
+        }
+    }
+
+    @Builder
+    public record DetailList(
+            Long detailId,
+            Long tacticId,
+            Position position,
+            String positionDescription
+    ){
+        public static DetailList from(TacticPositionDetail tacticPositionDetail){
+            return DetailList.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .tacticId(tacticPositionDetail.getTactic().getTacticId())
+                    .position(tacticPositionDetail.getPosition())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+        public static List<DetailList> from(List<TacticPositionDetail> details){
+            return details.stream().map(DetailList::from).collect(Collectors.toList());
         }
     }
 }
