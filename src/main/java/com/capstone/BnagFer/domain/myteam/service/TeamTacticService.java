@@ -60,9 +60,6 @@ public class TeamTacticService {
         if (!user.getTactics().contains(tactic)) {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_ALLOWED);
         }
-        if (!(tactic.getTacticId() == null)) {
-            throw new TacticExceptionHandler(ErrorCode.TACTIC_EXISTS);
-        }
         // 팀 정보 업데이트
         team.updateLeaderAndTactic(user, tactic);
     }
