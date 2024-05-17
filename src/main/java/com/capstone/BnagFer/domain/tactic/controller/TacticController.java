@@ -42,14 +42,14 @@ public class TacticController {
 
     // 전술 게시물 생성
     @PostMapping
-    public ApiResponse<TacticResponse> createTactic(@RequestBody TacticCreateRequest request, @LoginUser User user){
+    public ApiResponse<TacticResponse> createTactic( @Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
         TacticResponse tacticDetail = tacticService.createTactic(request, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
     // 자신의 전술 게시물 수정
     @PutMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> updateTactic(@PathVariable Long tacticId, @RequestBody TacticUpdateRequest request, @LoginUser User user) {
+    public ApiResponse<TacticResponse> updateTactic(@PathVariable Long tacticId,  @Valid @RequestBody TacticUpdateRequest request, @LoginUser User user) {
         TacticResponse tacticDetail = tacticService.updateTactic(tacticId, request, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
@@ -70,14 +70,14 @@ public class TacticController {
 
     // 전술 게시물에 댓글 달기
     @PostMapping("/{tacticId}/comment")
-    public ApiResponse<CommentResponse> createComment(@PathVariable Long tacticId, @RequestBody CommentCreateRequest request, @LoginUser User user) {
+    public ApiResponse<CommentResponse> createComment(@PathVariable Long tacticId,  @Valid @RequestBody CommentCreateRequest request, @LoginUser User user) {
         CommentResponse commentDetail = tacticService.createComment(tacticId, request, user);
         return ApiResponse.onSuccess(commentDetail);
     }
 
     // 전술 게시물 댓글 수정
     @PutMapping("/comment/{commentId}")
-    public ApiResponse<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest request, @LoginUser User user) {
+    public ApiResponse<CommentResponse> updateComment(@PathVariable Long commentId,  @Valid @RequestBody CommentUpdateRequest request, @LoginUser User user) {
         CommentResponse commentDetail = tacticService.updateComment(commentId, request, user);
         return ApiResponse.onSuccess(commentDetail);
     }
@@ -91,14 +91,14 @@ public class TacticController {
 
     // 전술 게시물 포지션 디테일 설명 추가하기
     @PostMapping("/{tacticId}/positionDetail")
-    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId, @RequestBody DetailCreateRequest request) {
+    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId,  @Valid @RequestBody DetailCreateRequest request) {
         DetailResponse detailResponse = tacticService.createDetail(tacticId, request);
         return ApiResponse.onSuccess(detailResponse);
     }
 
     // 전술 게시물 포지션 디테일 수정
     @PutMapping("/positionDetail/{detailId}")
-    public ApiResponse<DetailResponse> updateDetail(@PathVariable Long detailId, @RequestBody DetailUpdateRequest request, @LoginUser User user) {
+    public ApiResponse<DetailResponse> updateDetail(@PathVariable Long detailId,  @Valid @RequestBody DetailUpdateRequest request, @LoginUser User user) {
         DetailResponse detailResponse = tacticService.updateDetail(detailId, request, user);
         return ApiResponse.onSuccess(detailResponse);
     }
