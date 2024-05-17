@@ -40,9 +40,11 @@ public class TacticController {
         return ApiResponse.onSuccess(userTacticLists);
     }
 
+
+
     // 전술 게시물 생성
     @PostMapping
-    public ApiResponse<TacticResponse> createTactic( @Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
+    public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
         TacticResponse tacticDetail = tacticService.createTactic(request, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
@@ -87,20 +89,6 @@ public class TacticController {
     public ApiResponse<Object> deleteComment(@PathVariable Long commentId, @LoginUser User user){
         tacticService.deleteComment(commentId, user);
         return ApiResponse.noContent();
-    }
-
-    // 전술 게시물 포지션 디테일 설명 추가하기
-    @PostMapping("/{tacticId}/positionDetail")
-    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId,  @Valid @RequestBody DetailCreateRequest request) {
-        DetailResponse detailResponse = tacticService.createDetail(tacticId, request);
-        return ApiResponse.onSuccess(detailResponse);
-    }
-
-    // 전술 게시물 포지션 디테일 수정
-    @PutMapping("/positionDetail/{detailId}")
-    public ApiResponse<DetailResponse> updateDetail(@PathVariable Long detailId,  @Valid @RequestBody DetailUpdateRequest request, @LoginUser User user) {
-        DetailResponse detailResponse = tacticService.updateDetail(detailId, request, user);
-        return ApiResponse.onSuccess(detailResponse);
     }
 
     // 포지션 디테일 삭제

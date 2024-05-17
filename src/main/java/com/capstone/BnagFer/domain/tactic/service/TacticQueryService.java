@@ -1,11 +1,11 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
+import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TacticQueryService {
 
-    private final AccountsServiceUtils accountsServiceUtils;
     private final TacticRepository tacticRepository;
+    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
     public List<TacticResponse.TacticList> getTactics() {
         List<Tactic> tactics = tacticRepository.findAllByAnonymousFalse();
@@ -36,4 +36,6 @@ public class TacticQueryService {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         return TacticDetailResponse.from(tactic);
     }
+
+
 }

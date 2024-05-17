@@ -37,6 +37,11 @@ public class TacticService {
         accountsServiceUtils.checkUserProfile(user);
         tacticRepository.save(tactic);
 
+        for(DetailCreateRequest detailRequest : request.positionDetails()){
+            TacticPositionDetail detail = detailRequest.toEntity(tactic);
+            tacticPositionDetailRepository.save(detail);
+        }
+
         return TacticResponse.from(tactic);
     }
 
@@ -57,6 +62,14 @@ public class TacticService {
 
         tactic.updateTactic(request);
         Tactic updatedTactic = tacticRepository.saveAndFlush(tactic);
+
+        tacticPositionDetailRepository.deleteByTactic_TacticId(tacticId);
+
+        for(DetailCreateRequest detailRequest : request.positionDetails()){
+            TacticPositionDetail detail = detailRequest.toEntity(tactic);
+            tacticPositionDetailRepository.save(detail);
+        }
+
         return TacticResponse.from(updatedTactic);
     }
 
@@ -107,16 +120,6 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
-    }
-
-    public DetailResponse createDetail(Long tacticId, DetailCreateRequest request){
-        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-
-        TacticPositionDetail tacticPositionDetail = request.toEntity(tactic);
-
-        tacticPositionDetailRepository.save(tacticPositionDetail);
-
-        return DetailResponse.from(tacticPositionDetail);
     }
 
     public DetailResponse updateDetail(Long detailId, DetailUpdateRequest request, User user) {
