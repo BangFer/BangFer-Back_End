@@ -63,8 +63,6 @@ public class TeamController {
     public ApiResponse<List<CreateTeamTacticResponseDto.MyTacticList>> getMyTactic() {
         List<CreateTeamTacticResponseDto.MyTacticList> myTacticList = teamTacticQueryService.getMyTacticList();
         return ApiResponse.onSuccess(myTacticList);
-
-
-
     }
+
 }
