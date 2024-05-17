@@ -10,6 +10,7 @@ import com.capstone.BnagFer.domain.myteam.service.TeamTacticQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamTacticService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +39,13 @@ public class TeamController {
     }
 
     @PostMapping
-    public ApiResponse<CUTeamResponseDto> createMyTeam(@RequestBody CUTeamRequestDto request, @LoginUser User user) {
+    public ApiResponse<CUTeamResponseDto> createMyTeam(@RequestBody @Valid CUTeamRequestDto request, @LoginUser User user) {
         CUTeamResponseDto myTeam = teamService.createMyTeam(request, user);
         return ApiResponse.onSuccess(myTeam);
     }
 
     @PutMapping("/{teamId}")
-    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable Long teamId, @RequestBody CUTeamRequestDto request,
+    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable Long teamId, @RequestBody @Valid CUTeamRequestDto request,
                                                        @LoginUser User user) {
         CUTeamResponseDto updatedTeam = teamService.updateMyTeam(request, teamId, user);
         return ApiResponse.onSuccess(updatedTeam);

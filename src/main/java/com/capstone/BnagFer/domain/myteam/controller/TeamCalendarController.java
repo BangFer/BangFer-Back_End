@@ -8,6 +8,7 @@ import com.capstone.BnagFer.domain.myteam.service.TeamCalendarQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamCalendarService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class TeamCalendarController {
     private final TeamCalendarQueryService teamCalendarQueryService;
 
     @PostMapping("/{teamId}")
-    public ApiResponse<TeamCalendarResponseDto> createEvent(@PathVariable Long teamId, @RequestBody TeamCalendarRequestDto request ,
+    public ApiResponse<TeamCalendarResponseDto> createEvent(@PathVariable Long teamId, @RequestBody @Valid TeamCalendarRequestDto request ,
                                                             @LoginUser User user) {
         TeamCalendarResponseDto myEvent = teamCalendarService.createMatchEvent(teamId, request, user);
         return ApiResponse.onSuccess(myEvent);
@@ -41,7 +42,7 @@ public class TeamCalendarController {
 
 
     @PutMapping("/{calendarId}")
-    public ApiResponse<TeamCalendarResponseDto> updateEvent(@PathVariable Long calendarId, @RequestBody UpdateTeamCalendarRequestDto request,
+    public ApiResponse<TeamCalendarResponseDto> updateEvent(@PathVariable Long calendarId, @RequestBody @Valid UpdateTeamCalendarRequestDto request,
                                                             @LoginUser User user) {
         TeamCalendarResponseDto myEvent = teamCalendarService.updateMatchEvent(request, calendarId, user);
         return ApiResponse.onSuccess(myEvent);

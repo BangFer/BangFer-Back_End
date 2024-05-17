@@ -9,6 +9,7 @@ import com.capstone.BnagFer.domain.myteam.service.TeamMembersQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class TeamMembersController {
     }
 
     @PostMapping("/invite")
-    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody TeamMemberRequestDto request, @LoginUser User user) {
+    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody @Valid TeamMemberRequestDto request, @LoginUser User user) {
         TeamMembersResponseDto myTeam = teamMembersService.addTeamMembers(request, user);
         return ApiResponse.onSuccess(myTeam);
     }
@@ -40,7 +41,7 @@ public class TeamMembersController {
     }
 
     @PostMapping("/position")
-    public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody TeamMemberPositionRequestDto request, @LoginUser User user) {
+    public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody @Valid TeamMemberPositionRequestDto request, @LoginUser User user) {
         TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request, user);
         return ApiResponse.onSuccess(position);
     }
