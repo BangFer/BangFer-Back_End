@@ -4,9 +4,10 @@ import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record DetailCreateRequest(
-        @NotBlank(message = "[ERROR] 포지션 할당은 필수입니다.")
+        @NotNull(message = "[ERROR] 포지션 할당은 필수입니다.")
         Position position,
         String positionDescription
 ){
