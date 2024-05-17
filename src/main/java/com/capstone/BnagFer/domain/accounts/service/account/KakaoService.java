@@ -11,6 +11,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
+import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ public class KakaoService {
     private final AccountsService accountsService;
     private final JwtProvider jwtProvider;
     private final UserJpaRepository userJpaRepository;
+    private final RedisUtil redisUtil;
 
     @Value("${spring.url.base}")
     private String baseUrl;
@@ -130,6 +132,8 @@ public class KakaoService {
 
 //        String kakaoEmail = kakaoProfile.getKakao_account().getEmail();
 //        if (kakaoEmail == null) throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
+
+        redisUtil.saveFCMToken(requestDto.email(), requestDto.fcmToken());
 
         User user = userJpaRepository.findByEmailAndProvider(requestDto.email(), "kakao")
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
