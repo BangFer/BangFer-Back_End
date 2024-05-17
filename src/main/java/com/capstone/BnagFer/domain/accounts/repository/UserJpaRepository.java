@@ -2,6 +2,8 @@ package com.capstone.BnagFer.domain.accounts.repository;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,5 +16,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmailAndProvider(String email, String provider);
 
-    void deleteByDeletedIsTrueAndDeletedAtBefore(LocalDateTime dateTime);
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.deleted = TRUE AND u.deletedAt < :dateTime")
+    void deleteInactiveUsers(LocalDateTime dateTime);
 }

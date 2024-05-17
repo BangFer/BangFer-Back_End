@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.controller;
 
-import com.capstone.BnagFer.domain.accounts.dto.*;
+import com.capstone.BnagFer.domain.accounts.dto.account.*;
 import com.capstone.BnagFer.domain.accounts.dto.email.EmailVerifyDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialLoginRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.social.UserSocialSignupRequestDto;
@@ -9,9 +9,9 @@ import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
-import com.capstone.BnagFer.domain.accounts.service.AccountsQueryService;
-import com.capstone.BnagFer.domain.accounts.service.AccountsService;
-import com.capstone.BnagFer.domain.accounts.service.KakaoService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsQueryService;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsService;
+import com.capstone.BnagFer.domain.accounts.service.account.KakaoService;
 import com.capstone.BnagFer.domain.accounts.service.email.EmailService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
@@ -74,7 +74,7 @@ public class AccountsController {
             @LoginUser User user,
             HttpServletRequest request,
             @Valid @RequestBody ChangePwRequestDto requestDto) {
-        accountsService.changePassword(request, requestDto, user);
+        accountsService.updatePassword(request, requestDto, user);
         return ApiResponse.onSuccess("비밀번호 변경 성공");
     }
 
@@ -83,6 +83,15 @@ public class AccountsController {
             @Valid @RequestBody ForgotPwRequestDto requestDto) {
         accountsService.forgotPassword(requestDto);
         return ApiResponse.onSuccess("비밀번호 변경 성공");
+    }
+
+    @PostMapping("/changeEmail")
+    public ApiResponse<String> changeEmail(
+            @LoginUser User user,
+            HttpServletRequest request,
+            @Valid @RequestBody ChangeEmailRequestDto requestDto) {
+        accountsService.updateEmail(request, user, requestDto);
+        return ApiResponse.onSuccess("이메일 변경 성공");
     }
 
     @GetMapping("/reissue")
@@ -115,7 +124,7 @@ public class AccountsController {
     }
 
     @PostMapping("/email/verify")
-    public ApiResponse<String> verifyCode(@RequestBody EmailVerifyDto requestDto) {
+    public ApiResponse<String> verifyCode(@Valid @RequestBody EmailVerifyDto requestDto) {
         boolean check = emailService.verifyCode(requestDto);
         if (check) {
             return ApiResponse.onSuccess("인증 완료!");

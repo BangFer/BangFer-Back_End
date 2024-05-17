@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.dto;
+package com.capstone.BnagFer.domain.accounts.dto.account;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import lombok.Builder;

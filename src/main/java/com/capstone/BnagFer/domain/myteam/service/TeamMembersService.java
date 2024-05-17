@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
@@ -25,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TeamMembersService {
 
-    private final AccountsServiceUtils accountsServiceUtils;
+    private final AccountsCommonService accountsCommonService;
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
 
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
@@ -49,7 +49,7 @@ public class TeamMembersService {
         //팀원 생성
         TeamMember teamMember = request.toEntity(invitedUser, team);
         // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(teamMember.getUser());
+        accountsCommonService.checkUserProfile(teamMember.getUser());
 
         teamMember.updateRole(Role.MEMBER);
         teamMembersRepository.save(teamMember);
@@ -57,11 +57,11 @@ public class TeamMembersService {
     }
 
     public void kickOutMembers(Long memberId) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(teamMember.getUser());
+        accountsCommonService.checkUserProfile(teamMember.getUser());
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
         if (user.getId().equals(memberId)) {
             throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
@@ -77,7 +77,7 @@ public class TeamMembersService {
     }
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
@@ -105,7 +105,7 @@ public class TeamMembersService {
     }
 
     public void deallocatePosition(Long teamId, Long memberId) {
-        User user = accountsServiceUtils.getCurrentUser();
+        User user = accountsCommonService.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
