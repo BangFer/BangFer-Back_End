@@ -109,13 +109,11 @@ public class TacticService {
         commentRepository.deleteById(commentId);
     }
 
-    public DetailResponse createDetail(Long tacticId, DetailCreateRequest request, User user){
+    public DetailResponse createDetail(Long tacticId, DetailCreateRequest request){
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         TacticPositionDetail tacticPositionDetail = request.toEntity(tactic);
 
-        // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(user);
         tacticPositionDetailRepository.save(tacticPositionDetail);
 
         return DetailResponse.from(tacticPositionDetail);

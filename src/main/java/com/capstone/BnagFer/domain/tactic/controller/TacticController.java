@@ -6,6 +6,7 @@ import com.capstone.BnagFer.domain.tactic.service.TacticQueryService;
 import com.capstone.BnagFer.domain.tactic.service.TacticService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,8 +91,8 @@ public class TacticController {
 
     // 전술 게시물 포지션 디테일 설명 추가하기
     @PostMapping("/{tacticId}/positionDetail")
-    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId, @RequestBody DetailCreateRequest request, @LoginUser User user) {
-        DetailResponse detailResponse = tacticService.createDetail(tacticId, request, user);
+    public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId, @RequestBody DetailCreateRequest request) {
+        DetailResponse detailResponse = tacticService.createDetail(tacticId, request);
         return ApiResponse.onSuccess(detailResponse);
     }
 
