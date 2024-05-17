@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 @Builder
 public record CommentResponseDto(
         Long id,
-        Long commentWriterId,
-        Long boardWriterId,
+        Long boardId,
+        Long userId,
+        String nickName,
         String commentText,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -16,8 +17,8 @@ public record CommentResponseDto(
     public static CommentResponseDto from(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .commentWriterId(comment.getUser().getId())
-                .boardWriterId(comment.getBoard().getUser().getId())
+                .boardId(comment.getBoard().getId())
+                .userId(comment.getUser().getId())
                 .commentText(comment.getCommentText())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())

@@ -1,11 +1,13 @@
 package com.capstone.BnagFer.domain.board.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,4 +36,17 @@ public class Board extends BaseEntity {
 
     @Column(name = "board_content", nullable = false)
     private String boardContent;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Like> likes = new ArrayList<>();
+
+    public void updateBoard(BoardRequestDto request) {
+        boardTitle = request.boardTitle();
+        boardContent = request.boardContent();
+    }
+    public void initializeLike() {
+        //NullPointerException 방지를 위한 좋아요 초기화
+        likes = new ArrayList<>();
+    }
 }

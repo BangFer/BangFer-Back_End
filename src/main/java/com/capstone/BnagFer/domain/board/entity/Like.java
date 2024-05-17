@@ -22,4 +22,12 @@ public class Like extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public Like(User likedUser, Board likedBoard) {
+        user = likedUser;
+        board = likedBoard;
+
+
+
+    }
 }

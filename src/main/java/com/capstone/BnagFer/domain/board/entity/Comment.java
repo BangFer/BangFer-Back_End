@@ -27,4 +27,9 @@ public class Comment extends BaseEntity {
 
     @Column(name = "comment_text", nullable = false)
     private String commentText;
+
+    @Column(name = "comment_count", nullable = false)
+    private int commentCount;
+
+
 }

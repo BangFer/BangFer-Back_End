@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.tactic.dto;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
