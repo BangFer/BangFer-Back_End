@@ -121,6 +121,27 @@ public class TacticService {
         return DetailResponse.from(tacticPositionDetail);
     }
 
+    public DetailResponse updateDetail(Long detailId, DetailUpdateRequest request, User user) {
+        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(detailId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
+
+        if(!tacticPositionDetail.getTactic().getUser().getId().equals(user.getId()))
+            throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+
+        tacticPositionDetail.updateDetail(request);
+        TacticPositionDetail updateDetail = tacticPositionDetailRepository.save(tacticPositionDetail);
+        return DetailResponse.from(updateDetail);
+
+    }
+
+    public void deleteDetail(Long detailId, User user) {
+        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(detailId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
+
+        if(!tacticPositionDetail.getTactic().getUser().getId().equals(user.getId()))
+            throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
+
+        tacticPositionDetailRepository.deleteById(detailId);
+    }
+
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 

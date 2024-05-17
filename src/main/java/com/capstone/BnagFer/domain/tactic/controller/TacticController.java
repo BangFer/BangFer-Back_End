@@ -74,7 +74,7 @@ public class TacticController {
         return ApiResponse.onSuccess(commentDetail);
     }
 
-    // 전술 게시물 댓글 조희
+    // 전술 게시물 댓글 수정
     @PutMapping("/comment/{commentId}")
     public ApiResponse<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest request, @LoginUser User user) {
         CommentResponse commentDetail = tacticService.updateComment(commentId, request, user);
@@ -93,6 +93,20 @@ public class TacticController {
     public ApiResponse<DetailResponse> createDetail(@PathVariable Long tacticId, @RequestBody DetailCreateRequest request, @LoginUser User user) {
         DetailResponse detailResponse = tacticService.createDetail(tacticId, request, user);
         return ApiResponse.onSuccess(detailResponse);
+    }
+
+    // 전술 게시물 포지션 디테일 수정
+    @PutMapping("/positionDetail/{detailId}")
+    public ApiResponse<DetailResponse> updateDetail(@PathVariable Long detailId, @RequestBody DetailUpdateRequest request, @LoginUser User user) {
+        DetailResponse detailResponse = tacticService.updateDetail(detailId, request, user);
+        return ApiResponse.onSuccess(detailResponse);
+    }
+
+    // 포지션 디테일 삭제
+    @DeleteMapping("/positionDetail/{detailId}")
+    public ApiResponse<Object> deleteDetail(@PathVariable Long detailId, @LoginUser User user){
+        tacticService.deleteDetail(detailId, user);
+        return ApiResponse.noContent();
     }
 
     // 좋아요 누르기 및 취소하기
