@@ -30,6 +30,10 @@ public enum ErrorCode implements BaseErrorCode {
     USER_IS_NOT_STAFF(HttpStatus.FORBIDDEN, "USER413", "스태프가 아닙니다."),
     EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "이메일이 맞지 않습니다."),
 
+    // Firebase 관련 에러
+    FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
+    FIREBASE_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "FIREBASE402", "Firebase 토큰을 찾을 수 없습니다."),
+
     // Profile 관련 에러
     NICKNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE401", "해당 닉네임이 이미 존재합니다."),
     PROFILE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE402", "프로필이 이미 존재합니다."),
