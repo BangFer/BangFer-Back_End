@@ -89,10 +89,15 @@ public class TacticService {
         return TacticResponse.from(copyTactic);
     }
 
-    public CommentResponse createComment(Long tacticId, CommentCreateRequest request, User user){
+    public CommentResponse createComment(Long tacticId, CommentCreateRequest request, User user, Long parentCommentId){
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        TacticComment tacticComment = request.toEntity(user, tactic);
+        TacticComment parent = null;
+        if (parentCommentId != null) {
+            parent = commentRepository.findById(parentCommentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
+        }
+
+        TacticComment tacticComment = request.toEntity(user, tactic, parent);
 
         // 프로필 존재 확인
         accountsServiceUtils.checkUserProfile(user);
@@ -120,18 +125,6 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
-    }
-
-    public DetailResponse updateDetail(Long detailId, DetailUpdateRequest request, User user) {
-        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(detailId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
-
-        if(!tacticPositionDetail.getTactic().getUser().getId().equals(user.getId()))
-            throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
-
-        tacticPositionDetail.updateDetail(request);
-        TacticPositionDetail updateDetail = tacticPositionDetailRepository.save(tacticPositionDetail);
-        return DetailResponse.from(updateDetail);
-
     }
 
     public void deleteDetail(Long detailId, User user) {

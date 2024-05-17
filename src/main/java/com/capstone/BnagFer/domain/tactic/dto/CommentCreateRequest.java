@@ -9,11 +9,21 @@ public record CommentCreateRequest(
         @NotBlank(message = "[ERROR] 댓글내용은 필수입니다.")
         String comment
 ) {
-        public TacticComment toEntity(User user, Tactic tactic){
-                return TacticComment.builder()
+        public TacticComment toEntity(User user, Tactic tactic, TacticComment parent){
+                TacticComment tacticComment = TacticComment.builder()
                         .comment(comment)
                         .user(user)
                         .tactic(tactic)
                         .build();
+                if (parent != null) {
+                        tacticComment.setParent(parent);
+                }
+                return tacticComment;
+
+                /*return TacticComment.builder()
+                        .comment(comment)
+                        .user(user)
+                        .tactic(tactic)
+                        .build();*/
         }
 }

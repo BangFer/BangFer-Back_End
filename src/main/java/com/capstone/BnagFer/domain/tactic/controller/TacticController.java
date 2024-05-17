@@ -83,7 +83,14 @@ public class TacticController {
     // 전술 게시물에 댓글 달기
     @PostMapping("/{tacticId}/comment")
     public ApiResponse<CommentResponse> createComment(@PathVariable Long tacticId,  @Valid @RequestBody CommentCreateRequest request, @LoginUser User user) {
-        CommentResponse commentDetail = tacticService.createComment(tacticId, request, user);
+        CommentResponse commentDetail = tacticService.createComment(tacticId, request, user, null);
+        return ApiResponse.onSuccess(commentDetail);
+    }
+
+    // 댓글에 대댓글 달기
+    @PostMapping("/{tacticId}/comment/{parentCommentId}")
+    public ApiResponse<CommentResponse> createReplyComment(@PathVariable Long tacticId, @PathVariable Long parentCommentId, @Valid @RequestBody CommentCreateRequest request, @LoginUser User user) {
+        CommentResponse commentDetail = tacticService.createComment(tacticId, request, user, parentCommentId);
         return ApiResponse.onSuccess(commentDetail);
     }
 

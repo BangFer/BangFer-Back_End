@@ -38,6 +38,15 @@ public class TacticComment extends BaseEntity {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<TacticComment> children = new ArrayList<>();
 
+    public void setParent(TacticComment parent) {
+        if (this.parent != null) {
+            this.parent.getChildren().remove(this);
+        }
+        this.parent = parent;
+        if (parent != null) {
+            parent.getChildren().add(this);
+        }
+    }
     public void updateComment(CommentUpdateRequest request){
         comment = request.comment();
     }
