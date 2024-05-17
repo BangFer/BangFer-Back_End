@@ -8,6 +8,9 @@ import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +23,18 @@ public class TacticController {
     private final TacticQueryService tacticQueryService;
 
     // 전체 전술 게시판 조회
-    @GetMapping
+    /*@GetMapping
     public ApiResponse<List<TacticResponse.TacticList>> getTacticList(){
         List<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics();
+        return ApiResponse.onSuccess(tacticLists);
+    }*/
+
+    @GetMapping
+    public ApiResponse<Page<TacticResponse.TacticList>> getTacticList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics(pageable);
         return ApiResponse.onSuccess(tacticLists);
     }
 
@@ -39,8 +51,6 @@ public class TacticController {
         List<TacticResponse.TacticList> userTacticLists = tacticQueryService.getUserTactics(user);
         return ApiResponse.onSuccess(userTacticLists);
     }
-
-
 
     // 전술 게시물 생성
     @PostMapping

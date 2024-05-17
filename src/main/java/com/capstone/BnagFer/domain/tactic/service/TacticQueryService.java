@@ -5,10 +5,11 @@ import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
-import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,15 @@ import java.util.List;
 public class TacticQueryService {
 
     private final TacticRepository tacticRepository;
-    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
-    public List<TacticResponse.TacticList> getTactics() {
+    /*public List<TacticResponse.TacticList> getTactics() {
         List<Tactic> tactics = tacticRepository.findAllByAnonymousFalse();
         return TacticResponse.TacticList.from(tactics);
+    }*/
+
+    public Page<TacticResponse.TacticList> getTactics(Pageable pageable) {
+        Page<Tactic> tactics = tacticRepository.findAllByAnonymousFalse(pageable);
+        return tactics.map(TacticResponse.TacticList::from);
     }
 
     public List<TacticResponse.TacticList> getUserTactics(User user) {
