@@ -12,6 +12,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+# Firebase key file
+firebase/bangfer-firebase-key.json
+
 # AWS User-specific
 .idea/**/aws.xml
 
