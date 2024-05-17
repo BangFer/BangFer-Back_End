@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.board.service.boardService;
+package com.capstone.BnagFer.domain.board.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
