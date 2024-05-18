@@ -61,7 +61,7 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tactic.updateTactic(request);
-        Tactic updatedTactic = tacticRepository.saveAndFlush(tactic);
+        Tactic updatedTactic = tacticRepository.save(tactic);
 
         tacticPositionDetailRepository.deleteByTactic_TacticId(tacticId);
 
