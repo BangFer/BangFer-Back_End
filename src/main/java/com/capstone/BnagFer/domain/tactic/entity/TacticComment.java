@@ -6,6 +6,9 @@ import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -28,8 +31,23 @@ public class TacticComment extends BaseEntity {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    public void updateComment(User users, CommentUpdateRequest request){
-        user = users;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private TacticComment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<TacticComment> children = new ArrayList<>();
+
+    public void setParent(TacticComment parent) {
+        if (this.parent != null) {
+            this.parent.getChildren().remove(this);
+        }
+        this.parent = parent;
+        if (parent != null) {
+            parent.getChildren().add(this);
+        }
+    }
+    public void updateComment(CommentUpdateRequest request){
         comment = request.comment();
     }
 }
