@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +23,18 @@ public class TacticController {
     private final TacticService tacticService;
     private final TacticQueryService tacticQueryService;
 
-    // 전체 전술 게시판 조회
     /*@GetMapping
     public ApiResponse<List<TacticResponse.TacticList>> getTacticList(){
         List<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics();
         return ApiResponse.onSuccess(tacticLists);
     }*/
 
+    // 전체 전술 게시판 조회
     @GetMapping
     public ApiResponse<Page<TacticResponse.TacticList>> getTacticList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics(pageable);
         return ApiResponse.onSuccess(tacticLists);
     }
@@ -45,10 +46,20 @@ public class TacticController {
         return ApiResponse.onSuccess(tacticDetail);
     }
 
-    // 자신의 전술 게시물 조회
-    @GetMapping("/mylist")
+    /*@GetMapping("/mylist")
     public ApiResponse<List<TacticResponse.TacticList>> getUserTactic(@LoginUser User user) {
         List<TacticResponse.TacticList> userTacticLists = tacticQueryService.getUserTactics(user);
+        return ApiResponse.onSuccess(userTacticLists);
+    }*/
+
+    // 자신의 전술 게시물 조회
+    @GetMapping("/mylist")
+    public ApiResponse<Page<TacticResponse.TacticList>> getUserTactic(
+            @LoginUser User user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<TacticResponse.TacticList> userTacticLists = tacticQueryService.getUserTactics(user, pageable);
         return ApiResponse.onSuccess(userTacticLists);
     }
 

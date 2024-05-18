@@ -32,9 +32,14 @@ public class TacticQueryService {
         return tactics.map(TacticResponse.TacticList::from);
     }
 
-    public List<TacticResponse.TacticList> getUserTactics(User user) {
+    /*public List<TacticResponse.TacticList> getUserTactics(User user) {
         List<Tactic> tactics = user.getTactics();
         return TacticResponse.TacticList.from(tactics);
+    }*/
+
+    public Page<TacticResponse.TacticList> getUserTactics(User user, Pageable pageable) {
+        Page<Tactic> tactics = tacticRepository.findAllByUser(user, pageable);
+        return tactics.map(TacticResponse.TacticList::from);
     }
 
     public TacticDetailResponse getTacticById(Long tacticId) {
