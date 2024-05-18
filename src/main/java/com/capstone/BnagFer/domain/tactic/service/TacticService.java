@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.tactic.dto.*;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
@@ -24,17 +24,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class TacticService {
+
     private final TacticRepository tacticRepository;
-    private final AccountsServiceUtils accountsServiceUtils;
+    private final AccountsCommonService accountsCommonService;
     private final CommentRepository commentRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
+
         Tactic tactic = request.toEntity(user);
 
         // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(user);
+        accountsCommonService.checkUserProfile(user);
         tacticRepository.save(tactic);
 
         for(DetailCreateRequest detailRequest : request.positionDetails()){
@@ -46,6 +48,7 @@ public class TacticService {
     }
 
     public void deleteTactic(Long tacticId, User user) {
+      
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         if(!tactic.getUser().getId().equals(user.getId()))
@@ -55,6 +58,7 @@ public class TacticService {
     }
 
     public TacticResponse updateTactic(Long tacticId, TacticUpdateRequest request, User user) {
+
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         if(!tactic.getUser().getId().equals(user.getId()))
@@ -74,6 +78,7 @@ public class TacticService {
     }
 
     public TacticResponse copyTactic(Long tacticId, User user) {
+
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         if(tactic.getUser().getId().equals(user.getId()))
@@ -83,13 +88,14 @@ public class TacticService {
         copyTactic.setCopyDetail(user, tactic);
 
         // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(user);
+        accountsCommonService.checkUserProfile(user);
         tacticRepository.save(copyTactic);
 
         return TacticResponse.from(copyTactic);
     }
 
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request, User user, Long parentCommentId){
+
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         TacticComment parent = null;
@@ -100,13 +106,14 @@ public class TacticService {
         TacticComment tacticComment = request.toEntity(user, tactic, parent);
 
         // 프로필 존재 확인
-        accountsServiceUtils.checkUserProfile(user);
+        accountsCommonService.checkUserProfile(user);
         commentRepository.save(tacticComment);
 
         return CommentResponse.from(tacticComment);
     }
 
     public CommentResponse updateComment(Long commentId, CommentUpdateRequest request, User user) {
+
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
         if(!tacticComment.getUser().getId().equals(user.getId()))
@@ -119,6 +126,7 @@ public class TacticService {
     }
 
     public void deleteComment(Long commentId, User user) {
+
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
 
         if(!tacticComment.getUser().getId().equals(user.getId()))
@@ -128,6 +136,7 @@ public class TacticService {
     }
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
+
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);

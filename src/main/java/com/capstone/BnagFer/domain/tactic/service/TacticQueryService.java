@@ -33,6 +33,7 @@ public class TacticQueryService {
     }
 
     /*public List<TacticResponse.TacticList> getUserTactics(User user) {
+    
         List<Tactic> tactics = user.getTactics();
         return TacticResponse.TacticList.from(tactics);
     }*/

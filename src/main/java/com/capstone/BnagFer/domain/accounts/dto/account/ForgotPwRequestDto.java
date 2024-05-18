@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.dto;
+package com.capstone.BnagFer.domain.accounts.dto.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

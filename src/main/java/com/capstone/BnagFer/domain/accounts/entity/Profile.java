@@ -45,10 +45,6 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    public void setUser(User account) {
-        user = account;
-    }
-
     public void updateProfile(UpdateProfileRequestDto requestDto) {
         nickname = requestDto.nickname();
         description = requestDto.description();
