@@ -66,6 +66,10 @@ public class Tactic extends BaseEntity {
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
+    private List<TacticPositionDetail> tacticPositionDetails = new ArrayList<TacticPositionDetail>();
+
+    @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TacticLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
@@ -85,9 +89,8 @@ public class Tactic extends BaseEntity {
         defenseDetails = tactic.getDefenseDetails();
     }
 
-    public void updateTactic(User users, TacticUpdateRequest request){
+    public void updateTactic(TacticUpdateRequest request){
         tacticName = request.tacticName();
-        user = users;
         anonymous = request.anonymous();
         famousCoachName = request.famousCoachName();
         mainFormation = request.mainFormation();
