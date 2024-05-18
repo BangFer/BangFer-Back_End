@@ -119,13 +119,6 @@ public class TacticController {
         return ApiResponse.noContent();
     }
 
-    // 포지션 디테일 삭제
-    @DeleteMapping("/positionDetail/{detailId}")
-    public ApiResponse<Object> deleteDetail(@PathVariable Long detailId, @LoginUser User user){
-        tacticService.deleteDetail(detailId, user);
-        return ApiResponse.noContent();
-    }
-
     // 좋아요 누르기 및 취소하기
     @PostMapping("/{tacticId}/like")
     public ApiResponse<Object> likeToggle(@PathVariable Long tacticId, @LoginUser User user) {
