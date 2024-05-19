@@ -8,6 +8,7 @@ import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import java.util.List;
 public class TacticQueryService {
 
     private final TacticRepository tacticRepository;
+
+    @Autowired
+    private TacticService tacticService;
 
     /*public List<TacticResponse.TacticList> getTactics() {
         List<Tactic> tactics = tacticRepository.findAllByAnonymousFalse();
@@ -45,7 +49,8 @@ public class TacticQueryService {
 
     public TacticDetailResponse getTacticById(Long tacticId) {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-        return TacticDetailResponse.from(tactic);
+        Long likeCnt = tacticService.getLikeCount(tacticId);
+        return TacticDetailResponse.from(tactic, likeCnt);
     }
 
 

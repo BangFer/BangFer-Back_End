@@ -15,6 +15,8 @@ import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import java.util.Optional;
 @Transactional
 public class TacticService {
 
+    private final RedisTemplate<String, String> redisTemplate;
     private final TacticRepository tacticRepository;
     private final AccountsCommonService accountsCommonService;
     private final CommentRepository commentRepository;
@@ -136,18 +139,28 @@ public class TacticService {
     }
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
+        String key = "tactic:" + tacticId + ":likes";
+        ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
 
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
-
         Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
 
         if (like.isPresent()) {
             likeRepository.delete(like.get());
+            valueOps.increment(key, -1);
             return ApiResponse.CANCELED_LIKE();
         }
         else {
             likeRepository.save(new TacticLike(user, tactic));
+            valueOps.increment(key, 1);
             return ApiResponse.SUCCESS_LIKE();
         }
+    }
+
+    public Long getLikeCount(Long tacticId) {
+        String key = "tactic:" + tacticId + ":likes";
+        ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
+        String likeCount = valueOps.get(key);
+        return likeCount != null ? Long.parseLong(likeCount) : 0;
     }
 }
