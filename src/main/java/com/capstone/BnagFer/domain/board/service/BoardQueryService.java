@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.board.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
@@ -30,9 +31,9 @@ public class BoardQueryService {
         return boards.map(BoardDetailResponseDto.BoardList::from);
     }
 
-    public BoardDetailResponseDto getBoard(Long boardId) {
+    public BoardResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        return BoardDetailResponseDto.from(board);
+        return BoardResponseDto.from(board);
     }
 
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {

@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CommentResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
@@ -40,8 +41,8 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable Long boardId) {
-        BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
+    public ApiResponse<BoardResponseDto> getBoard (@PathVariable Long boardId) {
+        BoardResponseDto board = boardQueryService.getBoard(boardId);
         return ApiResponse.onSuccess(board);
     }
 

@@ -25,7 +25,7 @@ public class Comment extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "board")
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @Column(name = "comment_text", nullable = false)
