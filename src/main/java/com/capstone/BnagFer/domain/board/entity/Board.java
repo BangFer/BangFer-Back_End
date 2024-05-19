@@ -45,8 +45,8 @@ public class Board extends BaseEntity {
         boardTitle = request.boardTitle();
         boardContent = request.boardContent();
     }
-    public void initializeLike() {
-        //NullPointerException 방지를 위한 좋아요 초기화
-        likes = new ArrayList<>();
-    }
+//    public void initializeLike() {
+//        //NullPointerException 방지를 위한 좋아요 초기화
+//        likes = new ArrayList<>();
+//    }
 }

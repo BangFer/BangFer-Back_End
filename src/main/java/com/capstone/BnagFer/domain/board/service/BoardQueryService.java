@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.board.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
@@ -20,19 +20,19 @@ import java.util.List;
 public class BoardQueryService {
     private final BoardRepository boardRepository;
 
-    public Page<BoardResponseDto.BoardList> getBoards(Pageable pageable) {
+    public Page<BoardDetailResponseDto.BoardList> getBoards(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
-        return boards.map(BoardResponseDto.BoardList::from);
+        return boards.map(BoardDetailResponseDto.BoardList::from);
     }
 
-    public Page<BoardResponseDto.BoardList> getMyBoards(User user, Pageable pageable) {
+    public Page<BoardDetailResponseDto.BoardList> getMyBoards(User user, Pageable pageable) {
         Page<Board> boards = getBoardsByUser(user, pageable);
-        return boards.map(BoardResponseDto.BoardList::from);
+        return boards.map(BoardDetailResponseDto.BoardList::from);
     }
 
-    public BoardResponseDto getBoard(Long boardId) {
+    public BoardDetailResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        return BoardResponseDto.from(board);
+        return BoardDetailResponseDto.from(board);
     }
 
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {

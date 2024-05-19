@@ -2,7 +2,8 @@ package com.capstone.BnagFer.domain.board.controller;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
 import com.capstone.BnagFer.domain.board.service.BoardService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
@@ -24,42 +25,42 @@ public class BoardController {
     private final BoardQueryService boardQueryService;
 
     @GetMapping //게시판 리스트 조회
-    public ApiResponse<Page<BoardResponseDto.BoardList>> getBoardsList(
+    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getBoardsList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
+        Page<BoardDetailResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
         return onSuccess(boardsList);
 
     }
 
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardResponseDto> getBoard (@PathVariable Long boardId) {
-        BoardResponseDto board = boardQueryService.getBoard(boardId);
+    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable Long boardId) {
+        BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
         return ApiResponse.onSuccess(board);
     }
 
     @GetMapping("/myboards")
-    public ApiResponse<Page<BoardResponseDto.BoardList>> getMyBoardsList(
+    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getMyBoardsList(
             @LoginUser User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
+        Page<BoardDetailResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
         return onSuccess(myBoardsList);
     }
 
     @PostMapping
-    public ApiResponse<BoardResponseDto> createBoard(@RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
-        BoardResponseDto board = boardService.createBoard(request, user);
+    public ApiResponse<CreateBoardResponseDto> createBoard(@RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
+        CreateBoardResponseDto board = boardService.createBoard(request, user);
         return ApiResponse.onSuccess(board);
     }
 
     @PutMapping("/{boardId}")
-    public ApiResponse<BoardResponseDto> updateBoard(@PathVariable long boardId, @RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
-        BoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user);
+    public ApiResponse<CreateBoardResponseDto> updateBoard(@PathVariable long boardId, @RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
+        CreateBoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user);
         return ApiResponse.onSuccess(updatedBoard);
     }
     @DeleteMapping("/{boardId}")

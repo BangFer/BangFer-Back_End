@@ -3,7 +3,7 @@ package com.capstone.BnagFer.domain.board.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.entity.Like;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
@@ -24,15 +24,14 @@ public class BoardService {
     private final AccountsCommonService accountsCommonService;
     private final BoardLikeRepository boardLikeRepository;
 
-    public BoardResponseDto createBoard(BoardRequestDto request, User user) {
+    public CreateBoardResponseDto createBoard(BoardRequestDto request, User user) {
         accountsCommonService.checkUserProfile(user);
         Board board = request.toEntity(user);
-        board.initializeLike(); //NullPointerException 방지를 위한 좋아요 초기화
         boardRepository.save(board);
-        return BoardResponseDto.from(board);
+        return CreateBoardResponseDto.from(board);
     }
 
-    public BoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user) {
+    public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
         accountsCommonService.checkUserProfile(user);
         if(!board.getUser().getId().equals(user.getId())) {
@@ -40,7 +39,7 @@ public class BoardService {
         }
         board.updateBoard(request);
         boardRepository.save(board);
-        return BoardResponseDto.from(board);
+        return CreateBoardResponseDto.from(board);
     }
     public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));

@@ -9,19 +9,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
-public record BoardResponseDto(
+public record BoardDetailResponseDto(
         Long id,
         Long writerId,
         String writerNickName,
         String boardTitle,
         String boardContent,
         List<Comment> commentContent,
-        int likeCount,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        int likeCount
 ) {
-    public static BoardResponseDto from(Board board) {
-        return BoardResponseDto.builder()
+    public static BoardDetailResponseDto from(Board board) {
+        return BoardDetailResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getUser().getId())
                 .writerNickName(board.getUser().getProfile().getNickname())
@@ -29,8 +27,6 @@ public record BoardResponseDto(
                 .boardContent(board.getBoardContent())
                 .commentContent(board.getComments())
                 .likeCount(board.getLikes().size())
-                .createdAt(board.getCreatedAt())
-                .updatedAt(board.getUpdatedAt())
                 .build();
     }
     @Builder
