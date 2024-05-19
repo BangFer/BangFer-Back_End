@@ -41,7 +41,7 @@ public record BoardDetailResponseDto(
     ) {
         public static CommentList from(Comment comment) {
             return CommentList.builder()
-                    .commentId(comment.getId())
+                    .commentId(comment.getCommentId())
                     .userId(comment.getUser().getId())
                     .boardId(comment.getBoard().getId())
                     .nickName(comment.getUser().getProfile().getNickname())

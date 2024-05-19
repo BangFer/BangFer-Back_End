@@ -29,7 +29,7 @@ public class Board extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "comment_id")
     @JsonIgnore
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "board_title", nullable = false)
     private String boardTitle;

@@ -44,7 +44,7 @@ public enum ErrorCode implements BaseErrorCode {
     CANNOT_COPY_MYSELF(HttpStatus.BAD_REQUEST, "TACTIC404", "본인이 직접 작성한 전술은 카피할 수 없습니다."),
 
     // Comment 관련 에러
-    Comment_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
     USERANDTACTIC_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER402", "사용자와 전술게시물이 맞지 않습니다. 권한이 없습니다."),
 
     //TEAM 관련 에러
