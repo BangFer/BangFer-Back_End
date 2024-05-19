@@ -33,7 +33,6 @@ public class BoardService {
 
     public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        accountsCommonService.checkUserProfile(user);
         if(!board.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
