@@ -33,12 +33,11 @@ public class TeamTacticService {
         // 팀 찾기
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
-        List<TacticPositionDetail> tacticPositionDetails = tactic.getTacticPositionDetails();
         // 사용자 검증 및 전술 업데이트
         validateAndUpdateTeam(team, user, tactic);
         // 팀 저장
         teamRepository.save(team);
-        return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic, tacticPositionDetails));
+        return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
     }
 
     public void deallocateMyTactic(Long teamId, Long tacticId, User user) {

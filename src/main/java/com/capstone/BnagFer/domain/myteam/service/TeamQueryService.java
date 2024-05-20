@@ -22,8 +22,7 @@ public class TeamQueryService {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         return GetTeamResponseDto.from(team);
     }
-    public List<GetTeamResponseDto.TeamList> getMyTeamList() {
-        User user = accountsCommonService.getCurrentUser();
+    public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
         List<Team> teams = user.getTeam();
         return GetTeamResponseDto.TeamList.from(teams);
     }

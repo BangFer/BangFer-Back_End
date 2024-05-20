@@ -17,8 +17,7 @@ public class TeamTacticQueryService {
 
     private final AccountsCommonService accountsCommonService;
 
-    public List<CreateTeamTacticResponseDto.MyTacticList> getMyTacticList(){
-        User user = accountsCommonService.getCurrentUser();
+    public List<CreateTeamTacticResponseDto.MyTacticList> getMyTacticList(User user){
         List<Tactic> tactics = user.getTactics();
         return CreateTeamTacticResponseDto.MyTacticList.from(tactics);
     }

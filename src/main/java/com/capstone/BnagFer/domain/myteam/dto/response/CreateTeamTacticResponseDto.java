@@ -1,6 +1,8 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
 
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.tactic.dto.DetailResponse;
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
@@ -28,6 +30,20 @@ public record CreateTeamTacticResponseDto (
                 .tacticDto(tacticDto)
                 .build();
     }
+    @Builder
+    public record TeamTacticDetailResponse(
+            Long detailId,
+            Position position,
+            String positionDescription
+    ) {
+        public static TeamTacticDetailResponse from(TacticPositionDetail tacticPositionDetail) {
+            return TeamTacticDetailResponse.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .position(tacticPositionDetail.getPosition())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+    }
 
     @Builder
     public record TacticDto(
@@ -45,13 +61,17 @@ public record CreateTeamTacticResponseDto (
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        public static TacticDto from(Tactic tactic, List<TacticPositionDetail> tacticPositionDetail) {
+        public static TacticDto from(Tactic tactic) {
+            List<TeamTacticDetailResponse> positionDetail = tactic.getTacticPositionDetails()
+                    .stream()
+                    .map(TeamTacticDetailResponse::from)
+                    .toList();
+
             return TacticDto.builder()
                     .tacticId(tactic.getTacticId())
                     .tacticName(tactic.getTacticName())
                     .anonymous(tactic.isAnonymous())
                     .famousCoachName(tactic.getFamousCoachName())
-                    .positionDetail(tacticPositionDetail)
                     .mainFormation(tactic.getMainFormation())
                     .attackFormation(tactic.getAttackFormation())
                     .defenseFormation(tactic.getDefenseFormation())

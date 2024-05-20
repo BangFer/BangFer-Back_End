@@ -37,8 +37,9 @@ public class TeamCalendarService {
         }
     }
 
-    public TeamCalendarResponseDto updateMatchEvent(UpdateTeamCalendarRequestDto request, Long calendarId) {
-        User user = accountsCommonService.getCurrentUser();
+
+    public TeamCalendarResponseDto updateMatchEvent(UpdateTeamCalendarRequestDto request, Long calendarId, User user) {
+
         CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
         if(user.getId().equals(event.getTeam().getLeader().getId())) {
             event.updateMatchInfo(request);
@@ -50,8 +51,7 @@ public class TeamCalendarService {
         }
     }
 
-    public void deleteMatchEvent(Long calendarId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void deleteMatchEvent(Long calendarId, User user) {
         CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
         if(user.getId().equals(event.getTeam().getLeader().getId())) {
             teamCalendarRepository.deleteById(calendarId);

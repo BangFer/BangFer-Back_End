@@ -23,8 +23,7 @@ public class TeamService {
     private final AccountsCommonService accountsCommonService;
     private final TeamMembersRepository teamMembersRepository;
 
-    public CUTeamResponseDto createMyTeam(CUTeamRequestDto request) {
-        User user = accountsCommonService.getCurrentUser();
+    public CUTeamResponseDto createMyTeam(CUTeamRequestDto request, User user) {
         Team team = request.toEntity();
         team.updateLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
@@ -38,8 +37,7 @@ public class TeamService {
         return CUTeamResponseDto.from(team);
     }
 
-    public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId) {
-        User user = accountsCommonService.getCurrentUser();
+    public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         //방장만 팀의 업데이트를 할 수 있다
         if(!team.getLeader().getId().equals(user.getId())) {
@@ -50,8 +48,7 @@ public class TeamService {
         return CUTeamResponseDto.from(updatedTeam);
     }
 
-    public void deleteMyTeam(Long teamId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void deleteMyTeam(Long teamId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
         //방장만이 강퇴 가능

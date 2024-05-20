@@ -54,8 +54,7 @@ public class TeamMembersService {
         return TeamMembersResponseDto.from(teamMember);
     }
 
-    public void kickOutMembers(Long memberId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void kickOutMembers(Long memberId, User user) {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
@@ -74,8 +73,7 @@ public class TeamMembersService {
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 
-    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
-        User user = accountsCommonService.getCurrentUser();
+    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, User user) {
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
@@ -102,8 +100,7 @@ public class TeamMembersService {
 
     }
 
-    public void deallocatePosition(Long teamId, Long memberId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void deallocatePosition(Long teamId, Long memberId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
@@ -118,4 +115,5 @@ public class TeamMembersService {
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
     }
+
 }

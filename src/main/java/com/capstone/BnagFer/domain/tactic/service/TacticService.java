@@ -32,7 +32,6 @@ public class TacticService {
     private final LikeRepository likeRepository;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
-
         Tactic tactic = request.toEntity(user);
 
         // 프로필 존재 확인
@@ -47,7 +46,7 @@ public class TacticService {
     }
 
     public void deleteTactic(Long tacticId, User user) {
-      
+
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
         if(!tactic.getUser().getId().equals(user.getId()))
