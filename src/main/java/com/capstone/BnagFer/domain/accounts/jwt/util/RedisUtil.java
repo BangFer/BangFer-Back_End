@@ -27,5 +27,23 @@ public class RedisUtil {
     public boolean delete(String key) {
         return Boolean.TRUE.equals(redisTemplate.delete(key));
     }
+
+    public void saveFCMToken(String userEmail, String fcmToken) {
+        redisTemplate.opsForValue().set(userEmail, fcmToken);
+        redisTemplate.expire(userEmail, 30, TimeUnit.DAYS);
+    }
+
+    public String getFCMToken(String userEmail) {
+        Object tokenObj = redisTemplate.opsForValue().get(userEmail);
+        if (tokenObj != null) {
+            return (String) tokenObj;
+        } else {
+            return null;
+        }
+    }
+
+    public void removeFCMToken(String userEmail) {
+        redisTemplate.delete(userEmail);
+    }
 }
 
