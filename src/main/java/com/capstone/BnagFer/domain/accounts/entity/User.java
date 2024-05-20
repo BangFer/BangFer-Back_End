@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.accounts.entity;
 
+import com.capstone.BnagFer.domain.accounts.dto.account.ChangeEmailRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -67,13 +68,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Tactic> tactics;
 
-    public void setPassword(String pw) {
+    public void updatePassword(String pw) {
         password = pw;
     }
 
     public void updateUser(UpdateProfileRequestDto requestDto) {
         name = requestDto.name();
-        email = requestDto.email();
     }
 
     public void softDelete() {
@@ -84,5 +84,9 @@ public class User extends BaseEntity {
     public void recoverDelete() {
         deleted = false;
         deletedAt = null;
+    }
+
+    public void updateEmail(ChangeEmailRequestDto requestDto) {
+        email = requestDto.newEmail();
     }
 }

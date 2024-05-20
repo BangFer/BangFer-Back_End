@@ -1,6 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;

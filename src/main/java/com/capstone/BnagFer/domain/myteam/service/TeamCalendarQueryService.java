@@ -17,8 +17,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TeamCalendarQueryService {
+
     private final TeamRepository teamRepository;
     private final TeamCalendarRepository teamCalendarRepository;
+
     public List<TeamCalendarResponseDto> getMatchEvents(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         List<CalendarEvent> matchEvents = teamCalendarRepository.findByTeam(team);
