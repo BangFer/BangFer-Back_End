@@ -48,6 +48,9 @@ public class AccountsService {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_MATCH);
         }
 
+        // fcm 토큰 저장
+        redisUtil.saveFCMToken(requestDto.email(), requestDto.fcmToken());
+
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         // 로그인 성공 시 토큰 생성
@@ -87,6 +90,8 @@ public class AccountsService {
     public void logout(HttpServletRequest request) {
         try {
             String accessToken = jwtProvider.resolveAccessToken(request);
+
+            redisUtil.removeFCMToken(jwtProvider.getUserEmail(accessToken));
 
             redisUtil.save(
                     accessToken,

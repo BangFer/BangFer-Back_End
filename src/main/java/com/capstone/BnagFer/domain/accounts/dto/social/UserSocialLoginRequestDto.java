@@ -6,6 +6,7 @@ public record UserSocialLoginRequestDto(
         @NotBlank(message = "[ERROR] 토큰 입력은 필수 입니다.")
         String accessToken,
         @NotBlank(message = "[ERROR] 이메일 입력은 필수 입니다.")
-        String email
+        String email,
+        String fcmToken
 ) {
 }
