@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -18,10 +19,29 @@ public record GetTeamResponseDto (
         String teamName,
         TacticResponse tacticDto,
         List<TeamMembersList> teamMembers,
+        List<TeamTacticDetailResponse> teamDetails,
         LocalDateTime createdAt
 ) {
+    @Builder
+    public record TeamTacticDetailResponse(
+            Long detailId,
+            Position position,
+            String positionDescription
+    ) {
+        public static TeamTacticDetailResponse from(TacticPositionDetail tacticPositionDetail) {
+            return TeamTacticDetailResponse.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .position(tacticPositionDetail.getPosition())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+    }
 
     public static GetTeamResponseDto from(Team team) {
+        List<TeamTacticDetailResponse> positionDetail = team.getTactic().getTacticPositionDetails()
+                .stream()
+                .map(TeamTacticDetailResponse::from)
+                .toList();
         return GetTeamResponseDto.builder()
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
