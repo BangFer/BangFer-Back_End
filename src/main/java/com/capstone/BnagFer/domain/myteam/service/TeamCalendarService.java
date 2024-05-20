@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.domain.accounts.service.AccountsServiceUtils;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
@@ -27,7 +26,6 @@ public class TeamCalendarService {
     private final AccountsCommonService accountsCommonService;
 
     public TeamCalendarResponseDto createMatchEvent(Long teamId, TeamCalendarRequestDto request, User user) {
-        User user = accountsCommonService.getCurrentUser();
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         if(user.getId().equals(team.getLeader().getId())) {
             CalendarEvent calendarEvent = request.toEntity(team);

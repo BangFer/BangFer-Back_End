@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.dto.response;
 
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -37,18 +38,20 @@ public record CreateTeamTacticResponseDto (
             String mainFormation,
             byte[] attackFormation,
             byte[] defenseFormation,
+            List<TacticPositionDetail> positionDetail,
             String tacticDetails,
             String attackDetails,
             String defenseDetails,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        public static TacticDto from(Tactic tactic) {
+        public static TacticDto from(Tactic tactic, List<TacticPositionDetail> tacticPositionDetail) {
             return TacticDto.builder()
                     .tacticId(tactic.getTacticId())
                     .tacticName(tactic.getTacticName())
                     .anonymous(tactic.isAnonymous())
                     .famousCoachName(tactic.getFamousCoachName())
+                    .positionDetail(tacticPositionDetail)
                     .mainFormation(tactic.getMainFormation())
                     .attackFormation(tactic.getAttackFormation())
                     .defenseFormation(tactic.getDefenseFormation())

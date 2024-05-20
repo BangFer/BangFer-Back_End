@@ -30,8 +30,7 @@ public class TeamMembersService {
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
 
-    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-        User user = accountsCommonService.getCurrentUser();
+    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request, User user) {
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 

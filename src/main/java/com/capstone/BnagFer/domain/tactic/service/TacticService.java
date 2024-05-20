@@ -43,7 +43,6 @@ public class TacticService {
             TacticPositionDetail detail = detailRequest.toEntity(tactic);
             tacticPositionDetailRepository.save(detail);
         }
-
         return TacticResponse.from(tactic);
     }
 

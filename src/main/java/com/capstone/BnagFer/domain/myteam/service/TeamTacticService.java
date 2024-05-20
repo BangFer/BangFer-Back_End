@@ -5,13 +5,17 @@ import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseD
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
+import com.capstone.BnagFer.domain.tactic.dto.DetailCreateRequest;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +32,15 @@ public class TeamTacticService {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         // 팀 찾기
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        List<TacticPositionDetail> tacticPositionDetails = tactic.getTacticPositionDetails();
         // 사용자 검증 및 전술 업데이트
         validateAndUpdateTeam(team, user, tactic);
         // 팀 저장
         teamRepository.save(team);
-        return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
+        return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic, tacticPositionDetails));
     }
+
     public void deallocateMyTactic(Long teamId, Long tacticId, User user) {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));

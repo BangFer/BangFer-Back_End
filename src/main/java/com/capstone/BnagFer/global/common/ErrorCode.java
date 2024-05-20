@@ -18,14 +18,17 @@ public enum ErrorCode implements BaseErrorCode {
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER401", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER402", "닉네임은 필수 입니다."),
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER403", "비밀번호가 일치하지 않습니다."),
-    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER404", "사용자가 이미 존재합니다."),
-    USER_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER405", "사용자가 맞지 않습니다. 권한이 없습니다."),
-    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER406", "사용자 이메일이 존재하지 않습니다."),
-    PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER407", "사용자 프로필이 존재하지 않습니다."),
-    NO_USER_AUTHORIZATION(HttpStatus.BAD_REQUEST, "USER408", "사용자 권한이 없습니다."),
-    USER_IS_DELETED(HttpStatus.BAD_REQUEST, "USER409", "탈퇴된 회원입니다."),
-    UNABLE_TO_SEND_EMAIL(HttpStatus.BAD_REQUEST, "USER410", "이메일을 전송할 수 없습니다."),
-    CODE_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "USER411", "유효하지 않은 코드입니다."),
+    PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "비밀번호가 맞지 않습니다."),
+    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER405", "사용자가 이미 존재합니다."),
+    USER_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER406", "사용자가 맞지 않습니다. 권한이 없습니다."),
+    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER407", "사용자 이메일이 존재하지 않습니다."),
+    PROFILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER408", "사용자 프로필이 존재하지 않습니다."),
+    NO_USER_AUTHORIZATION(HttpStatus.BAD_REQUEST, "USER409", "사용자 권한이 없습니다."),
+    USER_IS_DELETED(HttpStatus.BAD_REQUEST, "USER410", "탈퇴된 회원입니다."),
+    UNABLE_TO_SEND_EMAIL(HttpStatus.BAD_REQUEST, "USER411", "이메일을 전송할 수 없습니다."),
+    CODE_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "USER412", "유효하지 않은 코드입니다."),
+    USER_IS_NOT_STAFF(HttpStatus.FORBIDDEN, "USER413", "스태프가 아닙니다."),
+    EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "이메일이 맞지 않습니다."),
 
     // Profile 관련 에러
     NICKNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE401", "해당 닉네임이 이미 존재합니다."),
@@ -40,6 +43,7 @@ public enum ErrorCode implements BaseErrorCode {
     TACTIC_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "TACTIC403", "본인 전술만 적용할 수 있습니다."),
     CANNOT_COPY_MYSELF(HttpStatus.BAD_REQUEST, "TACTIC404", "본인이 직접 작성한 전술은 카피할 수 없습니다."),
     DETAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "세부 전술 설명이 없습니다."),
+
     // Comment 관련 에러
     Comment_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
     USERANDTACTIC_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER402", "사용자와 전술게시물이 맞지 않습니다. 권한이 없습니다."),
