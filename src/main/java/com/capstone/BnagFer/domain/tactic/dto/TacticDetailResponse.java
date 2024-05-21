@@ -1,9 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
-import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -25,11 +23,11 @@ public record TacticDetailResponse(
         String attackDetails,
         String defenseDetails,
         List<CommentList> comments,
-        int likeCnt,
+        Long likeCnt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static TacticDetailResponse from(Tactic tactic) {
+    public static TacticDetailResponse from(Tactic tactic, Long likeCnt) {
         return TacticDetailResponse.builder()
                 .tacticId(tactic.getTacticId())
                 .userId(tactic.getUser().getId())
@@ -44,7 +42,7 @@ public record TacticDetailResponse(
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
                 .comments(CommentList.from(tactic.getComments()))
-                .likeCnt(tactic.getLikes().size())
+                .likeCnt(likeCnt)
                 .createdAt(tactic.getCreatedAt())
                 .updatedAt(tactic.getUpdatedAt())
                 .build();
@@ -57,7 +55,8 @@ public record TacticDetailResponse(
             String nickname,
             String comment,
             LocalDateTime createdAt,
-            LocalDateTime updateAt
+            LocalDateTime updateAt,
+            List<CommentList> children
     ){
         public static CommentList from(TacticComment comment){
             return CommentList.builder()
@@ -68,10 +67,11 @@ public record TacticDetailResponse(
                     .comment(comment.getComment())
                     .createdAt(comment.getCreatedAt())
                     .updateAt(comment.getUpdatedAt())
+                    .children(comment.getChildren().stream().map(CommentList::from).collect(Collectors.toList()))
                     .build();
         }
         public static List<CommentList> from(List<TacticComment> comments){
-            return comments.stream().map(CommentList::from).collect(Collectors.toList());
+            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
         }
     }
 }
