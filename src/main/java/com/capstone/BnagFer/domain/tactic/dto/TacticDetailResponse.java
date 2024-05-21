@@ -1,9 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
-import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
