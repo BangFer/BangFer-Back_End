@@ -3,12 +3,21 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
+import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
+import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
+import com.capstone.BnagFer.domain.tactic.entity.Tactic;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
+import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -17,6 +26,8 @@ import java.util.List;
 public class TeamQueryService {
     private final AccountsCommonService accountsCommonService;
     private final TeamRepository teamRepository;
+    private final TeamMembersRepository teamMembersRepository;
+    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
@@ -25,5 +36,26 @@ public class TeamQueryService {
     public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
         List<Team> teams = user.getTeam();
         return GetTeamResponseDto.TeamList.from(teams);
+    }
+
+    public List<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(Long teamId, Long memberId, User user) {
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
+        List<GetTeamResponseDto.getIndividualDetail> individualDetails = new ArrayList<>();
+
+        // Assuming there is a one-to-one mapping between tacticPositionDetails and teamMembers
+        for (TacticPositionDetail tacticDetail : tacticPositionDetails) {
+            GetTeamResponseDto.getIndividualDetail individualDetail =
+                    GetTeamResponseDto.getIndividualDetail.from(tacticDetail, teamMember);
+            individualDetails.add(individualDetail);
+        }
+        return individualDetails;
+
+//        List<TeamMember> teamMember = team.getTeamMembers();
+//        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
+//        return GetTeamResponseDto.individualPositionDetail.
+
+
     }
 }

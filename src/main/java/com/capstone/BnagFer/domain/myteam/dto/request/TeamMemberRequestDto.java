@@ -6,9 +6,7 @@ import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import jakarta.validation.constraints.NotBlank;
 
 public record TeamMemberRequestDto(
-        @NotBlank
         Long userId,
-        @NotBlank
         Long teamId
 ) {
     public TeamMember toEntity(User user, Team team) {

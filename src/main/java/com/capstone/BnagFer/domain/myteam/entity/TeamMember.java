@@ -26,7 +26,7 @@ import lombok.*;
     private User user;
 
     @Column(name = "role", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Role role; //LEADER(1) or MEMBER(2)
 
     @Column(name = "position")
