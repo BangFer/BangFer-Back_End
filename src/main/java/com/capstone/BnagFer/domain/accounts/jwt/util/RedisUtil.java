@@ -16,12 +16,26 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(key, val, time, timeUnit);
     }
 
+    public void save(String key, Long val, Long time, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, String.valueOf(val), time, timeUnit);
+    }
+
+
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
+    }
+
+    public Long getLikes(String key) {
+        Object value = redisTemplate.opsForValue().get(key);
+        if (value instanceof Long) {
+            return (Long) value;
+        } else {
+            return null;
+        }
     }
 
     public boolean delete(String key) {
