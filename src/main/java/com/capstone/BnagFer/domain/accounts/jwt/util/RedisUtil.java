@@ -16,6 +16,11 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(key, val, time, timeUnit);
     }
 
+    public void save(String key, Long val, Long time, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, String.valueOf(val), time, timeUnit);
+    }
+
+
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
@@ -24,8 +29,35 @@ public class RedisUtil {
         return redisTemplate.opsForValue().get(key);
     }
 
+    public Long getLikes(String key) {
+        Object value = redisTemplate.opsForValue().get(key);
+        if (value instanceof Long) {
+            return (Long) value;
+        } else {
+            return null;
+        }
+    }
+
     public boolean delete(String key) {
         return Boolean.TRUE.equals(redisTemplate.delete(key));
+    }
+
+    public void saveFCMToken(String userEmail, String fcmToken) {
+        redisTemplate.opsForValue().set(userEmail, fcmToken);
+        redisTemplate.expire(userEmail, 30, TimeUnit.DAYS);
+    }
+
+    public String getFCMToken(String userEmail) {
+        Object tokenObj = redisTemplate.opsForValue().get(userEmail);
+        if (tokenObj != null) {
+            return (String) tokenObj;
+        } else {
+            return null;
+        }
+    }
+
+    public void removeFCMToken(String userEmail) {
+        redisTemplate.delete(userEmail);
     }
 }
 

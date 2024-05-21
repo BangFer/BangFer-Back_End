@@ -30,6 +30,10 @@ public enum ErrorCode implements BaseErrorCode {
     USER_IS_NOT_STAFF(HttpStatus.FORBIDDEN, "USER413", "스태프가 아닙니다."),
     EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "이메일이 맞지 않습니다."),
 
+    // Firebase 관련 에러
+    FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
+    FIREBASE_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "FIREBASE402", "Firebase 토큰을 찾을 수 없습니다."),
+
     // Profile 관련 에러
     NICKNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE401", "해당 닉네임이 이미 존재합니다."),
     PROFILE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE402", "프로필이 이미 존재합니다."),
@@ -42,6 +46,7 @@ public enum ErrorCode implements BaseErrorCode {
     TACTIC_EMPTY_ID(HttpStatus.BAD_REQUEST, "TACTIC402", "전술 아이디 값을 확인해주세요."),
     TACTIC_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "TACTIC403", "본인 전술만 적용할 수 있습니다."),
     CANNOT_COPY_MYSELF(HttpStatus.BAD_REQUEST, "TACTIC404", "본인이 직접 작성한 전술은 카피할 수 없습니다."),
+    DETAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "세부 전술 설명이 없습니다."),
 
     // Comment 관련 에러
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),

@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.entity;
 
+import com.capstone.BnagFer.domain.tactic.dto.DetailUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,8 @@ public class TacticPositionDetail {
     @Column(name = "position_description")
     private String positionDescription;
 
+    public void updateDetail(DetailUpdateRequest request){
+        position = request.position();
+        positionDescription = request.positionDescription();
+    }
 }
