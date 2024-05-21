@@ -55,7 +55,8 @@ public record TacticDetailResponse(
             String nickname,
             String comment,
             LocalDateTime createdAt,
-            LocalDateTime updateAt
+            LocalDateTime updateAt,
+            List<CommentList> children
     ){
         public static CommentList from(TacticComment comment){
             return CommentList.builder()
@@ -66,10 +67,11 @@ public record TacticDetailResponse(
                     .comment(comment.getComment())
                     .createdAt(comment.getCreatedAt())
                     .updateAt(comment.getUpdatedAt())
+                    .children(comment.getChildren().stream().map(CommentList::from).collect(Collectors.toList()))
                     .build();
         }
         public static List<CommentList> from(List<TacticComment> comments){
-            return comments.stream().map(CommentList::from).collect(Collectors.toList());
+            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
         }
     }
 }
