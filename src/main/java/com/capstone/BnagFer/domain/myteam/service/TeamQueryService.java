@@ -44,7 +44,6 @@ public class TeamQueryService {
         List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
         List<GetTeamResponseDto.getIndividualDetail> individualDetails = new ArrayList<>();
 
-        // Assuming there is a one-to-one mapping between tacticPositionDetails and teamMembers
         for (TacticPositionDetail tacticDetail : tacticPositionDetails) {
             GetTeamResponseDto.getIndividualDetail individualDetail =
                     GetTeamResponseDto.getIndividualDetail.from(tacticDetail, teamMember);
