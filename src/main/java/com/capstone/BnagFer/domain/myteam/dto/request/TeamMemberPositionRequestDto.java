@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.dto.request;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record TeamMemberPositionRequestDto(

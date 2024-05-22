@@ -1,7 +1,6 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
 
 import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.tactic.dto.DetailResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;

@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamCalendarService {
     private final TeamCalendarRepository teamCalendarRepository;
     private final TeamRepository teamRepository;
-    private final AccountsCommonService accountsCommonService;
 
     public TeamCalendarResponseDto createMatchEvent(Long teamId, TeamCalendarRequestDto request, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));

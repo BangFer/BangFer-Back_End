@@ -1,33 +1,25 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
-import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
-import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
-import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamQueryService {
-    private final AccountsCommonService accountsCommonService;
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
-    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
@@ -50,11 +42,5 @@ public class TeamQueryService {
             individualDetails.add(individualDetail);
         }
         return individualDetails;
-
-//        List<TeamMember> teamMember = team.getTeamMembers();
-//        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
-//        return GetTeamResponseDto.individualPositionDetail.
-
-
     }
 }

@@ -1,11 +1,9 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
 
 import com.capstone.BnagFer.domain.myteam.entity.CalendarEvent;
-import com.capstone.BnagFer.domain.myteam.entity.Team;
 import lombok.Builder;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Builder
 public record TeamCalendarResponseDto  (

@@ -1,21 +1,16 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
-import com.capstone.BnagFer.domain.tactic.dto.DetailCreateRequest;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

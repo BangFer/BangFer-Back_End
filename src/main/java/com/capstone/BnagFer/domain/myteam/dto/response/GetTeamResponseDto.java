@@ -1,18 +1,14 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
-import com.capstone.BnagFer.domain.accounts.entity.Profile;
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.*;
 import java.time.LocalDateTime;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Builder
@@ -33,20 +29,9 @@ public record GetTeamResponseDto (
             String nickName,
             String positionDescription
     ) {
-//        public static TeamTacticDetailResponse from(TacticPositionDetail tacticPositionDetail) {
-//            return TeamTacticDetailResponse.builder()
-//                    .detailId(tacticPositionDetail.getDetailId())
-//                    .position(tacticPositionDetail.getPosition())
-//                    .positionDescription(tacticPositionDetail.getPositionDescription())
-//                    .build();
-//        }
     }
 
     public static GetTeamResponseDto from(Team team) {
-//        List<TeamTacticDetailResponse> positionDetail = team.getTactic().getTacticPositionDetails()
-//                .stream()
-//                .map(TeamTacticDetailResponse::from)
-//                .toList();
         return GetTeamResponseDto.builder()
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
