@@ -27,7 +27,6 @@ public class Board extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "board_title", nullable = false)
@@ -44,8 +43,4 @@ public class Board extends BaseEntity {
         boardTitle = request.boardTitle();
         boardContent = request.boardContent();
     }
-//    public void initializeLike() {
-//        //NullPointerException 방지를 위한 좋아요 초기화
-//        likes = new ArrayList<>();
-//    }
 }

@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.board.entity;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.global.common.BaseEntity;
@@ -20,18 +19,15 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Board board;
 
     @Column(name = "comment_text", nullable = false)
     private String commentText;
 
-//    @Column(name = "comment_count", nullable = false)
-//    private int commentCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
