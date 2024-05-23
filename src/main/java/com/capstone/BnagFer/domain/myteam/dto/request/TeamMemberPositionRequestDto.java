@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.myteam.dto.request;
-
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
