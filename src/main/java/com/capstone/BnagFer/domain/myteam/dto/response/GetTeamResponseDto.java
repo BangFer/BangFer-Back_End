@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -18,8 +19,17 @@ public record GetTeamResponseDto (
         String teamName,
         TacticResponse tacticDto,
         List<TeamMembersList> teamMembers,
+//        List<TeamTacticDetailResponse> teamDetails,
         LocalDateTime createdAt
 ) {
+    @Builder
+    public record TeamTacticDetailResponse(
+            Long detailId,
+            Position position,
+            String nickName,
+            String positionDescription
+    ) {
+    }
 
     public static GetTeamResponseDto from(Team team) {
         return GetTeamResponseDto.builder()
@@ -74,6 +84,21 @@ public record GetTeamResponseDto (
             return teams.stream().map(TeamList::from).collect(Collectors.toList());
         }
     }
+    @Builder
+    public record getIndividualDetail(
+            Long detailId,
+            Position position,
+            String positionDescription,
+            String memberNickName
+    ) {
+        public static getIndividualDetail from(TacticPositionDetail tacticPositionDetail, TeamMember teamMember) {
+            return getIndividualDetail.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .position(tacticPositionDetail.getPosition())
+                    .memberNickName(teamMember.getUser().getProfile().getNickname())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+    }
 }
-
 
