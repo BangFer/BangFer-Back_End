@@ -16,8 +16,6 @@ import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -103,7 +101,7 @@ public class TacticService {
 
         TacticComment parent = null;
         if (parentCommentId != null) {
-            parent = commentRepository.findById(parentCommentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
+            parent = commentRepository.findById(parentCommentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         }
 
         TacticComment tacticComment = request.toEntity(user, tactic, parent);
@@ -117,7 +115,7 @@ public class TacticService {
 
     public CommentResponse updateComment(Long commentId, CommentUpdateRequest request, User user) {
 
-        TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
+        TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
 
         if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
@@ -130,7 +128,7 @@ public class TacticService {
 
     public void deleteComment(Long commentId, User user) {
 
-        TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.Comment_NOT_FOUND));
+        TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
 
         if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);

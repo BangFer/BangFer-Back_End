@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.accounts.entity;
 
 import com.capstone.BnagFer.domain.accounts.dto.account.ChangeEmailRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
+import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.global.common.BaseEntity;
@@ -11,6 +12,8 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -67,6 +70,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Tactic> tactics;
+
+    @OneToMany(mappedBy = "user")
+    private List<Board> boards;
 
     public void updatePassword(String pw) {
         password = pw;

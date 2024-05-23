@@ -49,7 +49,7 @@ public enum ErrorCode implements BaseErrorCode {
     DETAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "세부 전술 설명이 없습니다."),
 
     // Comment 관련 에러
-    Comment_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "댓글이 없습니다."),
     USERANDTACTIC_NOT_MATCHED(HttpStatus.BAD_REQUEST, "USER402", "사용자와 전술게시물이 맞지 않습니다. 권한이 없습니다."),
 
     //TEAM 관련 에러
@@ -67,8 +67,9 @@ public enum ErrorCode implements BaseErrorCode {
     CANNOT_DEALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER410", "포지션 할당 해제 권한이 없습니다."),
     //CALENDAR_EVENT 관련 에러
     MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
-    MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다.");
-
+    MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다."),
+    //Board 관련 에러
+    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

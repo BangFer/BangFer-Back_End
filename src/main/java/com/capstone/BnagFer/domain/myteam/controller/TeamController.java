@@ -80,4 +80,5 @@ public class TeamController {
         List<GetTeamResponseDto.getIndividualDetail> positionDetail = teamQueryService .getIndividualDetail(teamId, memberId, user);
         return ApiResponse.onSuccess(positionDetail);
     }
+
 }
