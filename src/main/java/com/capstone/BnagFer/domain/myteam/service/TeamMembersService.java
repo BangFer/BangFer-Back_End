@@ -30,8 +30,7 @@ public class TeamMembersService {
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
 
-    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request) {
-        User user = accountsCommonService.getCurrentUser();
+    public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request, User user) {
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
@@ -50,14 +49,12 @@ public class TeamMembersService {
         TeamMember teamMember = request.toEntity(invitedUser, team);
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(teamMember.getUser());
-
         teamMember.updateRole(Role.MEMBER);
         teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
     }
 
-    public void kickOutMembers(Long memberId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void kickOutMembers(Long memberId, User user) {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
@@ -76,8 +73,7 @@ public class TeamMembersService {
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 
-    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request) {
-        User user = accountsCommonService.getCurrentUser();
+    public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, User user) {
         Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(request.memberId()).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Position requestedPosition = request.position();
@@ -100,12 +96,11 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-        return TeamMemberPositionResponseDto.from(request.toEntity(team, teamMember, requestedPosition));
+        return TeamMemberPositionResponseDto.from(request.toEntity(team,  teamMember, requestedPosition));
 
     }
 
-    public void deallocatePosition(Long teamId, Long memberId) {
-        User user = accountsCommonService.getCurrentUser();
+    public void deallocatePosition(Long teamId, Long memberId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
@@ -120,4 +115,5 @@ public class TeamMembersService {
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
     }
+
 }

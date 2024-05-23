@@ -1,8 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.dto;
-
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import lombok.Builder;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
