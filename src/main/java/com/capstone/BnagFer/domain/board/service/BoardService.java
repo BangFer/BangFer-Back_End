@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.board.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class BoardService {
     private final AccountsCommonService accountsCommonService;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardCommentRepository boardCommentRepository;
+    private final RedisUtil redisUtil;
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user) {
         accountsCommonService.checkUserProfile(user);
@@ -57,15 +60,24 @@ public class BoardService {
     public ApiResponse<Object> likeButton(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
         Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
-        if(like.isPresent()) {
+        String redisKey = "board:likes" + boardId; // if boardId = 1 -> redisKey = boardlikes1
+        Long currentLikes = redisUtil.getLikes(redisKey); //redisUtil을 통해 Redis 캐시에서 redisKey에 해당하는 좋아요 수를 가져온다. 없으면 null반환
+        if(currentLikes == null) {
+            currentLikes = (long) board.getLikes().size(); //레디스 캐시에 저장할 좋아요 수
+            redisUtil.save(redisKey, currentLikes, 30L, TimeUnit.DAYS); // 조회한 좋아요 수를 Redis 캐시에 30일 동안 저장하는 역할
+        }
+        if (like.isPresent()) {
             boardLikeRepository.delete(like.get());
+            redisUtil.save(redisKey, currentLikes - 1, 30L, TimeUnit.DAYS);
             return ApiResponse.CANCELED_LIKE();
         }
         else {
             boardLikeRepository.save(new Like(user, board));
+            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
             return ApiResponse.SUCCESS_LIKE();
         }
     }
+//    }
 
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
