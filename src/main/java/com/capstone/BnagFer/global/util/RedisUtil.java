@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.jwt.util;
+package com.capstone.BnagFer.global.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -2,7 +2,7 @@ package com.capstone.BnagFer.domain.accounts.jwt.filter;
 
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

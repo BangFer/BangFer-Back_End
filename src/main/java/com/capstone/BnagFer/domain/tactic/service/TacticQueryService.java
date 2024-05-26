@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
@@ -9,13 +9,11 @@ import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
