@@ -64,7 +64,7 @@ public class EmailService {
     }
 
     public static String createKey() {
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
         // 인증코드 6자리
