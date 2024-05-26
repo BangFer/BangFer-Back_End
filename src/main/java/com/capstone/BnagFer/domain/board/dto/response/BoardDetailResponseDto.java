@@ -37,7 +37,8 @@ public record BoardDetailResponseDto(
             String nickName,
             String commentText,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            List<CommentList> children
     ) {
         public static CommentList from(Comment comment) {
             return CommentList.builder()
@@ -48,10 +49,12 @@ public record BoardDetailResponseDto(
                     .commentText(comment.getCommentText())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
+                    .children(comment.getChildren().stream().map(CommentList::from).collect(Collectors.toList()))
+                    //최상위 댓글로만 자식 댓글이 달릴 수 있게!
                     .build();
         }
         public static List<CommentList> from(List<Comment> comments) {
-            return comments.stream().map(CommentList::from).collect(Collectors.toList());
+            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
         }
     }
     @Builder
@@ -60,7 +63,8 @@ public record BoardDetailResponseDto(
             Long userId,
             String writerNickName,
             String boardTitle,
-            int likeCount
+            int likeCount,
+            int commentCount
 
     ) {
         public static BoardList from(Board board) {
@@ -70,6 +74,7 @@ public record BoardDetailResponseDto(
                     .writerNickName(board.getUser().getProfile().getNickname())
                     .boardTitle(board.getBoardTitle())
                     .likeCount(board.getLikes().size())
+                    .commentCount(board.getComments().size())
                     .build();
         }
         public static List<BoardList> from(List<Board> boards) {

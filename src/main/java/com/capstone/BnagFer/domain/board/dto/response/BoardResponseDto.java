@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.board.dto.response;
 
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.entity.Comment;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ public record BoardResponseDto(
         String boardTitle,
         String boardContent,
         int likeCount,
+        int commentCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 
@@ -25,6 +27,7 @@ public record BoardResponseDto(
                 board.getBoardTitle(),
                 board.getBoardContent(),
                 board.getLikes().size(),
+                board.getComments().size(),
                 board.getCreatedAt(),
                 board.getUpdatedAt()
         );

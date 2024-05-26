@@ -18,6 +18,7 @@ import com.capstone.BnagFer.domain.board.repository.BoardRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -32,6 +33,7 @@ public class BoardService {
     private final BoardLikeRepository boardLikeRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final RedisUtil redisUtil;
+    private final StringRedisTemplate stringRedisTemplate;
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user) {
         accountsCommonService.checkUserProfile(user);
@@ -77,7 +79,11 @@ public class BoardService {
             return ApiResponse.SUCCESS_LIKE();
         }
     }
-//    }
+
+    public long getTotalCommentCount(Long boardId) {
+        return boardCommentRepository.countByBoardId(boardId);
+    }
+
 
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
@@ -85,25 +91,23 @@ public class BoardService {
         if (parentCommentId != null) {
             parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         }
-
         Comment comment = request.toEntity(user, board, parent);
-
         accountsCommonService.checkUserProfile(user);
         boardCommentRepository.save(comment);
+        long totalCommentCount = getTotalCommentCount(boardId);
+        String boardCommentCountKey = "board:commentCount:" + boardId;
+        stringRedisTemplate.opsForValue().set(boardCommentCountKey, String.valueOf(totalCommentCount));
         return CommentResponseDto.from(comment);
     }
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-
         if(!comment.getUser().getId().equals(user.getId()))
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
-
         comment.updateComment(request);
         Comment updatedComment = boardCommentRepository.save(comment);
         return CommentResponseDto.from(updatedComment);
     }
-
     public void deleteComment(Long commentId, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         if(!comment.getUser().getId().equals(user.getId())) {
