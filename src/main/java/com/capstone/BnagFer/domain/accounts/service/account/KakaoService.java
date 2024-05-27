@@ -11,7 +11,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.google.gson.Gson;
@@ -119,7 +119,6 @@ public class KakaoService {
         UserSignupRequestDto signupRequestDto = UserSignupRequestDto.builder()
                 .email(requestDto.email())
                 .name(kakaoProfile.getProperties().getNickname())
-//                .nickName(kakaoProfile.getProperties().getNickname())
                 .provider("kakao")
                 .build();
 

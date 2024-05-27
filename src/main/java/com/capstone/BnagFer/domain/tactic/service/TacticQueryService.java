@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;

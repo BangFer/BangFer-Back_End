@@ -5,7 +5,7 @@ import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAccessDeniedHandler
 import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAuthenticationEntryPoint;
 import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtExceptionFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
