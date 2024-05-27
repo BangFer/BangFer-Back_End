@@ -1,7 +1,7 @@
 package com.capstone.BnagFer.domain.firebase.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.firebase.dto.FCMAlarmRequestDto;
 import com.capstone.BnagFer.domain.firebase.exception.FirebaseExceptionHandler;
@@ -24,8 +24,8 @@ public class FcmAlarmService {
     private final UserJpaRepository userJpaRepository;
     private final RedisUtil redisUtil;
 
-    public String sendAlarm(FCMAlarmRequestDto requestDto) {
-        Optional<User> userOptional = userJpaRepository.findById(requestDto.targetUserId());
+    public String sendAlarm(FCMAlarmRequestDto requestDto, Long userId) {
+        Optional<User> userOptional = userJpaRepository.findById(userId);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -43,7 +43,7 @@ public class FcmAlarmService {
 
                 try {
                     firebaseMessaging.send(message);
-                    return "알림을 성공적으로 전송했습니다. targetUserId = " + requestDto.targetUserId();
+                    return "알림을 성공적으로 전송했습니다. targetUserId = " + userId;
                 } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
                     throw new FirebaseExceptionHandler(ErrorCode.FIREBASE_MESSAGING_ERROR);

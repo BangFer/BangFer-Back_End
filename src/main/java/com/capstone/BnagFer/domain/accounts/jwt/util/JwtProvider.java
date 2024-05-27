@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomExceptio
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetailService;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;

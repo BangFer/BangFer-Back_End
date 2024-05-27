@@ -28,7 +28,8 @@ public enum ErrorCode implements BaseErrorCode {
     UNABLE_TO_SEND_EMAIL(HttpStatus.BAD_REQUEST, "USER411", "이메일을 전송할 수 없습니다."),
     CODE_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "USER412", "유효하지 않은 코드입니다."),
     USER_IS_NOT_STAFF(HttpStatus.FORBIDDEN, "USER413", "스태프가 아닙니다."),
-    EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "이메일이 맞지 않습니다."),
+    EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER414", "이메일이 맞지 않습니다."),
+    CANNOT_USE_SAME_PASSWORD(HttpStatus.BAD_REQUEST, "USER415", "기존 비밀번호와 동일합니다."),
 
     // Firebase 관련 에러
     FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
