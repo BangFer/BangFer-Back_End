@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -37,18 +35,13 @@ public class TacticQueryService {
     public TacticDetailResponse getTacticById(Long tacticId) {
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        String redisKey = "tactic:likes:" + tacticId;
-        Long likeCount = redisUtil.getLikes(redisKey);
+        Long likeCount = redisUtil.getLikeCount(tacticId);
 
         if (likeCount == null) {
-            // Redis에 좋아요 개수가 없으면 데이터베이스에서 가져와 Redis에 저장
             likeCount = (long) tactic.getLikes().size();
-            redisUtil.save(redisKey, likeCount, 30L, TimeUnit.DAYS);
+            redisUtil.saveLikeCount(tacticId, likeCount);
         }
 
         return TacticDetailResponse.from(tactic, likeCount);
     }
-
-
-
 }
