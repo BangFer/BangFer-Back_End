@@ -162,29 +162,50 @@ public class TacticService {
         return likeCount != null ? Long.parseLong(likeCount) : 0;
     }*/
 
-    public ApiResponse<Object> likeButton(Long tacticId, User user) {
+//    public ApiResponse<Object> likeButton(Long tacticId, User user) {
+//
+//        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+//
+//        Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
+//        String redisKey = "tactic:likes:" + tacticId;
+//
+//        Long currentLikes = redisUtil.getLikes(redisKey);
+//        if (currentLikes == null) {
+//            currentLikes = (long) tactic.getLikes().size();
+//            redisUtil.save(redisKey, currentLikes, 30L, TimeUnit.DAYS);
+//        }
+//
+//        if (like.isPresent()) {
+//            likeRepository.delete(like.get());
+//            redisUtil.save(redisKey, currentLikes - 1, 30L, TimeUnit.DAYS);
+//            return ApiResponse.CANCELED_LIKE();
+//        }
+//        else {
+//            likeRepository.save(new TacticLike(user, tactic));
+//            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
+//            return ApiResponse.SUCCESS_LIKE();
+//        }
+//    }
+public ApiResponse<Object> likeButton(Long tacticId, User user) {
 
-        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+    Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
-        Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
-        String redisKey = "tactic:likes:" + tacticId;
+    Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
 
-        Long currentLikes = redisUtil.getLikes(redisKey);
-        if (currentLikes == null) {
-            currentLikes = (long) tactic.getLikes().size();
-            redisUtil.save(redisKey, currentLikes, 30L, TimeUnit.DAYS);
-        }
+    long likeCount = redisUtil.getLikeCount(tacticId);
 
-        if (like.isPresent()) {
-            likeRepository.delete(like.get());
-            redisUtil.save(redisKey, currentLikes - 1, 30L, TimeUnit.DAYS);
-            return ApiResponse.CANCELED_LIKE();
-        }
-        else {
-            likeRepository.save(new TacticLike(user, tactic));
-            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
-            return ApiResponse.SUCCESS_LIKE();
-        }
+    if (like.isPresent()) {
+        likeRepository.delete(like.get());
+        likeCount--;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.CANCELED_LIKE();
+    } else {
+        likeRepository.save(new TacticLike(user, tactic));
+        likeCount++;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.SUCCESS_LIKE();
     }
+}
+
 
 }

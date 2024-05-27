@@ -1,25 +1,25 @@
 package com.capstone.BnagFer.domain.accounts.jwt.util;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
 import java.util.concurrent.TimeUnit;
-
 @Component
 @RequiredArgsConstructor
 public class RedisUtil {
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void save(String key, Object val, Long time, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, val, time, timeUnit);
     }
 
-    public void save(String key, Long val, Long time, TimeUnit timeUnit) {
-        redisTemplate.opsForValue().set(key, String.valueOf(val), time, timeUnit);
+    public void saveLikeCount(Long tacticId, Long likeCount) {
+        redisTemplate.opsForValue().set("tactic:" + tacticId + ":likeCount", likeCount.toString());
     }
 
+    public Long getLikeCount(Long tacticId) {
+        String likeCountStr = (String) redisTemplate.opsForValue().get("tactic:" + tacticId + ":likeCount");
+        return likeCountStr != null ? Long.valueOf(likeCountStr) : null;
+    }
 
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
@@ -27,15 +27,6 @@ public class RedisUtil {
 
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
-    }
-
-    public Long getLikes(String key) {
-        Object value = redisTemplate.opsForValue().get(key);
-        if (value instanceof Long) {
-            return (Long) value;
-        } else {
-            return null;
-        }
     }
 
     public boolean delete(String key) {
@@ -60,4 +51,3 @@ public class RedisUtil {
         redisTemplate.delete(userEmail);
     }
 }
-

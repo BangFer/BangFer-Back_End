@@ -16,5 +16,6 @@ Content-Type: application/json
 
 {
   "email": "test1234@naver.com",
-  "password": "test1234!!"
+  "password": "test1234!!",
+  "fcmToken": "String"
 }

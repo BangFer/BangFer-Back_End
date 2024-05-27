@@ -15,18 +15,21 @@ public record BoardDetailResponseDto(
         String writerNickName,
         String boardTitle,
         String boardContent,
-        List<Comment> commentContent,
-        int likeCount
+        List<CommentList> commentList,
+        Long likeCount,
+        int commentCount
 ) {
-    public static BoardDetailResponseDto from(Board board) {
+    public static BoardDetailResponseDto from(Board board, Long likeCount) {
         return BoardDetailResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getUser().getId())
                 .writerNickName(board.getUser().getProfile().getNickname())
                 .boardTitle(board.getBoardTitle())
                 .boardContent(board.getBoardContent())
-                .commentContent(board.getComments())
-                .likeCount(board.getLikes().size())
+                .commentList(CommentList.from(board.getComments()))
+                .likeCount(likeCount)
+                .commentCount(board.getComments().size())
+
                 .build();
     }
     @Builder
@@ -55,30 +58,6 @@ public record BoardDetailResponseDto(
         }
         public static List<CommentList> from(List<Comment> comments) {
             return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
-        }
-    }
-    @Builder
-    public record BoardList(
-            Long id,
-            Long userId,
-            String writerNickName,
-            String boardTitle,
-            int likeCount,
-            int commentCount
-
-    ) {
-        public static BoardList from(Board board) {
-            return BoardList.builder()
-                    .id(board.getId())
-                    .userId(board.getUser().getId())
-                    .writerNickName(board.getUser().getProfile().getNickname())
-                    .boardTitle(board.getBoardTitle())
-                    .likeCount(board.getLikes().size())
-                    .commentCount(board.getComments().size())
-                    .build();
-        }
-        public static List<BoardList> from(List<Board> boards) {
-            return boards.stream().map(BoardList::from).collect(Collectors.toList());
         }
     }
 

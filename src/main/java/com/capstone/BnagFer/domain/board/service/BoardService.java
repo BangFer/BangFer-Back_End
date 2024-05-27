@@ -58,27 +58,46 @@ public class BoardService {
         }
         boardRepository.deleteById(boardId);
     }
+//    @Transactional
+//    public ApiResponse<Object> likeButton(Long boardId, User user) {
+//        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+//        Like like = boardLikeRepository.findByUserAndBoard(user, board).orElse(null);;
+//        String redisKey = "board:likes:" + boardId; // if boardId = 1 -> redisKey = boardlikes1
+//        Long currentLikes = redisUtil.getLikes(redisKey); //redisUtil을 통해 Redis 캐시에서 redisKey에 해당하는 좋아요 수를 가져온다. 없으면 null반환
+//        if(currentLikes == null) {
+//            currentLikes = (long) board.getLikes().size(); //레디스 캐시에 저장할 좋아요 수
+//            redisUtil.save(redisKey, currentLikes, 30L, TimeUnit.DAYS); // 조회한 좋아요 수를 Redis 캐시에 30일 동안 저장하는 역할
+//        }
+//        if (like!=null) {
+//            boardLikeRepository.delete(like);
+//            redisUtil.save(redisKey, currentLikes - 1, 30L, TimeUnit.DAYS);
+//            return ApiResponse.CANCELED_LIKE();
+//        }
+//        else {
+//            boardLikeRepository.save(new Like(user, board));
+//            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
+//            return ApiResponse.SUCCESS_LIKE();
+//        }
+public ApiResponse<Object> likeButton(Long tacticId, User user) {
 
-    public ApiResponse<Object> likeButton(Long boardId, User user) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
-        String redisKey = "board:likes" + boardId; // if boardId = 1 -> redisKey = boardlikes1
-        Long currentLikes = redisUtil.getLikes(redisKey); //redisUtil을 통해 Redis 캐시에서 redisKey에 해당하는 좋아요 수를 가져온다. 없으면 null반환
-        if(currentLikes == null) {
-            currentLikes = (long) board.getLikes().size(); //레디스 캐시에 저장할 좋아요 수
-            redisUtil.save(redisKey, currentLikes, 30L, TimeUnit.DAYS); // 조회한 좋아요 수를 Redis 캐시에 30일 동안 저장하는 역할
-        }
-        if (like.isPresent()) {
-            boardLikeRepository.delete(like.get());
-            redisUtil.save(redisKey, currentLikes - 1, 30L, TimeUnit.DAYS);
-            return ApiResponse.CANCELED_LIKE();
-        }
-        else {
-            boardLikeRepository.save(new Like(user, board));
-            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
-            return ApiResponse.SUCCESS_LIKE();
-        }
+    Board board = boardRepository.findById(tacticId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+
+    Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
+
+    long likeCount = redisUtil.getLikeCount(tacticId);
+
+    if (like.isPresent()) {
+        boardLikeRepository.delete(like.get());
+        likeCount--;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.CANCELED_LIKE();
+    } else {
+        boardLikeRepository.save(new Like(user, board));
+        likeCount++;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.SUCCESS_LIKE();
     }
+}
 
     public long getTotalCommentCount(Long boardId) {
         return boardCommentRepository.countByBoardId(boardId);
@@ -99,6 +118,11 @@ public class BoardService {
         stringRedisTemplate.opsForValue().set(boardCommentCountKey, String.valueOf(totalCommentCount));
         return CommentResponseDto.from(comment);
     }
+//    public long getCommentsCountFromRedis(Long boardId) {
+//        String boardCommentCountKey = "board:commentCount:" + boardId;
+//        String commentsCount = stringRedisTemplate.opsForValue().get(boardCommentCountKey);
+//        return commentsCount != null ? Long.parseLong(commentsCount) : 0;
+//    }
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));

@@ -30,30 +30,30 @@ public class BoardController {
     private final BoardQueryService boardQueryService;
 
     @GetMapping //게시판 리스트 조회
-    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getBoardsList(
+    public ApiResponse<Page<BoardResponseDto.BoardList>> getBoardsList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardDetailResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
+        Page<BoardResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
         return onSuccess(boardsList);
 
     }
 
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardResponseDto> getBoard (@PathVariable Long boardId) {
-        BoardResponseDto board = boardQueryService.getBoard(boardId);
+    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable Long boardId) {
+        BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
         return ApiResponse.onSuccess(board);
     }
 
     @GetMapping("/myboards")
-    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getMyBoardsList(
+    public ApiResponse<Page<BoardResponseDto.BoardList>> getMyBoardsList(
             @LoginUser User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardDetailResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
+        Page<BoardResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
         return onSuccess(myBoardsList);
     }
 
@@ -75,7 +75,7 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}/like")
-    public ApiResponse<Object> likeBoard(@PathVariable Long boardId, @LoginUser User user) {
+    public ApiResponse<Object> likeButton(@PathVariable Long boardId, @LoginUser User user) {
         return boardService.likeButton(boardId, user);
     }
 

@@ -6,6 +6,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record BoardResponseDto(
         Long id,
@@ -31,5 +32,29 @@ public record BoardResponseDto(
                 board.getCreatedAt(),
                 board.getUpdatedAt()
         );
+    }
+    @Builder
+    public record BoardList(
+            Long id,
+            Long userId,
+            String writerNickName,
+            String boardTitle,
+            Long likeCount,
+            int commentCount
+
+    ) {
+        public static BoardList from(Board board) {
+            return BoardList.builder()
+                    .id(board.getId())
+                    .userId(board.getUser().getId())
+                    .writerNickName(board.getUser().getProfile().getNickname())
+                    .boardTitle(board.getBoardTitle())
+                    .likeCount((long) board.getLikes().size())
+                    .commentCount(board.getComments().size())
+                    .build();
+        }
+        public static List<BoardList> from(List<Board> boards) {
+            return boards.stream().map(BoardList::from).collect(Collectors.toList());
+        }
     }
 }
