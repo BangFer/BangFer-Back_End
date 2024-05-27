@@ -19,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 
 @Service
 @RequiredArgsConstructor
@@ -142,7 +140,7 @@ public class TacticService {
 
         Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
 
-        long likeCount = redisUtil.getLikeCount(tacticId);;
+        long likeCount = redisUtil.getLikeCount(tacticId);
 
         if (like.isPresent()) {
             likeRepository.delete(like.get());
