@@ -21,6 +21,17 @@ public class RedisUtil {
         return likeCountStr != null ? Long.valueOf(likeCountStr) : null;
     }
 
+    public void boardSaveLikeCount(Long boardId, Long likeCount) {
+        redisTemplate.opsForValue().set("tactic:" + boardId + ":likeCount", likeCount.toString());
+    }
+
+    public Long boardGetLikeCount(Long boardId) {
+        String likeCountStr = (String) redisTemplate.opsForValue().get("board:" + boardId + ":likeCount");
+        return likeCountStr != null ? Long.valueOf(likeCountStr) : null;
+    }
+
+
+
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
