@@ -52,6 +52,9 @@ public class Tactic extends BaseEntity {
     @Column(name = "defense_details", columnDefinition = "TEXT")
     private String defenseDetails;
 
+    @Column(name = "image_url") // 이미지 URL 필드 추가
+    private String imageUrl;
+
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticComment> comments = new ArrayList<TacticComment>();
