@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.global.config.AppConfig;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.tactic.dto.*;
@@ -31,6 +32,7 @@ public class TacticService {
     private final CommentRepository commentRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
+    private final AppConfig appConfig;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
         Tactic tactic = request.toEntity(user);
@@ -43,7 +45,7 @@ public class TacticService {
             TacticPositionDetail detail = detailRequest.toEntity(tactic);
             tacticPositionDetailRepository.save(detail);
         }
-        return TacticResponse.from(tactic);
+        return TacticResponse.from(tactic, appConfig.getBaseUrl());
     }
 
     public void deleteTactic(Long tacticId, User user) {
@@ -73,7 +75,7 @@ public class TacticService {
             tacticPositionDetailRepository.save(detail);
         }
 
-        return TacticResponse.from(updatedTactic);
+        return TacticResponse.from(updatedTactic, appConfig.getBaseUrl());
     }
 
     public TacticResponse copyTactic(Long tacticId, User user) {
@@ -90,7 +92,7 @@ public class TacticService {
         accountsCommonService.checkUserProfile(user);
         tacticRepository.save(copyTactic);
 
-        return TacticResponse.from(copyTactic);
+        return TacticResponse.from(copyTactic, appConfig.getBaseUrl());
     }
 
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request, User user, Long parentCommentId){

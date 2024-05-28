@@ -1,6 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.global.config.AppConfig;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.tactic.dto.TacticDetailResponse;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
@@ -21,6 +22,7 @@ public class TacticQueryService {
 
     private final TacticRepository tacticRepository;
     private final RedisUtil redisUtil;
+    private final AppConfig appConfig;
 
     public Page<TacticResponse.TacticList> getTactics(Pageable pageable) {
         Page<Tactic> tactics = tacticRepository.findAllByAnonymousFalse(pageable);
@@ -42,6 +44,6 @@ public class TacticQueryService {
             redisUtil.saveLikeCount(tacticId, likeCount);
         }
 
-        return TacticDetailResponse.from(tactic, likeCount);
+        return TacticDetailResponse.from(tactic, likeCount, appConfig.getBaseUrl());
     }
 }
