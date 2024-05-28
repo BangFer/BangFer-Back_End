@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
+import com.capstone.BnagFer.domain.myteam.dto.request.PositionDetailRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
@@ -14,6 +15,8 @@ import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
+import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class TeamMembersService {
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
+    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
     public TeamMembersResponseDto addTeamMembers(TeamMemberRequestDto request, User user) {
         User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -115,5 +119,4 @@ public class TeamMembersService {
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
     }
-
 }

@@ -7,11 +7,11 @@ import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
+import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TeamQueryService {
     private final TeamRepository teamRepository;
+    private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final TeamMembersRepository teamMembersRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
@@ -30,17 +31,15 @@ public class TeamQueryService {
         return GetTeamResponseDto.TeamList.from(teams);
     }
 
-    public List<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(Long teamId, Long memberId, User user) {
+    public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
         List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
-        List<GetTeamResponseDto.getIndividualDetail> individualDetails = new ArrayList<>();
-
-        for (TacticPositionDetail tacticDetail : tacticPositionDetails) {
-            GetTeamResponseDto.getIndividualDetail individualDetail =
-                    GetTeamResponseDto.getIndividualDetail.from(tacticDetail, teamMember);
-            individualDetails.add(individualDetail);
+        TeamMember byTeamAndPosition = teamMembersRepository.findByTeamAndPosition(team, tacticPositionDetail.getPosition());
+        if(tacticPositionDetails.contains(tacticPositionDetail)) {
+            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, byTeamAndPosition);
         }
-        return individualDetails;
+        else
+            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, null);
     }
 }

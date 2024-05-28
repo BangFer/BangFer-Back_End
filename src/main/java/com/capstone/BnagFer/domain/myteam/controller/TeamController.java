@@ -75,9 +75,9 @@ public class TeamController {
         teamTacticService.deallocateMyTactic(teamId, tacticId, user);
         return ApiResponse.noContent();
     }
-    @GetMapping("/{teamId}/{memberId}/positionDetail")
-    public ApiResponse<List<GetTeamResponseDto.getIndividualDetail>> getIndividualDetail(@PathVariable Long teamId, Long memberId, @LoginUser User user) {
-        List<GetTeamResponseDto.getIndividualDetail> positionDetail = teamQueryService .getIndividualDetail(teamId, memberId, user);
+    @GetMapping("/{teamId}/{positionDetailId}")
+    public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable Long teamId, Long positionDetailId) {
+        GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService .getIndividualDetail(teamId, positionDetailId);
         return ApiResponse.onSuccess(positionDetail);
     }
 

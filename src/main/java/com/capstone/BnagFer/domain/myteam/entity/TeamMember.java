@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
