@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamCalendarRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamCalendarResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.CalendarEvent;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -29,20 +28,6 @@ public class TeamCalendarService {
             CalendarEvent calendarEvent = request.toEntity(team);
             teamCalendarRepository.save(calendarEvent);
             return TeamCalendarResponseDto.from(calendarEvent);
-        }
-        else {
-            throw new AccountsExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-        }
-    }
-
-
-    public TeamCalendarResponseDto updateMatchEvent(UpdateTeamCalendarRequestDto request, Long calendarId, User user) {
-
-        CalendarEvent event = teamCalendarRepository.findById(calendarId).orElseThrow(() -> new EventExceptionHandler(ErrorCode.MATCH_EVENT_NOT_EXIST));
-        if(user.getId().equals(event.getTeam().getLeader().getId())) {
-            event.updateMatchInfo(request);
-            teamCalendarRepository.save(event);
-            return TeamCalendarResponseDto.from(event);
         }
         else {
             throw new AccountsExceptionHandler(ErrorCode.NO_AUTHORIZATION);
