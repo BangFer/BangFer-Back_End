@@ -72,8 +72,6 @@ public record CreateTeamTacticResponseDto (
                     .anonymous(tactic.isAnonymous())
                     .famousCoachName(tactic.getFamousCoachName())
                     .mainFormation(tactic.getMainFormation())
-                    .attackFormation(tactic.getAttackFormation())
-                    .defenseFormation(tactic.getDefenseFormation())
                     .tacticDetails(tactic.getTacticDetails())
                     .attackDetails(tactic.getAttackDetails())
                     .defenseDetails(tactic.getDefenseDetails())

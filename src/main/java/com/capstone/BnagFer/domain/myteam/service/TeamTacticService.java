@@ -36,17 +36,15 @@ public class TeamTacticService {
     }
 
     public void deallocateMyTactic(Long teamId, Long tacticId, User user) {
-        Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+        tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        if (user.getId() == null) {
-            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
-        }
+
         if (!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         if (team.getTactic() != null && team.getTactic().getTacticId().equals(tacticId)) {
             team.deleteMyTactic();
-            teamRepository.save(team); // Update the team in the database
+            teamRepository.save(team);
         } else {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND);
         }
