@@ -17,8 +17,6 @@ public record TacticDetailResponse(
         Boolean anonymous,
         String famousCoachName,
         String mainFormation,
-        byte[] attackFormation,
-        byte[] defenseFormation,
         String tacticDetails,
         String attackDetails,
         String defenseDetails,
@@ -36,8 +34,6 @@ public record TacticDetailResponse(
                 .anonymous(tactic.isAnonymous())
                 .famousCoachName(tactic.getFamousCoachName())
                 .mainFormation(tactic.getMainFormation())
-                .attackFormation(tactic.getAttackFormation())
-                .defenseFormation(tactic.getDefenseFormation())
                 .tacticDetails(tactic.getTacticDetails())
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
