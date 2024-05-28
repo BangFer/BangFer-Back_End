@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,15 +21,17 @@ public class TeamQueryService {
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final TeamMembersRepository teamMembersRepository;
 
-    public GetTeamResponseDto getMyTeamById(Long teamId) {
+    public GetTeamResponseDto getMyTeamById(Long teamId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        if(!user.getTeam().contains(team)) {
+            throw new TeamExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+        }
         return GetTeamResponseDto.from(team);
     }
     public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
         List<Team> teams = user.getTeam();
         return GetTeamResponseDto.TeamList.from(teams);
     }
-
     public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
