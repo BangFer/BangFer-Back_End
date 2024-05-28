@@ -30,14 +30,14 @@ public record GetTeamResponseDto (
     ) {
     }
 
-    public static GetTeamResponseDto from(Team team) {
+    public static GetTeamResponseDto from(Team team, String baseUrl) {
         return GetTeamResponseDto.builder()
                 .id(team.getId())
                 .leaderId(team.getLeader().getId())
                 .leaderNickName(team.getLeader().getProfile().getNickname())
                 .teamName(team.getTeamName())
                 .teamMembers(TeamMembersList.from(team.getTeamMembers()))
-                .tacticDto(team.getTactic() != null ? TacticResponse.from(team.getTactic()) : null)
+                .tacticDto(team.getTactic() != null ? TacticResponse.from(team.getTactic(), baseUrl) : null)
                 .createdAt(team.getCreatedAt())
                 .build();
     }

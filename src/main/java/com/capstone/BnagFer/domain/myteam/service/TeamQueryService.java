@@ -8,6 +8,7 @@ import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.global.common.ErrorCode;
+import com.capstone.BnagFer.global.config.AppConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,11 @@ import java.util.List;
 public class TeamQueryService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
+    private final AppConfig appConfig;
 
     public GetTeamResponseDto getMyTeamById(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        return GetTeamResponseDto.from(team);
+        return GetTeamResponseDto.from(team, appConfig.getBaseUrl());
     }
     public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
         List<Team> teams = user.getTeam();
