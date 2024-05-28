@@ -78,23 +78,23 @@ public class BoardService {
 //            redisUtil.save(redisKey, currentLikes + 1, 30L, TimeUnit.DAYS);
 //            return ApiResponse.SUCCESS_LIKE();
 //        }
-public ApiResponse<Object> likeButton(Long tacticId, User user) {
+public ApiResponse<Object> likeButton(Long boardId, User user) {
 
-    Board board = boardRepository.findById(tacticId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+    Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
     Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
 
-    long likeCount = redisUtil.getLikeCount(tacticId);
+    long likeCount = redisUtil.getLikeCount(boardId);
 
     if (like.isPresent()) {
         boardLikeRepository.delete(like.get());
         likeCount--;
-        redisUtil.saveLikeCount(tacticId, likeCount);
+        redisUtil.saveLikeCount(boardId, likeCount);
         return ApiResponse.CANCELED_LIKE();
     } else {
         boardLikeRepository.save(new Like(user, board));
         likeCount++;
-        redisUtil.saveLikeCount(tacticId, likeCount);
+        redisUtil.saveLikeCount(boardId, likeCount);
         return ApiResponse.SUCCESS_LIKE();
     }
 }
