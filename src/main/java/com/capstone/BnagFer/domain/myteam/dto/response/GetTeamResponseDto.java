@@ -14,12 +14,11 @@ import java.util.stream.Collectors;
 @Builder
 public record GetTeamResponseDto (
         Long id,
-        Long leaderId, //leader_id
-        String leaderNickName, //leader_name
+        Long leaderId,
+        String leaderNickName,
         String teamName,
         TacticResponse tacticDto,
         List<TeamMembersList> teamMembers,
-//        List<TeamTacticDetailResponse> teamDetails,
         LocalDateTime createdAt
 ) {
     @Builder
