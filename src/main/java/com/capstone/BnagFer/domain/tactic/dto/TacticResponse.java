@@ -15,9 +15,10 @@ public record TacticResponse(Long tacticId,
                              String tacticDetails,
                              String attackDetails,
                              String defenseDetails,
+                             String imageUrl,
                              LocalDateTime createdAt,
                              LocalDateTime updatedAt) {
-        public static TacticResponse from(Tactic tactic) {
+        public static TacticResponse from(Tactic tactic, String baseUrl) {
             return new TacticResponse(
                     tactic.getTacticId(),
                     tactic.getUser().getId(),
@@ -29,6 +30,7 @@ public record TacticResponse(Long tacticId,
                     tactic.getTacticDetails(),
                     tactic.getAttackDetails(),
                     tactic.getDefenseDetails(),
+                    baseUrl + tactic.getImageUrl(),
                     tactic.getCreatedAt(),
                     tactic.getUpdatedAt()
             );

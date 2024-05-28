@@ -26,6 +26,8 @@ public record TacticCreateRequest(
         String attackDetails,
         @Schema(description = "defenseDetails", example = "수비시 두줄 수비...")
         String defenseDetails,
+        @Schema(description = "imageUrl", example = "/images/example.jpg")
+        String imageUrl, // 이미지 URL 필드 추가
         @Schema(description = "positionDetails", example = """
             [
                 {"position": "Position1", "positionDescription": "Description1"},
@@ -53,6 +55,7 @@ public record TacticCreateRequest(
                 .tacticDetails(tacticDetails)
                 .attackDetails(attackDetails)
                 .defenseDetails(defenseDetails)
+                .imageUrl(imageUrl)
                 .build();
     }
 }

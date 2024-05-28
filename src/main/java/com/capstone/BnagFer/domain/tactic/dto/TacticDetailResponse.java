@@ -20,12 +20,13 @@ public record TacticDetailResponse(
         String tacticDetails,
         String attackDetails,
         String defenseDetails,
+        String imageUrl,
         List<CommentList> comments,
         Long likeCnt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static TacticDetailResponse from(Tactic tactic, Long likeCnt) {
+    public static TacticDetailResponse from(Tactic tactic, Long likeCnt, String baseUrl) {
         return TacticDetailResponse.builder()
                 .tacticId(tactic.getTacticId())
                 .userId(tactic.getUser().getId())
@@ -37,6 +38,7 @@ public record TacticDetailResponse(
                 .tacticDetails(tactic.getTacticDetails())
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
+                .imageUrl(baseUrl + tactic.getImageUrl())
                 .comments(CommentList.from(tactic.getComments()))
                 .likeCnt(likeCnt)
                 .createdAt(tactic.getCreatedAt())
