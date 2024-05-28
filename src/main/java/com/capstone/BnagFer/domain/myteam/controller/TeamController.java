@@ -26,8 +26,8 @@ public class TeamController {
     private final TeamTacticQueryService teamTacticQueryService;
 
     @GetMapping("/{teamId}")
-    public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable Long teamId) {
-        GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId);
+    public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable Long teamId, @LoginUser User user) {
+        GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId, user);
         return ApiResponse.onSuccess(myTeam);
     }
 
