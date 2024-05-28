@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.dto.request;
 import com.capstone.BnagFer.domain.myteam.entity.CalendarEvent;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
