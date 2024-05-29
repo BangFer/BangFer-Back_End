@@ -2,13 +2,21 @@
 POST {{api}}/accounts/signup
 Content-Type: application/json
 
+//{
+//  "name": "퍼거슨",
+//  "email": "test1234@naver.com",
+//  "password": "test1234!!",
+//  "passwordCheck": "test1234!!",
+//  "provider": "Kakao"
+//}
 {
-  "name": "퍼거슨",
-  "email": "test1234@naver.com",
-  "password": "test1234!!",
-  "passwordCheck": "test1234!!",
+  "name": "김거슨",
+  "email": "test12345@naver.com",
+  "password": "test12345!!",
+  "passwordCheck": "test12345!!",
   "provider": "Kakao"
 }
+
 
 ### 로그인
 POST {{api}}/accounts/login
@@ -19,3 +27,8 @@ Content-Type: application/json
   "password": "test1234!!",
   "fcmToken": "String"
 }
+//  {
+//    "email" : "test12345@naver.com",
+//    "password" : "test12345!!",
+//    "fcmToken": "String"
+//  }

@@ -12,6 +12,7 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -28,10 +29,15 @@ public class TeamQueryService {
         }
         return GetTeamResponseDto.from(team);
     }
-    public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
-        List<Team> teams = user.getTeam();
-        return GetTeamResponseDto.TeamList.from(teams);
+public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
+    List<TeamMember> teamMembers = teamMembersRepository.findByUser(user);
+    List<GetTeamResponseDto.TeamList> teamLists = new ArrayList<>();
+    for (TeamMember teamMember : teamMembers) {
+        Team team = teamMember.getTeam();
+        teamLists.add(GetTeamResponseDto.TeamList.from(team, teamMember));
     }
+    return teamLists;
+}
     public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));

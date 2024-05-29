@@ -1,15 +1,11 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
-import com.capstone.BnagFer.domain.accounts.entity.Profile;
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.google.firebase.database.annotations.Nullable;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,12 +17,11 @@ import java.util.stream.Collectors;
 @Builder
 public record GetTeamResponseDto (
         Long id,
-        Long leaderId, //leader_id
-        String leaderNickName, //leader_name
+        Long leaderId,
+        String leaderNickName,
         String teamName,
         TacticResponse tacticDto,
         List<TeamMembersList> teamMembers,
-//        List<TeamTacticDetailResponse> teamDetails,
         LocalDateTime createdAt
 ) {
     @Builder
@@ -77,18 +72,16 @@ public record GetTeamResponseDto (
     public record TeamList(
             Long teamId,
             String teamName,
+            Long teamMemberId,
             String leaderNickName
-    )
-    {
-        public static TeamList from(Team team) {
+    ) {
+        public static TeamList from(Team team, TeamMember teamMember) {
             return TeamList.builder()
                     .teamId(team.getId())
                     .teamName(team.getTeamName())
+                    .teamMemberId(teamMember.getId())
                     .leaderNickName(team.getLeader().getProfile().getNickname())
                     .build();
-        }
-        public static List<TeamList> from(List<Team> teams) {
-            return teams.stream().map(TeamList::from).collect(Collectors.toList());
         }
     }
     @Builder
@@ -97,15 +90,16 @@ public record GetTeamResponseDto (
             Long tacticPositionDetailId,
             String memberNickName
     ) {
-public static getIndividualDetail from(Team team, TacticPositionDetail tacticPositionDetail, @Nullable TeamMember teamMember) {
-    return getIndividualDetail.builder()
-            .teamId(team.getId())
-            .tacticPositionDetailId(tacticPositionDetail.getDetailId())
-            .memberNickName(teamMember != null && teamMember.getUser() != null && teamMember.getUser().getProfile() != null
-                    ? teamMember.getUser().getProfile().getNickname()
-                    : null)
-            .build();
-}
+        public static getIndividualDetail from(Team team, TacticPositionDetail tacticPositionDetail, @Nullable TeamMember teamMember) {
+            return getIndividualDetail.builder()
+                    .teamId(team.getId())
+                    .tacticPositionDetailId(tacticPositionDetail.getDetailId())
+                    .memberNickName(teamMember != null && teamMember.getUser() != null && teamMember.getUser().getProfile() != null
+                            ? teamMember.getUser().getProfile().getNickname()
+                            : null)
+                    .build();
+
+        }
     }
 }
 
