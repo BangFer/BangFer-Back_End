@@ -42,6 +42,13 @@ public class TacticQueryService {
             redisUtil.saveLikeCount(tacticId, likeCount);
         }
 
-        return TacticDetailResponse.from(tactic, likeCount);
+        Long commentCount = redisUtil.getCommentCount(tacticId);
+
+        if(commentCount == null){
+            commentCount = (long) tactic.getComments().size();
+            redisUtil.saveCommentCount(tacticId, commentCount);
+        }
+
+        return TacticDetailResponse.from(tactic, likeCount, commentCount);
     }
 }
