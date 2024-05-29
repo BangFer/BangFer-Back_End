@@ -20,11 +20,19 @@ public class RedisUtil {
         redisTemplate.opsForValue().set("tactic:" + tacticId + ":likeCount", likeCount.toString());
     }
 
+    public void saveCommentCount(Long tacticId, Long commentCount){
+        redisTemplate.opsForValue().set("tactic:" + tacticId + ":commentCount", commentCount.toString());
+    }
+
     public Long getLikeCount(Long tacticId) {
         String likeCountStr = (String) redisTemplate.opsForValue().get("tactic:" + tacticId + ":likeCount");
         return likeCountStr != null ? Long.valueOf(likeCountStr) : null;
     }
 
+    public Long getCommentCount(Long tacticId){
+        String commentCountStr = (String) redisTemplate.opsForValue().get("tactic:" + tacticId + ":commentCount");
+        return commentCountStr != null ? Long.valueOf(commentCountStr) : null;
+    }
 
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));

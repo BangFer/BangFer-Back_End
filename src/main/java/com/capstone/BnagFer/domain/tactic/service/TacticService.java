@@ -97,6 +97,8 @@ public class TacticService {
 
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
+        long commentCount = redisUtil.getCommentCount(tacticId);
+
         TacticComment parent = null;
         if (parentCommentId != null) {
             parent = commentRepository.findById(parentCommentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
@@ -107,6 +109,8 @@ public class TacticService {
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(user);
         commentRepository.save(tacticComment);
+        commentCount++;
+        redisUtil.saveCommentCount(tacticId, commentCount);
 
         return CommentResponse.from(tacticComment);
     }
@@ -128,10 +132,17 @@ public class TacticService {
 
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
 
+        long tacticId = tacticComment.getTactic().getTacticId();
+
+        long commentCount = redisUtil.getCommentCount(tacticId);
+        long chlidCnt = tacticComment.getChildren().size();
+
         if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         commentRepository.deleteById(commentId);
+        commentCount -= (chlidCnt + 1L);
+        redisUtil.saveCommentCount(tacticId, commentCount);
     }
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
