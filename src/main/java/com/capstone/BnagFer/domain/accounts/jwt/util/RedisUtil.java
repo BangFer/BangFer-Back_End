@@ -22,16 +22,13 @@ public class RedisUtil {
     }
 
     public void boardSaveLikeCount(Long boardId, Long likeCount) {
-        redisTemplate.opsForValue().set("tactic:" + boardId + ":likeCount", likeCount.toString());
+        redisTemplate.opsForValue().set("board:" + boardId + ":likeCount", likeCount.toString());
     }
 
     public Long boardGetLikeCount(Long boardId) {
         String likeCountStr = (String) redisTemplate.opsForValue().get("board:" + boardId + ":likeCount");
         return likeCountStr != null ? Long.valueOf(likeCountStr) : null;
     }
-
-
-
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
@@ -48,7 +45,6 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(userEmail, fcmToken);
         redisTemplate.expire(userEmail, 30, TimeUnit.DAYS);
     }
-
     public String getFCMToken(String userEmail) {
         Object tokenObj = redisTemplate.opsForValue().get(userEmail);
         if (tokenObj != null) {
@@ -57,7 +53,6 @@ public class RedisUtil {
             return null;
         }
     }
-
     public void removeFCMToken(String userEmail) {
         redisTemplate.delete(userEmail);
     }

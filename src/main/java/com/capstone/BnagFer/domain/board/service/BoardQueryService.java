@@ -36,11 +36,11 @@ public class BoardQueryService {
 
     public BoardDetailResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        Long likeCount = redisUtil.getLikeCount(boardId);
+        Long likeCount = redisUtil.boardGetLikeCount(boardId);
 
         if (likeCount == null) {
             likeCount = (long) board.getLikes().size();
-            redisUtil.saveLikeCount(boardId, likeCount);
+            redisUtil.boardSaveLikeCount(boardId, likeCount);
         }
         return BoardDetailResponseDto.from(board, likeCount);
     }

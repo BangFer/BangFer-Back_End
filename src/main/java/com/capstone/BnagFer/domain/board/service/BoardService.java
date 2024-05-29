@@ -22,7 +22,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -89,7 +88,7 @@ public class BoardService {
         if (like.isPresent()) {
             boardLikeRepository.delete(like.get());
             likeCount--;
-            redisUtil.saveLikeCount(boardId, likeCount);
+            redisUtil.boardSaveLikeCount(boardId, likeCount);
             return ApiResponse.CANCELED_LIKE();
         } else {
             boardLikeRepository.save(new Like(user, board));
