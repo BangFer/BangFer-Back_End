@@ -17,9 +17,9 @@ public record BoardDetailResponseDto(
         String boardContent,
         List<CommentList> commentList,
         Long likeCount,
-        int commentCount
+        Long commentCount
 ) {
-    public static BoardDetailResponseDto from(Board board, Long likeCount) {
+    public static BoardDetailResponseDto from(Board board, Long likeCount, Long commentCount) {
         return BoardDetailResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getUser().getId())
@@ -28,8 +28,7 @@ public record BoardDetailResponseDto(
                 .boardContent(board.getBoardContent())
                 .commentList(CommentList.from(board.getComments()))
                 .likeCount(likeCount)
-                .commentCount(board.getComments().size())
-
+                .commentCount(commentCount)
                 .build();
     }
     @Builder

@@ -105,6 +105,7 @@ public class BoardService {
 
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+        long commentCount = redisUtil.boardGetCommentCount(boardId);
         Comment parent = null;
         if (parentCommentId != null) {
             parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
@@ -112,10 +113,13 @@ public class BoardService {
         Comment comment = request.toEntity(user, board, parent);
         accountsCommonService.checkUserProfile(user);
         boardCommentRepository.save(comment);
-        long totalCommentCount = getTotalCommentCount(boardId);
-        String boardCommentCountKey = "board:commentCount:" + boardId;
-        stringRedisTemplate.opsForValue().set(boardCommentCountKey, String.valueOf(totalCommentCount));
+        commentCount++;
+        redisUtil.boardSaveCommentCount(boardId, commentCount);
         return CommentResponseDto.from(comment);
+//        long totalCommentCount = getTotalCommentCount(boardId);
+//        String boardCommentCountKey = "board:commentCount:" + boardId;
+//        stringRedisTemplate.opsForValue().set(boardCommentCountKey, String.valueOf(totalCommentCount));
+//        return CommentResponseDto.from(comment);
     }
 //    public long getCommentsCountFromRedis(Long boardId) {
 //        String boardCommentCountKey = "board:commentCount:" + boardId;
@@ -133,9 +137,14 @@ public class BoardService {
     }
     public void deleteComment(Long commentId, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
+        long boardId = comment.getBoard().getId();
+        long commentCount = redisUtil.boardGetCommentCount(boardId);
+        long childCnt = comment.getChildren().size();
         if(!comment.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         boardCommentRepository.deleteById(commentId);
+        commentCount -=(childCnt + 1L);
+        redisUtil.boardSaveCommentCount(boardId, commentCount);
     }
 }

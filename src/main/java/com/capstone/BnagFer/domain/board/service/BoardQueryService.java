@@ -42,7 +42,12 @@ public class BoardQueryService {
             likeCount = (long) board.getLikes().size();
             redisUtil.boardSaveLikeCount(boardId, likeCount);
         }
-        return BoardDetailResponseDto.from(board, likeCount);
+        Long commentCount = redisUtil.boardGetCommentCount(boardId);
+        if(commentCount == null){
+            commentCount = (long) board.getComments().size();
+            redisUtil.boardSaveCommentCount(boardId, commentCount);
+        }
+        return BoardDetailResponseDto.from(board, likeCount, commentCount);
     }
 
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {
