@@ -40,18 +40,21 @@ public record BoardResponseDto(
             String writerNickName,
             String boardTitle,
             Long likeCount,
-            int commentCount
+            Long commentCount
 
     ) {
-        public static BoardList from(Board board) {
+        public static BoardList from(Board board, Long commentCount, Long likeCount) {
             return BoardList.builder()
                     .id(board.getId())
                     .userId(board.getUser().getId())
                     .writerNickName(board.getUser().getProfile().getNickname())
                     .boardTitle(board.getBoardTitle())
-                    .likeCount((long) board.getLikes().size())
-                    .commentCount(board.getComments().size())
+                    .likeCount(likeCount)
+                    .commentCount(commentCount)
                     .build();
+        }
+        public static BoardList from(Board board) {
+            return from(board, 0L, 0L);
         }
         public static List<BoardList> from(List<Board> boards) {
             return boards.stream().map(BoardList::from).collect(Collectors.toList());
