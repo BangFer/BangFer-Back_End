@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CommentResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
@@ -30,12 +31,12 @@ public class BoardController {
     private final BoardQueryService boardQueryService;
 
     @GetMapping //게시판 리스트 조회
-    public ApiResponse<Page<BoardResponseDto.BoardList>> getBoardsList(
+    public ApiResponse<Page<BoardListDto>> getBoardsList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
+        Page<BoardListDto> boardsList = boardQueryService.getBoards(pageable);
         return onSuccess(boardsList);
 
     }
@@ -47,13 +48,13 @@ public class BoardController {
     }
 
     @GetMapping("/myboards")
-    public ApiResponse<Page<BoardResponseDto.BoardList>> getMyBoardsList(
+    public ApiResponse<Page<BoardListDto>> getMyBoardsList(
             @LoginUser User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
+        Page<BoardListDto> myBoardsList = boardQueryService.getMyBoards(user, pageable);
         return onSuccess(myBoardsList);
     }
 

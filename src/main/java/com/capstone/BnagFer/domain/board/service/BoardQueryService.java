@@ -3,6 +3,7 @@ package com.capstone.BnagFer.domain.board.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
@@ -21,14 +22,14 @@ public class BoardQueryService {
     private final BoardRepository boardRepository;
     private final RedisUtil redisUtil;
 
-    public Page<BoardResponseDto.BoardList> getBoards(Pageable pageable) {
+    public Page<BoardListDto> getBoards(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
-        return boards.map(BoardResponseDto.BoardList::from);
+        return boards.map(BoardListDto::from);
     }
 
-    public Page<BoardResponseDto.BoardList> getMyBoards(User user, Pageable pageable) {
+    public Page<BoardListDto> getMyBoards(User user, Pageable pageable) {
         Page<Board> boards = getBoardsByUser(user, pageable);
-        return boards.map(BoardResponseDto.BoardList::from);
+        return boards.map(BoardListDto::from);
     }
 
     public BoardDetailResponseDto getBoard(Long boardId) {
