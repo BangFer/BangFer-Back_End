@@ -4,7 +4,6 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
