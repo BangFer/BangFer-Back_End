@@ -9,7 +9,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   AWS_S3_BUCKET: app-release-files
-  AWS_CODE_BUCKET_NAME : bucket-cicd    # 기억해두라고 했던 버킷 이름
+  AWS_CODE_BUCKET_NAME : s3-cicd-bucket    # 기억해두라고 했던 버킷 이름
   AWS_CODE_DEPLOY_APPLICATION: cd-application-cicd    # 기억해두라고 했던 애플리케이션 이름
   AWS_CODE_DEPLOY_GROUP: cd-publish-cicd      # 기억해두라고 했던 배포 그룹 이름
 
