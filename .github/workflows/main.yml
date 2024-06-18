@@ -30,6 +30,15 @@ jobs:
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+        
+    - name: create firebase key
+      run: |
+        cd ./src/main/resources
+        ls -a .
+        touch ./bangfer-firebase-key.json
+        echo "${{ secrets.FIREBASE_KEY }}" > ./bangfer-firebase-key.json
+      shell: bash
+      
     - name: gradlew에 실행 권한 부여
       run: chmod +x ./gradlew
     - name: 프로젝트 빌드
