@@ -487,5 +487,6 @@ gradle-app.setting
 
 # yml files
 application-*.yml
+application.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/macos

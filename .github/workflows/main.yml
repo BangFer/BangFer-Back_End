@@ -33,7 +33,7 @@ jobs:
     - name: Create application.yml
       run: |
         mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application-dev.yml
+        echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
     - name: AWS credential 설정
       uses: aws-actions/configure-aws-credentials@v1
       with:
