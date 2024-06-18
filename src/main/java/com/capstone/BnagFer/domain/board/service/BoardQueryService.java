@@ -35,15 +35,14 @@ public class BoardQueryService {
         return boards.map(BoardListDto::from);
     }
 
-    public BoardDetailResponseDto getBoard(Long boardId) {
-    public Page<BoardDetailResponseDto.BoardList> getUserBoards(Long userId, Pageable pageable) {
+    public Page<BoardListDto> getUserBoards(Long userId, Pageable pageable) {
         User user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
         Page<Board> boards = getBoardsByUser(user, pageable);
-        return boards.map(BoardDetailResponseDto.BoardList::from);
+        return boards.map(BoardListDto::from);
     }
 
-    public BoardResponseDto getBoard(Long boardId) {
+    public BoardDetailResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
         Long likeCount = redisUtil.boardGetLikeCount(boardId);
 

@@ -1,7 +1,6 @@
 package com.capstone.BnagFer.domain.board.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
@@ -17,6 +16,7 @@ import com.capstone.BnagFer.domain.board.repository.BoardLikeRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
