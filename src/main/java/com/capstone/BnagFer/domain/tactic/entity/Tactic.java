@@ -43,14 +43,6 @@ public class Tactic extends BaseEntity {
     @Column(name = "main_formation", length = 10)
     private String mainFormation;
 
-    @Lob
-    @Column(name = "attack_formation")
-    private byte[] attackFormation;
-
-    @Lob
-    @Column(name = "defense_formation")
-    private byte[] defenseFormation;
-
     @Column(name = "tactic_details", columnDefinition = "TEXT")
     private String tacticDetails;
 
@@ -82,8 +74,6 @@ public class Tactic extends BaseEntity {
         anonymous = true;
         famousCoachName = tactic.getFamousCoachName();
         mainFormation = tactic.getMainFormation();
-        attackFormation = tactic.getAttackFormation();
-        defenseFormation = tactic.getDefenseFormation();
         tacticDetails = tactic.getTacticDetails();
         attackDetails = tactic.getAttackDetails();
         defenseDetails = tactic.getDefenseDetails();
@@ -94,8 +84,6 @@ public class Tactic extends BaseEntity {
         anonymous = request.anonymous();
         famousCoachName = request.famousCoachName();
         mainFormation = request.mainFormation();
-        attackFormation = request.attackFormation();
-        defenseFormation = request.defenseFormation();
         tacticDetails = request.tacticDetails();
         attackDetails = request.attackDetails();
         defenseDetails = request.defenseDetails();

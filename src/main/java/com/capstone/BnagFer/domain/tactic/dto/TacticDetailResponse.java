@@ -17,17 +17,16 @@ public record TacticDetailResponse(
         Boolean anonymous,
         String famousCoachName,
         String mainFormation,
-        byte[] attackFormation,
-        byte[] defenseFormation,
         String tacticDetails,
         String attackDetails,
         String defenseDetails,
         List<CommentList> comments,
         Long likeCnt,
+        Long commentCnt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static TacticDetailResponse from(Tactic tactic, Long likeCnt) {
+    public static TacticDetailResponse from(Tactic tactic, Long likeCnt, Long commentCnt) {
         return TacticDetailResponse.builder()
                 .tacticId(tactic.getTacticId())
                 .userId(tactic.getUser().getId())
@@ -36,13 +35,12 @@ public record TacticDetailResponse(
                 .anonymous(tactic.isAnonymous())
                 .famousCoachName(tactic.getFamousCoachName())
                 .mainFormation(tactic.getMainFormation())
-                .attackFormation(tactic.getAttackFormation())
-                .defenseFormation(tactic.getDefenseFormation())
                 .tacticDetails(tactic.getTacticDetails())
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
                 .comments(CommentList.from(tactic.getComments()))
                 .likeCnt(likeCnt)
+                .commentCnt(commentCnt)
                 .createdAt(tactic.getCreatedAt())
                 .updatedAt(tactic.getUpdatedAt())
                 .build();

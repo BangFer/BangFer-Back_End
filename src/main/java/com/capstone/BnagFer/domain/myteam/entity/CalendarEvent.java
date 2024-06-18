@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.entity;
 
-import com.capstone.BnagFer.domain.myteam.dto.request.UpdateTeamCalendarRequestDto;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,13 +22,6 @@ public class CalendarEvent extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @Column(name = "event_info", nullable = false)
-    private String matchInfo;
-
     @Column(name="event_date", nullable = false)
     private LocalDate matchDate;
-
-    public void updateMatchInfo(UpdateTeamCalendarRequestDto updatedMatchInfo) {
-        matchInfo = updatedMatchInfo.getMatchInfo();
-    }
 }

@@ -28,7 +28,8 @@ public enum ErrorCode implements BaseErrorCode {
     UNABLE_TO_SEND_EMAIL(HttpStatus.BAD_REQUEST, "USER411", "이메일을 전송할 수 없습니다."),
     CODE_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "USER412", "유효하지 않은 코드입니다."),
     USER_IS_NOT_STAFF(HttpStatus.FORBIDDEN, "USER413", "스태프가 아닙니다."),
-    EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER404", "이메일이 맞지 않습니다."),
+    EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER414", "이메일이 맞지 않습니다."),
+    CANNOT_USE_SAME_PASSWORD(HttpStatus.BAD_REQUEST, "USER415", "기존 비밀번호와 동일합니다."),
 
     // Firebase 관련 에러
     FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
@@ -55,6 +56,7 @@ public enum ErrorCode implements BaseErrorCode {
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다."),
     NO_AUTHORIZATION(HttpStatus.BAD_REQUEST,"TEAM402", "권한이 없습니다."),
+
     //TEAM_MEMBER 관련 에러
     CANNOT_INVITE(HttpStatus.BAD_REQUEST, "TEAMMEMBER401", "팀원을 초대할 수 없습니다."),
     TEAMMEMBER_EXISTS(HttpStatus.BAD_REQUEST, "TEAMMEMBER402", "이미 초대된 인원입니다."),
@@ -65,9 +67,11 @@ public enum ErrorCode implements BaseErrorCode {
     POSITION_ALREADY_DEALLOCATED(HttpStatus.BAD_REQUEST, "TEAMMEMBER408", "이미 포지션이 할당 해제되었습니다."),
     CANNOT_ALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER409", "포지션 할당 권한이 없습니다."),
     CANNOT_DEALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER410", "포지션 할당 해제 권한이 없습니다."),
+
     //CALENDAR_EVENT 관련 에러
     MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
     MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다."),
+
     //Board 관련 에러
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다.");
 

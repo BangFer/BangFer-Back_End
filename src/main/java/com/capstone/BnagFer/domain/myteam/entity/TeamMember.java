@@ -6,6 +6,7 @@ import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
 @Builder
 @Getter

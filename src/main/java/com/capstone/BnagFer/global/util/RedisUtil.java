@@ -1,4 +1,4 @@
-package com.capstone.BnagFer.domain.accounts.jwt.util;
+package com.capstone.BnagFer.global.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -39,6 +39,14 @@ public class RedisUtil {
         return commentCountStr != null ? Long.valueOf(commentCountStr) : null;
     }
 
+    public void saveCommentCount(Long tacticId, Long commentCount){
+        redisTemplate.opsForValue().set("tactic:" + tacticId + ":commentCount", commentCount.toString());
+    }
+
+    public Long getCommentCount(Long tacticId){
+        String commentCountStr = (String) redisTemplate.opsForValue().get("tactic:" + tacticId + ":commentCount");
+        return commentCountStr != null ? Long.valueOf(commentCountStr) : null;
+    }
 
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));

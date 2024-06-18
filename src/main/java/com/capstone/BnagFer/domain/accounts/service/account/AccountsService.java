@@ -7,7 +7,7 @@ import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomExceptio
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.userdetails.CustomUserDetails;
-import com.capstone.BnagFer.domain.accounts.jwt.util.RedisUtil;
+import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -112,6 +112,10 @@ public class AccountsService {
 
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        if (requestDto.password().equals(requestDto.newPassword())) {
+            throw new AccountsExceptionHandler(ErrorCode.CANNOT_USE_SAME_PASSWORD);
         }
 
         if (!requestDto.newPassword().equals(requestDto.passwordCheck())) {
