@@ -1,6 +1,10 @@
 spring:
-  profiles:
-    active: local
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+  application:
+    name: BangFer
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
