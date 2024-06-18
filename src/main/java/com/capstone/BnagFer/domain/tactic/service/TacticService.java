@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.tactic.service;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -144,6 +142,28 @@ public class TacticService {
         commentCount -= (chlidCnt + 1L);
         redisUtil.saveCommentCount(tacticId, commentCount);
     }
+
+public ApiResponse<Object> likeButton(Long tacticId, User user) {
+
+    Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+    Optional<TacticLike> like = likeRepository.findByUserAndTactic(user, tactic);
+
+    long likeCount = redisUtil.getLikeCount(tacticId);
+
+    if (like.isPresent()) {
+        likeRepository.delete(like.get());
+        likeCount--;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.CANCELED_LIKE();
+    } else {
+        likeRepository.save(new TacticLike(user, tactic));
+        likeCount++;
+        redisUtil.saveLikeCount(tacticId, likeCount);
+        return ApiResponse.SUCCESS_LIKE();
+    }
+}
+
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
 
