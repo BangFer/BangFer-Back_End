@@ -34,8 +34,7 @@ public class BoardController {
 
     @GetMapping //게시판 리스트 조회
     @Operation(summary = "게시판 목록 조회", description = "전체 게시판 목록을 조회합니다. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
-    @GetMapping
-    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getBoardsList(
+    public ApiResponse<Page<BoardListDto>> getBoardsList(
 
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -67,13 +66,13 @@ public class BoardController {
 
     @Operation(summary = "사용자 게시물 목록 조회", description = "특정 사람이 작성한 게시글 목록 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping("/users/{userId}/boards")
-    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getUserBoardsList(
+    public ApiResponse<Page<BoardListDto>> getUserBoardsList(
             @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardDetailResponseDto.BoardList> userBoardsList = boardQueryService.getUserBoards(userId, pageable);
+        Page<BoardListDto> userBoardsList = boardQueryService.getUserBoards(userId, pageable);
         return onSuccess(userBoardsList);
     }
 

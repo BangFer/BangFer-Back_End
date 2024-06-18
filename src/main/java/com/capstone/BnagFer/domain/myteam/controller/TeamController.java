@@ -88,14 +88,7 @@ public class TeamController {
     }
     @GetMapping("/{teamId}/{positionDetailId}")
     public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable Long teamId, Long positionDetailId) {
-        GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService .getIndividualDetail(teamId, positionDetailId);
-
-
-    @Operation(summary = "포지션 세부 설명", description = "11개의 포지션 버튼을 눌러 포지션의 세부 설명을 확인하는 기능")
-    @GetMapping("/{teamId}/{memberId}/positionDetail")
-    public ApiResponse<List<GetTeamResponseDto.getIndividualDetail>> getIndividualDetail(@PathVariable Long teamId, @PathVariable Long memberId, @LoginUser User user) {
-        List<GetTeamResponseDto.getIndividualDetail> positionDetail = teamQueryService .getIndividualDetail(teamId, memberId, user);
-
+        GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService.getIndividualDetail(teamId, positionDetailId);
         return ApiResponse.onSuccess(positionDetail);
     }
 
