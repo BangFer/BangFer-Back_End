@@ -5,7 +5,7 @@ import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
 import com.capstone.BnagFer.domain.board.dto.response.CommentResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
@@ -31,34 +31,37 @@ public class BoardController {
     private final BoardService boardService;
     private final BoardQueryService boardQueryService;
 
+
+    @GetMapping //게시판 리스트 조회
     @Operation(summary = "게시판 목록 조회", description = "전체 게시판 목록을 조회합니다. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping
     public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getBoardsList(
+
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardDetailResponseDto.BoardList> boardsList = boardQueryService.getBoards(pageable);
+        Page<BoardListDto> boardsList = boardQueryService.getBoards(pageable);
         return onSuccess(boardsList);
 
     }
 
     @Operation(summary = "개별 게시물 조회", description = "단일 게시물의 내용을 조회합니다.")
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardResponseDto> getBoard (@PathVariable Long boardId) {
-        BoardResponseDto board = boardQueryService.getBoard(boardId);
+    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable Long boardId) {
+        BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
         return ApiResponse.onSuccess(board);
     }
 
     @Operation(summary = "내 게시물 목록 조회", description = "자신이 작성한 게시글 목록 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping("/myboards")
-    public ApiResponse<Page<BoardDetailResponseDto.BoardList>> getMyBoardsList(
+    public ApiResponse<Page<BoardListDto>> getMyBoardsList(
             @LoginUser User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardDetailResponseDto.BoardList> myBoardsList = boardQueryService.getMyBoards(user, pageable);
+        Page<BoardListDto> myBoardsList = boardQueryService.getMyBoards(user, pageable);
         return onSuccess(myBoardsList);
     }
 
@@ -99,7 +102,7 @@ public class BoardController {
 
     @Operation(summary = "게시글 좋아요 & 좋아요 취소", description = "게시글에 좋아요를 누르는 기능. 한번 더누르면 좋아요 취소.")
     @PostMapping("/{boardId}/like")
-    public ApiResponse<Object> likeBoard(@PathVariable Long boardId, @LoginUser User user) {
+    public ApiResponse<Object> likeButton(@PathVariable Long boardId, @LoginUser User user) {
         return boardService.likeButton(boardId, user);
     }
 

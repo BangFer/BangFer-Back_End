@@ -4,6 +4,8 @@ import com.capstone.BnagFer.domain.board.entity.Comment;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 public record CommentResponseDto(
         Long id,
         Long boardId,
@@ -24,4 +26,5 @@ public record CommentResponseDto(
                 comment.getUpdatedAt()
         );
     }
+
 }
