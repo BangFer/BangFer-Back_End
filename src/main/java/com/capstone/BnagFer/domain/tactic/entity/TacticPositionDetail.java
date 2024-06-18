@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.entity;
 
+import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.DetailUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;

@@ -5,10 +5,13 @@ import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.dto.TacticResponse;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
+import com.google.firebase.database.annotations.Nullable;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -69,34 +72,33 @@ public record GetTeamResponseDto (
     public record TeamList(
             Long teamId,
             String teamName,
+            Long teamMemberId,
             String leaderNickName
-    )
-    {
-        public static TeamList from(Team team) {
+    ) {
+        public static TeamList from(Team team, TeamMember teamMember) {
             return TeamList.builder()
                     .teamId(team.getId())
                     .teamName(team.getTeamName())
+                    .teamMemberId(teamMember.getId())
                     .leaderNickName(team.getLeader().getProfile().getNickname())
                     .build();
-        }
-        public static List<TeamList> from(List<Team> teams) {
-            return teams.stream().map(TeamList::from).collect(Collectors.toList());
         }
     }
     @Builder
     public record getIndividualDetail(
-            Long detailId,
-            Position position,
-            String positionDescription,
+            Long teamId,
+            Long tacticPositionDetailId,
             String memberNickName
     ) {
-        public static getIndividualDetail from(TacticPositionDetail tacticPositionDetail, TeamMember teamMember) {
+        public static getIndividualDetail from(Team team, TacticPositionDetail tacticPositionDetail, @Nullable TeamMember teamMember) {
             return getIndividualDetail.builder()
-                    .detailId(tacticPositionDetail.getDetailId())
-                    .position(tacticPositionDetail.getPosition())
-                    .memberNickName(teamMember.getUser().getProfile().getNickname())
-                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .teamId(team.getId())
+                    .tacticPositionDetailId(tacticPositionDetail.getDetailId())
+                    .memberNickName(teamMember != null && teamMember.getUser() != null && teamMember.getUser().getProfile() != null
+                            ? teamMember.getUser().getProfile().getNickname()
+                            : null)
                     .build();
+
         }
     }
 }
