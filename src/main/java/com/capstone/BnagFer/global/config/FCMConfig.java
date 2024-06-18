@@ -20,7 +20,7 @@ public class FCMConfig {
 
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("firebase/bangfer-firebase-key.json");
+        ClassPathResource resource = new ClassPathResource("/firebase/bangfer-firebase-key.json");
 
         try (InputStream refreshToken = resource.getInputStream()) {
             FirebaseApp firebaseApp = getOrInitializeFirebaseApp(refreshToken);
