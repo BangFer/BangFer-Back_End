@@ -10,7 +10,6 @@ START_LOG="$ROOT_PATH/start.log"
 NOW=$(date +%c)
 
 echo "[$NOW] $JAR 복사" >> $START_LOG
-# 정확한 경로를 지정하여 복사 명령어를 사용합니다.
 cp $ROOT_PATH/build/libs/*.jar $JAR
 
 echo "[$NOW] > $JAR 실행" >> $START_LOG
