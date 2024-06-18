@@ -12,7 +12,6 @@ NOW=$(date +%c)
 echo "[$NOW] $JAR 복사" >> $START_LOG
 cp $ROOT_PATH/build/libs/*.jar $JAR
 
-# 개발 환경(dev profile)으로 실행하기 위해 환경 변수 설정
 export SPRING_PROFILES_ACTIVE=dev
 
 echo "[$NOW] > $JAR 실행" >> $START_LOG
