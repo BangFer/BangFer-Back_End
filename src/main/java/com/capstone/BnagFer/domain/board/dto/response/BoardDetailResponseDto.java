@@ -15,18 +15,20 @@ public record BoardDetailResponseDto(
         String writerNickName,
         String boardTitle,
         String boardContent,
-        List<Comment> commentContent,
-        int likeCount
+        List<CommentList> commentList,
+        Long likeCount,
+        Long commentCount
 ) {
-    public static BoardDetailResponseDto from(Board board) {
+    public static BoardDetailResponseDto from(Board board, Long likeCount, Long commentCount) {
         return BoardDetailResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getUser().getId())
                 .writerNickName(board.getUser().getProfile().getNickname())
                 .boardTitle(board.getBoardTitle())
                 .boardContent(board.getBoardContent())
-                .commentContent(board.getComments())
-                .likeCount(board.getLikes().size())
+                .commentList(CommentList.from(board.getComments()))
+                .likeCount(likeCount)
+                .commentCount(commentCount)
                 .build();
     }
     @Builder
@@ -37,7 +39,8 @@ public record BoardDetailResponseDto(
             String nickName,
             String commentText,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            List<CommentList> children
     ) {
         public static CommentList from(Comment comment) {
             return CommentList.builder()
@@ -48,32 +51,12 @@ public record BoardDetailResponseDto(
                     .commentText(comment.getCommentText())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
+                    .children(comment.getChildren().stream().map(CommentList::from).collect(Collectors.toList()))
+                    //최상위 댓글로만 자식 댓글이 달릴 수 있게!
                     .build();
         }
         public static List<CommentList> from(List<Comment> comments) {
-            return comments.stream().map(CommentList::from).collect(Collectors.toList());
-        }
-    }
-    @Builder
-    public record BoardList(
-            Long id,
-            Long userId,
-            String writerNickName,
-            String boardTitle,
-            int likeCount
-
-    ) {
-        public static BoardList from(Board board) {
-            return BoardList.builder()
-                    .id(board.getId())
-                    .userId(board.getUser().getId())
-                    .writerNickName(board.getUser().getProfile().getNickname())
-                    .boardTitle(board.getBoardTitle())
-                    .likeCount(board.getLikes().size())
-                    .build();
-        }
-        public static List<BoardList> from(List<Board> boards) {
-            return boards.stream().map(BoardList::from).collect(Collectors.toList());
+            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
         }
     }
 

@@ -3,6 +3,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.request.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.global.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -31,6 +32,7 @@ public class Team extends BaseEntity {
 
     //팀 맴버
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TeamMember> teamMembers;
 
     //전술
@@ -40,6 +42,7 @@ public class Team extends BaseEntity {
 
     //캘린더
     @OneToMany(mappedBy = "team")
+    @JsonIgnore
     private List<CalendarEvent> calendarEvents;
 
     public void updateLeader(User updateLeader) {
