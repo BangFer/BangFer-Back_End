@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -16,11 +17,14 @@ import java.util.logging.Logger;
 @Configuration
 public class FCMConfig {
 
+    @Value("${firebase.keyPath}")
+    private String keyPath;
+
     private static final Logger logger = Logger.getLogger(FCMConfig.class.getName());
 
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("/firebase/bangfer-firebase-key.json");
+        ClassPathResource resource = new ClassPathResource(keyPath);
 
         try (InputStream refreshToken = resource.getInputStream()) {
             FirebaseApp firebaseApp = getOrInitializeFirebaseApp(refreshToken);
