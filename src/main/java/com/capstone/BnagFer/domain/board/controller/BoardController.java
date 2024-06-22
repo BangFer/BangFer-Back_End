@@ -4,10 +4,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
-import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
-import com.capstone.BnagFer.domain.board.dto.response.CommentResponseDto;
-import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.*;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
 import com.capstone.BnagFer.domain.board.service.BoardService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
@@ -136,4 +133,11 @@ public class BoardController {
         boardService.deleteComment(commentId, user);
         return ApiResponse.noContent();
     }
+    @Operation(summary = "부적절한 댓글 삭제", description = "부적절한 댓글 삭제 기능.")
+    @PostMapping("/report/comment/{commentId}")
+    public ApiResponse<ReportCommentResponseDto> reportComment(@PathVariable Long commentId, @LoginUser User user) {
+        boardService.reportComment(commentId, user);
+
+    }
+
 }

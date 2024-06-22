@@ -19,8 +19,12 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY) // 댓글 작성자
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "reported_by_user_id") // 신고하는 사람
+    private User reportedBy;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Board board;
@@ -35,6 +39,9 @@ public class Comment extends BaseEntity {
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
+
+    @Column(name = "report_count")
+    private int reportCount = 0;
 
     public void setParent(Comment parent) {
         if (this.parent != null) {

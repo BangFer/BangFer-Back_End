@@ -73,7 +73,11 @@ public enum ErrorCode implements BaseErrorCode {
     MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다."),
 
     //Board 관련 에러
-    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다.");
+    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다."),
+    //Report 관련 에러
+    RESTRICTED_CONTENT(HttpStatus.BAD_REQUEST, "REPORT401", "제한된 게시글입니다."),
+    CANNOT_REPORT_YOURSELF(HttpStatus.BAD_REQUEST, "REPORT402", "자신을 신고할 수 없습니다."),
+    USER_BANNED(HttpStatus.BAD_REQUEST, "REPORT403", "차단된 사용자입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

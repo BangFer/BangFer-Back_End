@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.board.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
+import com.capstone.BnagFer.domain.report.entity.BoardActivity;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -39,8 +40,15 @@ public class Board extends BaseEntity {
     @JsonIgnore
     private List<Like> likes = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private BoardActivity boardActivity = BoardActivity.GENERAL;
+
     public void updateBoard(BoardRequestDto request) {
         boardTitle = request.boardTitle();
         boardContent = request.boardContent();
+    }
+
+    public void changeActivity(BoardActivity boardActivity) {
+        this.boardActivity = boardActivity;
     }
 }
