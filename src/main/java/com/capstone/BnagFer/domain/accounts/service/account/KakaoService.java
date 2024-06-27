@@ -111,13 +111,13 @@ public class KakaoService {
     public UserSignupResponseDto signupByKakao(UserSocialSignupRequestDto requestDto) {
         KakaoProfile  kakaoProfile = getKakaoProfile(requestDto.accessToken());
         if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
-//        if (kakaoProfile.getKakao_account().getEmail() == null) {
-//            kakaoUnlink(requestDto.accessToken());
-//            throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
-//        }
+        if (kakaoProfile.getKakao_account().getEmail() == null) {
+            kakaoUnlink(requestDto.accessToken());
+            throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
+        }
 
         UserSignupRequestDto signupRequestDto = UserSignupRequestDto.builder()
-                .email(requestDto.email())
+                .email(kakaoProfile.getKakao_account().getEmail())
                 .name(kakaoProfile.getProperties().getNickname())
                 .provider("kakao")
                 .build();
@@ -129,12 +129,12 @@ public class KakaoService {
         KakaoProfile kakaoProfile = getKakaoProfile(requestDto.accessToken());
         if (kakaoProfile == null) throw new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND);
 
-//        String kakaoEmail = kakaoProfile.getKakao_account().getEmail();
-//        if (kakaoEmail == null) throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
+        String kakaoEmail = kakaoProfile.getKakao_account().getEmail();
+        if (kakaoEmail == null) throw new AccountsExceptionHandler(ErrorCode.EMAIL_NOT_EXIST);
 
-        redisUtil.saveFCMToken(requestDto.email(), requestDto.fcmToken());
+        redisUtil.saveFCMToken(kakaoEmail, requestDto.fcmToken());
 
-        User user = userJpaRepository.findByEmailAndProvider(requestDto.email(), "kakao")
+        User user = userJpaRepository.findByEmailAndProvider(kakaoEmail, "kakao")
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
