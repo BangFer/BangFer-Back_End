@@ -24,6 +24,7 @@ public class TeamService {
     private final TeamMembersRepository teamMembersRepository;
 
     public CUTeamResponseDto createMyTeam(CUTeamRequestDto request, User user) {
+
         Team team = request.toEntity();
         team.updateLeader(user);
         TeamMember teamMember = TeamMember.createTeamMember();
@@ -34,10 +35,12 @@ public class TeamService {
         teamMember.updateUserRoleAndTeam(user, team);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
+
         return CUTeamResponseDto.from(team);
     }
 
     public CUTeamResponseDto updateMyTeam(CUTeamRequestDto request, Long teamId, User user) {
+
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
         if(!team.getLeader().getId().equals(user.getId())) {
@@ -45,16 +48,18 @@ public class TeamService {
         }
 
         team.updateTeam(request);
-        Team updatedTeam = teamRepository.save(team);
-        return CUTeamResponseDto.from(updatedTeam);
+
+        return CUTeamResponseDto.from(team);
     }
 
     public void deleteMyTeam(Long teamId, User user) {
+
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
         if (!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
+
         teamRepository.deleteById(teamId);
     }
 }

@@ -30,7 +30,6 @@ public class TeamMembersService {
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
-    private final TacticPositionDetailRepository tacticPositionDetailRepository;
 
     public TeamMembersResponseDto inviteTeamMembers(TeamMemberRequestDto request, User user) {
 

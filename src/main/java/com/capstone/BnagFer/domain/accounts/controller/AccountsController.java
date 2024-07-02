@@ -83,7 +83,7 @@ public class AccountsController {
 
     @Operation(summary = "비밀번호 변경", description = "기존 비밀번호, 새 비밀번호, 새 비밀번호 확인을 받음. 로그인된 상태에서 가능. 비밀번호 변경 후 로그아웃 처리됨. " +
             "참고) SMTP 이메일 인증 필요.")
-    @PostMapping("/changePw")
+    @PutMapping("/changePw")
     public ApiResponse<String> changePassword(
             @LoginUser User user,
             HttpServletRequest request,
@@ -94,7 +94,7 @@ public class AccountsController {
 
     @Operation(summary = "비밀번호 분실", description = "이메일을 받아 해당회원의 새 비밀번호, 새 비밀번호 확인을 받음. " +
             "참고) SMTP 이메일 인증 필요.")
-    @PostMapping("/forgotPw")
+    @PutMapping("/forgotPw")
     public ApiResponse<String> forgotPassword(
             @Valid @RequestBody ForgotPwRequestDto requestDto) {
         accountsService.forgotPassword(requestDto);
@@ -103,7 +103,7 @@ public class AccountsController {
 
     @Operation(summary = "이메일 변경", description = "현재 이메일과 새 이메일을 받음. 이메일 변경 후 로그아웃 처림됨. " +
             "참고) SMTP 이메일 인증 2번 필요.")
-    @PostMapping("/changeEmail")
+    @PutMapping("/changeEmail")
     public ApiResponse<String> changeEmail(
             @LoginUser User user,
             HttpServletRequest request,

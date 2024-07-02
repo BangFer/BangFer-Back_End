@@ -20,9 +20,7 @@ public class TeamTacticService {
     private final TacticRepository tacticRepository;
 
     public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId, User user) {
-        if (user.getId() == null) {
-            throw new TeamExceptionHandler(ErrorCode.USER_NOT_FOUND);
-        }
+
         // 전술 찾기
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         // 팀 찾기
@@ -32,10 +30,12 @@ public class TeamTacticService {
         validateAndUpdateTeam(team, user, tactic);
         // 팀 저장
         teamRepository.save(team);
+
         return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
     }
 
     public void deallocateMyTactic(Long teamId, Long tacticId, User user) {
+
         tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
@@ -51,14 +51,17 @@ public class TeamTacticService {
     }
 
     private void validateAndUpdateTeam(Team team, User user, Tactic tactic) {
+
         // 팀 리더 검증
         if (!team.getLeader().getId().equals(user.getId())) {
             throw new TeamExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
+
         // 사용자 전술 권한 검증
         if (!user.getTactics().contains(tactic)) {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_ALLOWED);
         }
+
         // 팀 정보 업데이트
         team.updateLeaderAndTactic(user, tactic);
     }
