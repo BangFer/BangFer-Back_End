@@ -41,7 +41,7 @@ public class ProfileController {
     @PutMapping(value = "/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<ProfileResponseDto> updateProfile(
             @Parameter(description = "프로필 ID", required = true)
-            @PathVariable Long profileId,
+            @PathVariable(name = "profileId") Long profileId,
             @LoginUser User user,
             @Valid @RequestPart("request") UpdateProfileRequestDto requestDto,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
@@ -57,7 +57,7 @@ public class ProfileController {
     @Operation(summary = "다른 사람 프로필 정보 조회", description = "내 프로필 정보 조회와 다르게 닉네임, 설명, 성별만 조회 가능.")
     @GetMapping("/{userId}")
     public ApiResponse<OtherUserProfileResponseDto> getOtherUserProfile(
-            @Parameter(description = "사용자 ID", required = true) @PathVariable Long userId) {
+            @Parameter(description = "사용자 ID", required = true) @PathVariable(name = "userId") Long userId) {
         return ApiResponse.onSuccess(profileQueryService.getOtherUserProfile(userId));
     }
 }

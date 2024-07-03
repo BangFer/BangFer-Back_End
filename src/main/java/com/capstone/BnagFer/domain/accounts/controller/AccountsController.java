@@ -61,7 +61,7 @@ public class AccountsController {
     @Operation(summary = "회원 탈퇴", description = "이메일을 입력받아 해당 회원을 탈퇴시킴. 바로 탈퇴 되는게 아닌 30일 동안 회원 유지 하고 탈퇴. (30일 안에 회원 복구 가능) " +
             "참고) SMTP 이메일 인증 필요.")
     @DeleteMapping("/delete/{email}")
-    public ApiResponse<String> deleteAccount(@PathVariable String email, @LoginUser User user) {
+    public ApiResponse<String> deleteAccount(@PathVariable(name = "email") String email, @LoginUser User user) {
         accountsService.deleteAccount(email, user);
         return ApiResponse.onSuccess("회원 탈퇴 성공");
     }
@@ -69,14 +69,14 @@ public class AccountsController {
     @Operation(summary = "탈퇴 회원 복구", description = "이메일을 입력받아 해방 회원을 복구 시킴. 탈퇴 30일 이후면 복구 불가. " +
             "참고) SMTP 이메일 인증 필요.")
     @PostMapping("/recover/{email}")
-    public ApiResponse<String> recoverAccount(@PathVariable String email) {
+    public ApiResponse<String> recoverAccount(@PathVariable(name = "email") String email) {
         accountsService.recoverAccount(email);
         return ApiResponse.onSuccess("회원 복구 성공");
     }
 
     @Operation(summary = "이메일로 회원 조회", description = "이메일로 해당 회원 조회한다.")
     @GetMapping("/{email}")
-    public ApiResponse<User> getUserByEmail(@PathVariable String email) {
+    public ApiResponse<User> getUserByEmail(@PathVariable(name = "email") String email) {
         User user = accountsQueryService.getUserByEmail(email);
         return ApiResponse.onSuccess(user);
     }
