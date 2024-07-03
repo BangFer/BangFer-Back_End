@@ -30,6 +30,9 @@ public class Profile extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 20)
     private String nickname; // 닉네임
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description; // 소개 설명
 
@@ -50,5 +53,9 @@ public class Profile extends BaseEntity {
         description = requestDto.description();
         dateOfBirth = requestDto.dateOfBirth();
         gender = requestDto.gender();
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }

@@ -20,10 +20,13 @@ public record UpdateProfileRequestDto(
         @Size(max = 10, message = "이름은 최대 10자까지 입력 가능합니다.")
         String name,
 
+        @Schema(description = "description", example = "명장 퍼거슨 입니다")
         String description,
 
+        @Schema(description = "dateOfBirth", example = "2000-01-01")
         LocalDate dateOfBirth,
 
+        @Schema(description = "gender", example = "MALE")
         Gender gender
 ) {
 }
