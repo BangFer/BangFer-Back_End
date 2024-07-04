@@ -30,36 +30,9 @@ public class S3Provider {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String multipartFileUpload(MultipartFile file, S3UploadRequest request) {
-        String fileName = request.dirName() + "/" + request.userId() + File.separator + UUID.randomUUID();
-
-        TransferManager tm = TransferManagerBuilder.standard()
-                .withS3Client(amazonS3Client)
-                .build();
-        try {
-            InputStream is = file.getInputStream();
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(file.getContentType());
-            objectMetadata.setContentLength(file.getSize());
-            Upload upload = tm.upload(bucket, fileName, is, objectMetadata);
-            try {
-                upload.waitForCompletion();
-            } catch (InterruptedException e) {
-                log.error("S3 multipartFileUpload error", e);
-                throw new AccountsExceptionHandler(ErrorCode.S3_UPLOAD_FAILED);
-            }
-        } catch (IOException e) {
-            log.error("File convert error", e);
-            throw new AccountsExceptionHandler(ErrorCode.FILE_CONVERT_FAILED);
-        } finally {
-            tm.shutdownNow();
-        }
-        return amazonS3Client.getUrl(bucket, fileName).toString();
-    }
-
     public String uploadFile(MultipartFile file, S3UploadRequest request){
 
-        String fileName = request.dirName() + File.separator + request.userId() + File.separator + UUID.randomUUID();
+        String fileName = request.dirName() + "/" + request.userId() + File.separator + UUID.randomUUID();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());

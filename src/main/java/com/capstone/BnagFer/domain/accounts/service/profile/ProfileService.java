@@ -29,7 +29,11 @@ public class ProfileService {
 
         Profile profile = requestDto.toEntity(user);
 
-        uploadProfile(user, profileImage, profile, requestDto.nickname());
+        uploadProfile(user, profileImage, profile);
+
+        if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
+            throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
+        }
 
         // 프로필 이미 존재
         if (profileJpaRepository.existsByUser(user)) {
@@ -47,7 +51,13 @@ public class ProfileService {
             throw new ProfileExceptionHandler(ErrorCode.PROFILE_AND_USER_NOT_MATCHED);
         }
 
-        uploadProfile(user, profileImage, profile, requestDto.nickname());
+        uploadProfile(user, profileImage, profile);
+
+        // 나 아닌 다른 사람의 닉네임과 중복된 경우만 에러처리
+        Profile existingNickname = profileJpaRepository.findByNickname(requestDto.nickname());
+        if (existingNickname != null && !existingNickname.getUser().getId().equals(user.getId())) {
+            throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
+        }
 
         user.updateUser(requestDto);
         profile.updateProfile(requestDto);
@@ -55,18 +65,14 @@ public class ProfileService {
         return ProfileResponseDto.from(profileJpaRepository.save(profile), userJpaRepository.save(user));
     }
 
-    private void uploadProfile(User user, MultipartFile profileImage, Profile profile, String nickname) {
+    private void uploadProfile(User user, MultipartFile profileImage, Profile profile) {
         if (profileImage != null) {
-            String profileImageUrl = s3Provider.multipartFileUpload(profileImage,
+            String profileImageUrl = s3Provider.uploadFile(profileImage,
                     S3UploadRequest.builder()
                             .userId(user.getId())
                             .dirName("profile")
                             .build());
             profile.updateProfileImageUrl(profileImageUrl);
-        }
-
-        if (profileJpaRepository.existsByNickname(nickname)) {
-            throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
         }
     }
 }
