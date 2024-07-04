@@ -22,7 +22,6 @@ import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.global.util.s3.S3Provider;
 import com.capstone.BnagFer.global.util.s3.dto.S3UploadRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

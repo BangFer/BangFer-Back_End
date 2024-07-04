@@ -3,11 +3,6 @@ package com.capstone.BnagFer.global.util.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.amazonaws.services.s3.transfer.Upload;
-import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
-import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.util.s3.dto.S3UploadRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 @Slf4j
