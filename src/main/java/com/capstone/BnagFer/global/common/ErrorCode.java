@@ -77,7 +77,8 @@ public enum ErrorCode implements BaseErrorCode {
     MATCH_EVENT_NOT_IN_TEAM(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "해당 팀의 일정이 아닙니다."),
 
     //Board 관련 에러
-    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다.");
+    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다."),
+    TOO_MUCH_IMAGE(HttpStatus.BAD_REQUEST, "BOARD402", "사진은 최대 10개까지 첨부 가능합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

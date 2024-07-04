@@ -69,6 +69,11 @@ public class BoardService {
     }
 
     private void uploadBoard(User user, List<MultipartFile> images, Board board) {
+
+        if (board.getImages().size() + images.size() > 10) {
+            throw new BoardExceptionHandler(ErrorCode.TOO_MUCH_IMAGE);
+        }
+
         if (images != null && !images.isEmpty()) {
             List<BoardImage> boardImages = images.stream()
                     .map(image -> {
