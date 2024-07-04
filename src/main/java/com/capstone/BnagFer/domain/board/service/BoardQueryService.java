@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.AccountsExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.BoardImageDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -55,6 +59,7 @@ public class BoardQueryService {
             commentCount = (long) board.getComments().size();
             redisUtil.boardSaveCommentCount(boardId, commentCount);
         }
+
         return BoardDetailResponseDto.from(board, likeCount, commentCount);
     }
 

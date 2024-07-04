@@ -65,11 +65,11 @@ public record TacticDetailResponse(
                     .comment(comment.getComment())
                     .createdAt(comment.getCreatedAt())
                     .updateAt(comment.getUpdatedAt())
-                    .children(comment.getChildren().stream().map(CommentList::from).collect(Collectors.toList()))
+                    .children(comment.getChildren().stream().map(CommentList::from).toList())
                     .build();
         }
         public static List<CommentList> from(List<TacticComment> comments){
-            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).collect(Collectors.toList());
+            return comments.stream().filter(c -> c.getParent() == null).map(CommentList::from).toList();
         }
     }
 }

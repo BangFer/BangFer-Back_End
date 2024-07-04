@@ -19,7 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.capstone.BnagFer.global.common.ApiResponse.onSuccess;
 
@@ -77,18 +81,21 @@ public class BoardController {
     }
 
     @Operation(summary = "게시글 생성", description = "게시글을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
-    @PostMapping
-    public ApiResponse<CreateBoardResponseDto> createBoard(@RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
-        CreateBoardResponseDto board = boardService.createBoard(request, user);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<CreateBoardResponseDto> createBoard(@LoginUser User user,
+                                                           @Valid @RequestPart("request") BoardRequestDto request,
+                                                           @RequestPart(name = "image", required = false) List<MultipartFile> images) {
+        CreateBoardResponseDto board = boardService.createBoard(request, user, images);
         return ApiResponse.onSuccess(board);
     }
 
     @Operation(summary = "게시글 수정", description = "자신의 게시글을 수정합니다. 게시글 작성자 만이 수정 가능")
-    @PutMapping("/{boardId}")
-    public ApiResponse<CreateBoardResponseDto> updateBoard(@PathVariable(name = "boardId") long boardId,
-                                                           @RequestBody @Valid BoardRequestDto request,
-                                                           @LoginUser User user) {
-        CreateBoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user);
+    @PutMapping(value ="/{boardId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<CreateBoardResponseDto> updateBoard(@LoginUser User user,
+                                                           @PathVariable(name = "boardId") long boardId,
+                                                           @Valid @RequestPart("request") BoardRequestDto request,
+                                                           @RequestPart(name = "image", required = false) List<MultipartFile> images) {
+        CreateBoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user, images);
         return ApiResponse.onSuccess(updatedBoard);
     }
 
