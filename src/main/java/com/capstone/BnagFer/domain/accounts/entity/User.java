@@ -97,6 +97,14 @@ public class User extends BaseEntity {
         this.userActivity = userActivity;
     }
 
+    public void grantStaffAuthority(Boolean isStaff) {
+        this.isStaff = isStaff;
+    }
+
+    public void revokeStaffAuthority(Boolean isStaff) {
+        this.isStaff = isStaff;
+    }
+
     public void updateEmail(ChangeEmailRequestDto requestDto) {
         email = requestDto.newEmail();
     }

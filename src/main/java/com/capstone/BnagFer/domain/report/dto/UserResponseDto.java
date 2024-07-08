@@ -5,7 +5,7 @@ import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import lombok.Builder;
 
 @Builder
-public record UserDto(
+public record UserResponseDto(
         Long id,
         String name,
         String nickName,
@@ -14,8 +14,8 @@ public record UserDto(
         UserActivity userActivity
 
 ) {
-    public static UserDto from(User user) {
-        return UserDto.builder()
+    public static UserResponseDto from(User user) {
+        return UserResponseDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .nickName(user.getProfile().getNickname())
