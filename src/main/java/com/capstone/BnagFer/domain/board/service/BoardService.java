@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.board.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
@@ -28,8 +27,8 @@ public class BoardService {
     private final AccountsCommonService accountsCommonService;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardCommentRepository boardCommentRepository;
-    private final UserJpaRepository userJpaRepository;
     private final RedisUtil redisUtil;
+
 
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user) {
@@ -85,9 +84,9 @@ public class BoardService {
         if (parentCommentId != null) {
             parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         }
-        if(user.getIsBlocked()) {
-            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
-        }
+//        if(user.getIsBlocked()) {
+//            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
+//        }
         Comment comment = request.toEntity(user, board, parent);
         accountsCommonService.checkUserProfile(user);
         boardCommentRepository.save(comment);

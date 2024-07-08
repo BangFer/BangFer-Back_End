@@ -133,11 +133,4 @@ public class BoardController {
         boardService.deleteComment(commentId, user);
         return ApiResponse.noContent();
     }
-    @Operation(summary = "부적절한 댓글 삭제", description = "부적절한 댓글 삭제 기능.")
-    @PostMapping("/report/comment/{commentId}")
-    public ApiResponse<ReportCommentResponseDto> reportComment(@PathVariable Long commentId, @LoginUser User user) {
-        boardService.reportComment(commentId, user);
-
-    }
-
 }
