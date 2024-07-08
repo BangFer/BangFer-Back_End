@@ -33,9 +33,6 @@ public class UserReport {
     @Column(name = "reported_at")
     private LocalDateTime reportedAt;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
     @PostPersist
     private void setCreatedAt() {
         reportedAt = LocalDateTime.now();

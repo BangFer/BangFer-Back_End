@@ -2,7 +2,7 @@ package com.capstone.BnagFer.domain.report.controller;
 
 import com.capstone.BnagFer.domain.report.dto.UserRequestDto;
 import com.capstone.BnagFer.domain.report.dto.UserResponseDto;
-import com.capstone.BnagFer.domain.report.dto.UserReportDto;
+import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.service.StaffActionService;
 import com.capstone.BnagFer.global.common.ApiResponse;
@@ -24,8 +24,8 @@ public class StaffActionController {
     }
 
     @GetMapping("/users/{userId}") //해당 유저의 신고 기록 조회
-    public ApiResponse<Page<UserReportDto>> getUserReportRecord(@PathVariable Long userId, Pageable pageable) {
-        Page<UserReportDto> userReportPage = staffActionService.getUserReportRecord(userId, pageable);
+    public ApiResponse<Page<UserReportResponseDto>> getUserReportRecord(@PathVariable Long userId, Pageable pageable) {
+        Page<UserReportResponseDto> userReportPage = staffActionService.getUserReportRecord(userId, pageable);
         return ApiResponse.onSuccess(userReportPage);
     }
 

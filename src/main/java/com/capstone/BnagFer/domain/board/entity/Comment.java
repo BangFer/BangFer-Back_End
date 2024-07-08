@@ -40,9 +40,6 @@ public class Comment extends BaseEntity {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 
-    @Column(name = "report_count")
-    private int reportCount = 0;
-
     public void setParent(Comment parent) {
         if (this.parent != null) {
             this.parent.getChildren().remove(this);

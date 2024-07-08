@@ -3,7 +3,7 @@ import com.capstone.BnagFer.domain.report.dto.UserRequestDto;
 import com.capstone.BnagFer.domain.report.dto.UserResponseDto;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.report.dto.UserReportDto;
+import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.exception.ReportExceptionHandler;
 import com.capstone.BnagFer.domain.report.repository.UserReportRepository;
@@ -35,9 +35,9 @@ public class StaffActionService {
         return userRepository.findByUserActivity(userActivity, pageable).map(UserResponseDto::from);
     } //주어진 사용자 활동 상태에 해당하는 사용자 목록 반환 by pagination
 
-    public Page<UserReportDto> getUserReportRecord(Long userId, Pageable pageable) {
+    public Page<UserReportResponseDto> getUserReportRecord(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        return userReportRepository.findByReportedUser(user, pageable).map(UserReportDto::from);
+        return userReportRepository.findByReportedUser(user, pageable).map(UserReportResponseDto::from);
     } //특정 사용자가 보고된 사용자 목록 반환
     @Transactional
     public UserResponseDto changeUserActivity(UserActivity userActivity, Long reportedUserId) {
