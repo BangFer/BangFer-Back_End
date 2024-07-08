@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.report.controller;
 
-import com.capstone.BnagFer.domain.report.dto.UserRequestDto;
 import com.capstone.BnagFer.domain.report.dto.UserResponseDto;
 import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;

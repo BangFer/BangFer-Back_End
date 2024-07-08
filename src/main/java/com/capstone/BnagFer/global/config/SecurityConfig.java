@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtAuthenticationFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAccessDeniedHandler;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.JwtAuthenticationEntryPoint;
 import com.capstone.BnagFer.domain.accounts.jwt.filter.JwtExceptionFilter;
+import com.capstone.BnagFer.domain.accounts.jwt.filter.StaffAuthorizationFilter;
 import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
+    private final StaffAuthorizationFilter staffAuthorizationFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -75,10 +77,15 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 
+        // 스태프 권한 필터 추가
+        http
+                .addFilterBefore(staffAuthorizationFilter, JwtAuthenticationFilter.class);
+
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(allowedUrls).permitAll()
+                        .requestMatchers("/staff/**").hasAuthority("ROLE_STAFF")
                         .requestMatchers("/**").authenticated()
                         .anyRequest().permitAll()
                 );
@@ -95,7 +102,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-
         return http.build();
     }
 }
+
