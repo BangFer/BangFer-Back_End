@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<User, Long> {
@@ -23,5 +24,5 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
     @Query("DELETE FROM User u WHERE u.deleted = TRUE AND u.deletedAt < :dateTime")
     void deleteInactiveUsers(LocalDateTime dateTime);
 
-    Page<User> findByUserActivity(UserActivity userActivity, Pageable pageable);
+    List<User> findByUserActivity(UserActivity userActivity);
 }

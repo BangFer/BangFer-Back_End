@@ -9,10 +9,11 @@ import com.capstone.BnagFer.domain.report.exception.ReportExceptionHandler;
 import com.capstone.BnagFer.domain.report.repository.UserReportRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,18 +32,24 @@ public class StaffActionService {
         userRepository.save(user);
         return UserResponseDto.from(user);
     }
-    public Page<UserResponseDto> getUserByActivity(UserActivity userActivity, Pageable pageable) {
-        return userRepository.findByUserActivity(userActivity, pageable).map(UserResponseDto::from);
-    } //주어진 사용자 활동 상태에 해당하는 사용자 목록 반환 by pagination
+    public List<UserResponseDto> getUserByActivity(UserActivity userActivity) {
+        return userRepository.findByUserActivity(userActivity)
+                .stream()
+                .map(UserResponseDto::from)
+                .collect(Collectors.toList());
 
-    public Page<UserReportResponseDto> getUserReportRecord(Long userId, Pageable pageable) {
+    }
+
+    public List<UserReportResponseDto> getUserReportRecord(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        return userReportRepository.findByReportedUser(user, pageable).map(UserReportResponseDto::from);
+        return userReportRepository.findByReportedUser(user)
+                .stream()
+                .map(UserReportResponseDto::from)
+                .collect(Collectors.toList());
     } //특정 사용자가 보고된 사용자 목록 반환
     @Transactional
     public UserResponseDto changeUserActivity(UserActivity userActivity, Long reportedUserId) {
-        User reportedUser = userRepository.findById(reportedUserId).orElseThrow(
-                () -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        User reportedUser = userRepository.findById(reportedUserId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
         if(reportedUser.getUserActivity().equals(UserActivity.FLAGGED)) { //유저의 Activity가 FLAGGED이면 변경할 수 있게
             reportedUser.changeActivity(userActivity);
         }

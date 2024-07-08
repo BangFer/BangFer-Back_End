@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReportService {
     private final UserReportRepository userReportRepository;
     private final UserJpaRepository userRepository;
-    private final BoardRepository boardRepository;
 
     public UserReportResponseDto reportUser(UserReportRequest request, User user, Long reportedUserId) {
         /*
@@ -30,23 +29,16 @@ public class ReportService {
          */
         User reporter = userRepository.findById(user.getId()).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
         User reportedUser = userRepository.findById(reportedUserId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        UserReport userReport = request.toEntity();
         validateSelfReport(reporter.getId(), reportedUser.getId());
         validateUserBanned(reportedUser);
         reportedUser.changeActivity(UserActivity.FLAGGED);
+        UserReport userReport = request.toEntity(reporter, reportedUser);
         userReportRepository.save(userReport);
-        return UserReportResponseDto.of(reporter, reportedUser, request.content());
-//        User reporter = getReporterById(reporterId);
-//        if (userReportRepository.existsByReporterAndReportedUser(user,
-//                reportedUser)) {
-//            return;
-//        }
-//
-//        reportedUser.changeActivity(UserActivity.FLAGGED);
+        return UserReportResponseDto.from(userReport);
     }
 
     private void validateUserBanned(User reportedUser) { //이미 차단된 계정인지 확인
-        if (reportedUser.getUserActivity() == UserActivity.BAN) {
+        if (reportedUser.getUserActivity().equals(UserActivity.BAN)) {
             throw new ReportExceptionHandler(ErrorCode.USER_BANNED);
         }
     }

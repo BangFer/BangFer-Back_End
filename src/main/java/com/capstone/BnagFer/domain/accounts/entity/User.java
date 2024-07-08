@@ -74,7 +74,14 @@ public class User extends BaseEntity {
     private List<Board> boards;
     //신고 상태을 위한 Enum 컬럼
     @Enumerated(EnumType.STRING)
-    private UserActivity userActivity = UserActivity.NORMAL;
+    private UserActivity userActivity;
+
+    @PrePersist
+    protected void onCreate() {
+        if(this.userActivity == null) {
+            this.userActivity = UserActivity.NORMAL;
+        }
+    }
 
     public void updatePassword(String pw) {
         password = pw;

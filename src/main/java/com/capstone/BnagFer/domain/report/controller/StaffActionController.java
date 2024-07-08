@@ -7,9 +7,9 @@ import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.service.StaffActionService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/staff")
@@ -18,14 +18,14 @@ public class StaffActionController {
     private final StaffActionService staffActionService;
 
     @GetMapping("/users")
-    public ApiResponse<Page<UserResponseDto>> getUserByActivity(@RequestParam UserActivity activity, Pageable pageable) {
-        Page<UserResponseDto> userActivityPage = staffActionService.getUserByActivity(activity, pageable);
+    public ApiResponse<List<UserResponseDto>> getUserByActivity(@RequestParam UserActivity activity) {
+        List<UserResponseDto> userActivityPage = staffActionService.getUserByActivity(activity);
         return ApiResponse.onSuccess(userActivityPage);
     }
 
     @GetMapping("/users/{userId}") //해당 유저의 신고 기록 조회
-    public ApiResponse<Page<UserReportResponseDto>> getUserReportRecord(@PathVariable Long userId, Pageable pageable) {
-        Page<UserReportResponseDto> userReportPage = staffActionService.getUserReportRecord(userId, pageable);
+    public ApiResponse<List<UserReportResponseDto>> getUserReportRecord(@PathVariable Long userId) {
+        List<UserReportResponseDto> userReportPage = staffActionService.getUserReportRecord(userId);
         return ApiResponse.onSuccess(userReportPage);
     }
 
