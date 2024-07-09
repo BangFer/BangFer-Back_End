@@ -86,7 +86,6 @@ public class AccountsService {
         return UserSignupResponseDto.from(user);
     }
 
-
     public void logout(HttpServletRequest request) {
         try {
             String accessToken = jwtProvider.resolveAccessToken(request);
@@ -123,7 +122,6 @@ public class AccountsService {
         }
 
         user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));
-        userJpaRepository.save(user);
 
         logout(request);
     }
@@ -137,7 +135,6 @@ public class AccountsService {
         }
 
         user.updatePassword(passwordEncoder.encode(requestDto.password()));
-        userJpaRepository.save(user);
     }
 
     public void updateEmail(HttpServletRequest request, User user, ChangeEmailRequestDto requestDto) {
@@ -153,7 +150,6 @@ public class AccountsService {
 
         // 이메일 변경
         user.updateEmail(requestDto);
-        userJpaRepository.save(user);
 
         logout(request);
     }

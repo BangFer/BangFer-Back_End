@@ -7,7 +7,6 @@ import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.ProfileExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final ProfileJpaRepository profileJpaRepository;
-    private final UserJpaRepository userJpaRepository;
 
     public ProfileResponseDto createProfile(CreateProfileRequestDto requestDto, User user) {
 
@@ -53,6 +51,6 @@ public class ProfileService {
         user.updateUser(requestDto);
         profile.updateProfile(requestDto);
 
-        return ProfileResponseDto.from(profileJpaRepository.save(profile), userJpaRepository.save(user));
+        return ProfileResponseDto.from(profile, user);
     }
 }

@@ -1,4 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.service;
+
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.response.GetTeamResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -12,41 +13,54 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamQueryService {
+
     private final TeamRepository teamRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final TeamMembersRepository teamMembersRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId, User user) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        if(!user.getTeam().contains(team)) {
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        if (!user.getTeam().contains(team)) {
             throw new TeamExceptionHandler(ErrorCode.NO_AUTHORIZATION);
         }
+
         return GetTeamResponseDto.from(team);
     }
-public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
-    List<TeamMember> teamMembers = teamMembersRepository.findByUser(user);
-    List<GetTeamResponseDto.TeamList> teamLists = new ArrayList<>();
-    for (TeamMember teamMember : teamMembers) {
-        Team team = teamMember.getTeam();
-        teamLists.add(GetTeamResponseDto.TeamList.from(team, teamMember));
+
+    public List<GetTeamResponseDto.TeamList> getMyTeamList(User user) {
+
+        List<TeamMember> teamMembers = teamMembersRepository.findByUser(user);
+        List<GetTeamResponseDto.TeamList> teamLists = new ArrayList<>();
+
+        for (TeamMember teamMember : teamMembers) {
+            Team team = teamMember.getTeam();
+            teamLists.add(GetTeamResponseDto.TeamList.from(team, teamMember));
+        }
+
+        return teamLists;
     }
-    return teamLists;
-}
+
     public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
+
         List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
         TeamMember byTeamAndPosition = teamMembersRepository.findByTeamAndPosition(team, tacticPositionDetail.getPosition());
-        if(tacticPositionDetails.contains(tacticPositionDetail)) {
+
+        if (tacticPositionDetails.contains(tacticPositionDetail)) {
             return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, byTeamAndPosition);
-        }
-        else
+        } else
             return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, null);
     }
 }
