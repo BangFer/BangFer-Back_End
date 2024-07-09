@@ -59,9 +59,9 @@ public class TeamMembersService {
         return TeamMembersResponseDto.from(teamMember);
     }
 
-    public void kickOutMembers(Long memberId, User user) {
+    public void kickOutMembers(Long memberId, Long teamId, User user) {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
-        Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(teamMember.getUser());
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
@@ -73,7 +73,7 @@ public class TeamMembersService {
             throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
         //방장에게만 강퇴 권한
         if (team.getLeader().getId().equals(user.getId()))
-            teamMembersRepository.deleteById(memberId);
+            teamMembersRepository.delete(teamMember);
         else
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }

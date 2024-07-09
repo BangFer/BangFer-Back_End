@@ -41,9 +41,9 @@ public class TeamMembersController {
     }
 
     @Operation(summary = "멤버 강퇴", description = "팀 멤버를 강제로 추방하는 기능. 방장만이 강퇴 가능")
-    @DeleteMapping("/kickout/{memberId}")
-    public ApiResponse<Object> kickOutMembers(@PathVariable(name = "memberId") Long memberId, @LoginUser User user) {
-        teamMembersService.kickOutMembers(memberId, user);
+    @DeleteMapping("/kickout/{teamId}/{memberId}")
+    public ApiResponse<Object> kickOutMembers(@PathVariable(name = "memberId") Long memberId, @PathVariable (name = "teamId") Long teamId, @LoginUser User user) {
+        teamMembersService.kickOutMembers(memberId, teamId,user);
         return ApiResponse.noContent();
     }
 
