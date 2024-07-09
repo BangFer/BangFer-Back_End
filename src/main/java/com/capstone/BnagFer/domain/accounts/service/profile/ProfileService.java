@@ -7,7 +7,6 @@ import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.exception.ProfileExceptionHandler;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.util.s3.S3Provider;
 import com.capstone.BnagFer.global.util.s3.dto.S3UploadRequest;
@@ -24,6 +23,7 @@ public class ProfileService {
     private final ProfileJpaRepository profileJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final S3Provider s3Provider;
+
 
     public ProfileResponseDto createProfile(CreateProfileRequestDto requestDto, User user, MultipartFile profileImage) {
 
@@ -62,7 +62,7 @@ public class ProfileService {
         user.updateUser(requestDto);
         profile.updateProfile(requestDto);
 
-        return ProfileResponseDto.from(profileJpaRepository.save(profile), userJpaRepository.save(user));
+        return ProfileResponseDto.from(profile, user);
     }
 
     private void uploadProfile(User user, MultipartFile profileImage, Profile profile) {

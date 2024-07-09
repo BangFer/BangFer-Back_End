@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class EmailService {
 
@@ -74,6 +73,7 @@ public class EmailService {
         return key.toString();
     }
 
+    @Transactional
     public String sendMessage(String to) throws Exception {
         MimeMessage message = createMessage(to);
         try {
@@ -86,6 +86,7 @@ public class EmailService {
         return ePw;
     }
 
+    @Transactional
     public boolean verifyCode(EmailVerifyDto requestDto) {
         if (!(redisUtil.hasKey(AUTH_CODE_PREFIX + requestDto.email()))) {
             throw new CustomException(ErrorCode.CODE_IS_NOT_VALID);

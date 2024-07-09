@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.board.service;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
@@ -7,10 +6,7 @@ import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.CommentResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
-import com.capstone.BnagFer.domain.board.entity.Board;
-import com.capstone.BnagFer.domain.board.entity.BoardImage;
-import com.capstone.BnagFer.domain.board.entity.Comment;
-import com.capstone.BnagFer.domain.board.entity.Like;
+import com.capstone.BnagFer.domain.board.entity.*;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardCommentRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardImageRepository;
@@ -54,7 +50,7 @@ public class BoardService {
 
     public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user, List<MultipartFile> images) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        if(!board.getUser().getId().equals(user.getId())) {
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
 
@@ -96,7 +92,7 @@ public class BoardService {
 
     public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        if(!board.getUser().getId().equals(user.getId())) {
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         boardRepository.deleteById(boardId);
@@ -130,6 +126,9 @@ public class BoardService {
         if (parentCommentId != null) {
             parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         }
+//        if(user.getIsBlocked()) {
+//            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
+//        }
         Comment comment = request.toEntity(user, board, parent);
         accountsCommonService.checkUserProfile(user);
         boardCommentRepository.save(comment);
@@ -140,7 +139,7 @@ public class BoardService {
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-        if(!comment.getUser().getId().equals(user.getId()))
+        if (!comment.getUser().getId().equals(user.getId()))
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         comment.updateComment(request);
         Comment updatedComment = boardCommentRepository.save(comment);
@@ -152,11 +151,13 @@ public class BoardService {
         long boardId = comment.getBoard().getId();
         long commentCount = redisUtil.boardGetCommentCount(boardId);
         long childCnt = comment.getChildren().size();
-        if(!comment.getUser().getId().equals(user.getId())) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         boardCommentRepository.deleteById(commentId);
-        commentCount -=(childCnt + 1L);
+        commentCount -= (childCnt + 1L);
         redisUtil.boardSaveCommentCount(boardId, commentCount);
     }
 }
+
+

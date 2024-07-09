@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.accounts.dto.account.ChangeEmailRequestDto;
 import com.capstone.BnagFer.domain.accounts.dto.profile.UpdateProfileRequestDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,8 +13,6 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -73,6 +72,16 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Board> boards;
+    //신고 상태을 위한 Enum 컬럼
+    @Enumerated(EnumType.STRING)
+    private UserActivity userActivity;
+
+    @PrePersist
+    protected void onCreate() {
+        if(this.userActivity == null) {
+            this.userActivity = UserActivity.NORMAL;
+        }
+    }
 
     public void updatePassword(String pw) {
         password = pw;
@@ -86,13 +95,25 @@ public class User extends BaseEntity {
         deleted = true;
         deletedAt = LocalDateTime.now();
     }
-
     public void recoverDelete() {
         deleted = false;
         deletedAt = null;
     }
 
+    public void changeActivity(UserActivity userActivity) {
+        this.userActivity = userActivity;
+    }
+
+    public void grantStaffAuthority() {
+        this.isStaff = Boolean.TRUE;
+    }
+
+    public void revokeStaffAuthority() {
+        this.isStaff = Boolean.FALSE;
+    }
+
     public void updateEmail(ChangeEmailRequestDto requestDto) {
         email = requestDto.newEmail();
     }
+
 }

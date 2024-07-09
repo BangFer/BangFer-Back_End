@@ -19,15 +19,15 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY) // 댓글 작성자
     private User user;
+
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Board board;
 
     @Column(name = "comment_text", nullable = false)
     private String commentText;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

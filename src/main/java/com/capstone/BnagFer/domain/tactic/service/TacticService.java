@@ -17,7 +17,10 @@ import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -37,10 +40,9 @@ public class TacticService {
         accountsCommonService.checkUserProfile(user);
         tacticRepository.save(tactic);
 
-        for(DetailCreateRequest detailRequest : request.positionDetails()){
-            TacticPositionDetail detail = detailRequest.toEntity(tactic);
-            tacticPositionDetailRepository.save(detail);
-        }
+        // 11개의 개별 포지션에 대한 설명
+        createPositionDetails(request.positionDetails(), tactic);
+
         return TacticResponse.from(tactic);
     }
 
@@ -62,16 +64,22 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tactic.updateTactic(request);
-        Tactic updatedTactic = tacticRepository.save(tactic);
 
+        // 11개의 개별 포지션에 대한 설명 삭제
         tacticPositionDetailRepository.deleteByTactic_TacticId(tacticId);
 
-        for(DetailCreateRequest detailRequest : request.positionDetails()){
-            TacticPositionDetail detail = detailRequest.toEntity(tactic);
+        createPositionDetails(request.positionDetails(), tactic);
+
+        return TacticResponse.from(tactic);
+    }
+
+    private void createPositionDetails(List<DetailCreateRequest> positionDetails, Tactic tactic) {
+
+        for (int i = 0; i < 11; i++) {
+            DetailCreateRequest detailRequest = positionDetails.get(i);
+            TacticPositionDetail detail = detailRequest.toEntity(tactic, i);
             tacticPositionDetailRepository.save(detail);
         }
-
-        return TacticResponse.from(updatedTactic);
     }
 
     public TacticResponse copyTactic(Long tacticId, User user) {
@@ -121,9 +129,8 @@ public class TacticService {
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
 
         tacticComment.updateComment(request);
-        TacticComment updateComment = commentRepository.save(tacticComment);
-        return CommentResponse.from(updateComment);
 
+        return CommentResponse.from(tacticComment);
     }
 
     public void deleteComment(Long commentId, User user) {

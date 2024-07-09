@@ -3,6 +3,7 @@ package com.capstone.BnagFer.domain.tactic.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -24,19 +25,20 @@ public record TacticUpdateRequest(
         String attackDetails,
         @Schema(description = "defenseDetails", example = "수비시 두줄 수비...")
         String defenseDetails,
+        @Size(min = 11, max = 11, message = "[ERROR] 포지션 설명은 정확히 11개여야 합니다.")
         @Schema(description = "positionDetails", example = """
             [
-                {"position": "Position1", "positionDescription": "Description1"},
-                {"position": "Position2", "positionDescription": "Description2"},
-                {"position": "Position3", "positionDescription": "Description3"},
-                {"position": "Position4", "positionDescription": "Description4"},
-                {"position": "Position5", "positionDescription": "Description5"},
-                {"position": "Position6", "positionDescription": "Description6"},
-                {"position": "Position7", "positionDescription": "Description7"},
-                {"position": "Position8", "positionDescription": "Description8"},
-                {"position": "Position9", "positionDescription": "Description9"},
-                {"position": "Position10", "positionDescription": "Description10"},
-                {"position": "Position11", "positionDescription": "Description11"}
+                {"positionDescription": "Description for Position 1"},
+                {"positionDescription": "Description for Position 2"},
+                {"positionDescription": "Description for Position 3"},
+                {"positionDescription": "Description for Position 4"},
+                {"positionDescription": "Description for Position 5"},
+                {"positionDescription": "Description for Position 6"},
+                {"positionDescription": "Description for Position 7"},
+                {"positionDescription": "Description for Position 8"},
+                {"positionDescription": "Description for Position 9"},
+                {"positionDescription": "Description for Position 10"},
+                {"positionDescription": "Description for Position 11"}
             ]
         """)
         List<DetailCreateRequest> positionDetails
