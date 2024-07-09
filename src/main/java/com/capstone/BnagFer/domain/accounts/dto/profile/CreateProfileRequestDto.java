@@ -17,11 +17,15 @@ public record CreateProfileRequestDto(
         @Size(max = 10, message = "닉네임은 최대 10자까지 입력 가능합니다.")
         String nickname,
 
+        @Schema(name = "description", example = "명장 퍼거슨 입니다")
         String description,
 
+        @Schema(name = "dateOfBirth", example = "2000-01-01")
         LocalDate dateOfBirth,
 
+        @Schema(name = "gender", example = "MALE")
         Gender gender
+
 ) {
         public Profile toEntity(User user) {
                 return Profile.builder()

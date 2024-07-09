@@ -26,9 +26,6 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
-
     @Column(name = "board_title", nullable = false)
     private String boardTitle;
 
@@ -36,8 +33,14 @@ public class Board extends BaseEntity {
     private String boardContent;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardImage> images = new ArrayList<>();
 
     public void updateBoard(BoardRequestDto request) {
         boardTitle = request.boardTitle();

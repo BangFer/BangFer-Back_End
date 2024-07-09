@@ -28,7 +28,7 @@ public class TeamMembersController {
 
     @Operation(summary = "팀 멤버 목록 조회")
     @GetMapping("{teamId}")
-    public ApiResponse<List<TeamMembersResponseDto>> getMembers(@PathVariable Long teamId) {
+    public ApiResponse<List<TeamMembersResponseDto>> getMembers(@PathVariable(name = "teamId") Long teamId) {
         List<TeamMembersResponseDto> myTeam = teamMembersQueryService.getMembers(teamId);
         return ApiResponse.onSuccess(myTeam);
     }
@@ -42,7 +42,7 @@ public class TeamMembersController {
 
     @Operation(summary = "멤버 강퇴", description = "팀 멤버를 강제로 추방하는 기능. 방장만이 강퇴 가능")
     @DeleteMapping("/kickout/{memberId}")
-    public ApiResponse<Object> kickOutMembers(@PathVariable Long memberId, @LoginUser User user) {
+    public ApiResponse<Object> kickOutMembers(@PathVariable(name = "memberId") Long memberId, @LoginUser User user) {
         teamMembersService.kickOutMembers(memberId, user);
         return ApiResponse.noContent();
     }
@@ -50,7 +50,8 @@ public class TeamMembersController {
     @Operation(summary = "멤버 포지션 할당", description = "포지션에 멤버를 할당하는 기능. 방장만이 할당 가능")
     @PostMapping("/{teamId}/{memberId}/position")
     public ApiResponse<TeamMemberPositionResponseDto> allocatePosition(@RequestBody @Valid TeamMemberPositionRequestDto request,
-                                                                       @PathVariable Long teamId, @PathVariable Long memberId,
+                                                                       @PathVariable(name = "teamId") Long teamId,
+                                                                       @PathVariable(name = "memberId") Long memberId,
                                                                        @LoginUser User user) {
         TeamMemberPositionResponseDto position = teamMembersService.allocatePosition(request, teamId, memberId, user);
         return ApiResponse.onSuccess(position);
@@ -58,7 +59,8 @@ public class TeamMembersController {
 
     @Operation(summary = "멤버 포지션 할당 해제", description = "포지션에 멤버를 할당 해제 하는 기능. 방장만이 할당 해제 가능")
     @DeleteMapping("/position/{teamId}/{memberId}")
-    public ApiResponse<Object> deallocatePosition(@PathVariable Long teamId, @PathVariable Long memberId, @LoginUser User user) {
+    public ApiResponse<Object> deallocatePosition(@PathVariable(name = "teamId") Long teamId,
+                                                  @PathVariable(name = "memberId") Long memberId, @LoginUser User user) {
         teamMembersService.deallocatePosition(teamId, memberId, user);
         return ApiResponse.noContent();
     }
