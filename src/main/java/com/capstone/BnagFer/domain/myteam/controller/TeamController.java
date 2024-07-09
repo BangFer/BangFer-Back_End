@@ -86,6 +86,8 @@ public class TeamController {
         teamTacticService.deallocateMyTactic(teamId, tacticId, user);
         return ApiResponse.noContent();
     }
+
+    @Operation(summary = "개별 전술 조회", description = "11개의 버튼을 눌러 각각의 개별 전술을 조회")
     @GetMapping("/{teamId}/{positionDetailId}")
     public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable Long teamId, Long positionDetailId) {
         GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService.getIndividualDetail(teamId, positionDetailId);
