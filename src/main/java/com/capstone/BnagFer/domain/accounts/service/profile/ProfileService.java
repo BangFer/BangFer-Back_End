@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfileService {
 
     private final ProfileJpaRepository profileJpaRepository;
-    private final UserJpaRepository userJpaRepository;
     private final S3Provider s3Provider;
 
 
