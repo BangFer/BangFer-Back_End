@@ -27,8 +27,8 @@ public class UserReport {
     @JoinColumn(name = "reported_user_id")
     private User reportedUser;
 
-    @Column
-    private String content;
+    @Enumerated(EnumType.STRING)
+    private ReportActivity reportActivity;
 
     @Column(name = "reported_at")
     private LocalDateTime reportedAt;

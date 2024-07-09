@@ -1,5 +1,6 @@
 package com.capstone.BnagFer.global.config;
 
+import com.capstone.BnagFer.domain.report.converter.ReportActivityConverter;
 import com.capstone.BnagFer.domain.report.converter.UserActivityConverter;
 import com.capstone.BnagFer.global.annotation.LoginUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,11 @@ public class WebConfig implements WebMvcConfigurer {
         resolvers.add(loginUserArgumentResolver);
     }
 
-    //    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(new UserActivityConverter()).forEach(registry::addConverter);
-//
-//    }
     @Override
     public void addFormatters(FormatterRegistry registry) {
         Stream.of(
-                new UserActivityConverter()).forEach(registry::addConverter);
+                        new UserActivityConverter(),
+                        new ReportActivityConverter())
+                .forEach(registry::addConverter);
     }
 }
-//}

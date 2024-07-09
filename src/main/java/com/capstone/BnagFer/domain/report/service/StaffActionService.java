@@ -41,12 +41,7 @@ public class StaffActionService {
     }
     public UserResponseDto changeUserActivity(UserActivity userActivity, Long reportedUserId) {
         User reportedUser = userRepository.findById(reportedUserId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        if(reportedUser.getUserActivity().equals(UserActivity.FLAGGED) ) { //유저의 Activity가 FLAGGED이면 변경할 수 있게
-            reportedUser.changeActivity(userActivity);
-        }
-        else {
-            throw new ReportExceptionHandler(ErrorCode._BAD_REQUEST);
-        }
+        reportedUser.changeActivity(userActivity);
         return UserResponseDto.from(reportedUser);
     }
 }

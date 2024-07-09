@@ -22,16 +22,12 @@ public class Comment extends BaseEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY) // 댓글 작성자
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "reported_by_user_id") // 신고하는 사람
-    private User reportedBy;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Board board;
 
     @Column(name = "comment_text", nullable = false)
     private String commentText;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

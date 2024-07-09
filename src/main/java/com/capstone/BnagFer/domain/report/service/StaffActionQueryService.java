@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class StaffActionQueryService {
     private final UserReportRepository userReportRepository;
     private final UserJpaRepository userRepository;
-    public List<UserResponseDto> getUserByActivity(UserActivity userActivity) {
+    public List<UserResponseDto>getUserByActivity(UserActivity userActivity) {
         return userRepository.findByUserActivity(userActivity)
                 .stream()
                 .map(UserResponseDto::from)

@@ -32,15 +32,6 @@ public record BoardDetailResponseDto(
                 .build();
     }
 
-    public static BoardDetailResponseDto from(Board board) {
-        return BoardDetailResponseDto.builder()
-                .id(board.getId())
-                .writerId(board.getUser().getId())
-                .writerNickName(board.getUser().getProfile().getNickname())
-                .boardTitle(board.getBoardTitle())
-                .boardContent(board.getBoardContent())
-                .build();
-    }
     @Builder
     public record CommentList(
             Long commentId,

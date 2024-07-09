@@ -1,4 +1,5 @@
 package com.capstone.BnagFer.domain.report.dto;
+import com.capstone.BnagFer.domain.report.entity.ReportActivity;
 import com.capstone.BnagFer.domain.report.entity.UserReport;
 import lombok.Builder;
 
@@ -8,7 +9,7 @@ public record UserReportResponseDto(
         Long id,
         Long reporter,
         Long reportedUser,
-        String content,
+        ReportActivity reportActivity,
         LocalDateTime reportedAt
 
 ) {
@@ -17,7 +18,7 @@ public record UserReportResponseDto(
                 .id(userReport.getId())
                 .reporter(userReport.getReporter().getId())
                 .reportedUser(userReport.getReportedUser().getId())
-                .content(userReport.getContent())
+                .reportActivity(userReport.getReportActivity())
                 .reportedAt(userReport.getReportedAt())
                 .build();
     }
