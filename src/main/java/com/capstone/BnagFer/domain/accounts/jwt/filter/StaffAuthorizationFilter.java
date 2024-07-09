@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.accounts.jwt.filter;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -17,9 +16,6 @@ import java.io.IOException;
 @Component
 public class StaffAuthorizationFilter implements Filter {
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -33,11 +29,10 @@ public class StaffAuthorizationFilter implements Filter {
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_STAFF"));
 
             if (!isStaff) {
-                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "해당 기능에 권한이 없습니다.");
+                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.");
                 return;
             }
         }
-
         chain.doFilter(request, response);
     }
 
