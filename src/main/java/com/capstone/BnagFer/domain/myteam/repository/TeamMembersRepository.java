@@ -4,14 +4,11 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.Optional;
 @Repository
 public interface TeamMembersRepository extends JpaRepository<TeamMember, Long> {
     @Query("select m from TeamMember m " +
