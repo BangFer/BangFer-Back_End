@@ -52,14 +52,17 @@ public class Tactic extends BaseEntity {
     @Column(name = "defense_details", columnDefinition = "TEXT")
     private String defenseDetails;
 
+    @Builder.Default
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticComment> comments = new ArrayList<TacticComment>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticPositionDetail> tacticPositionDetails = new ArrayList<TacticPositionDetail>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TacticLike> likes = new ArrayList<>();
