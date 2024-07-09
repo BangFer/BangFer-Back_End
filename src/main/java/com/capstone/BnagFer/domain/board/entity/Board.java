@@ -32,13 +32,16 @@ public class Board extends BaseEntity {
     @Column(name = "board_content", nullable = false)
     private String boardContent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Like> likes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardImage> images = new ArrayList<>();
 
