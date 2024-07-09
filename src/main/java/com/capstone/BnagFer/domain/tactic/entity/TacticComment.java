@@ -35,6 +35,7 @@ public class TacticComment extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private TacticComment parent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<TacticComment> children = new ArrayList<>();
 
