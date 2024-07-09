@@ -31,6 +31,7 @@ public record BoardDetailResponseDto(
                 .commentCount(commentCount)
                 .build();
     }
+
     @Builder
     public record CommentList(
             Long commentId,
