@@ -16,7 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.capstone.BnagFer.global.common.ApiResponse.onSuccess;
 
@@ -44,7 +48,7 @@ public class BoardController {
 
     @Operation(summary = "개별 게시물 조회", description = "단일 게시물의 내용을 조회합니다.")
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable Long boardId) {
+    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable(name = "boardId") Long boardId) {
         BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
         return ApiResponse.onSuccess(board);
     }
@@ -64,7 +68,7 @@ public class BoardController {
     @Operation(summary = "사용자 게시물 목록 조회", description = "특정 사람이 작성한 게시글 목록 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping("/users/{userId}/boards")
     public ApiResponse<Page<BoardListDto>> getUserBoardsList(
-            @PathVariable Long userId,
+            @PathVariable(name = "userId") Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
@@ -74,37 +78,40 @@ public class BoardController {
     }
 
     @Operation(summary = "게시글 생성", description = "게시글을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
-    @PostMapping
-    public ApiResponse<CreateBoardResponseDto> createBoard(@RequestBody @Valid BoardRequestDto request, @LoginUser User user) {
-        CreateBoardResponseDto board = boardService.createBoard(request, user);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<CreateBoardResponseDto> createBoard(@LoginUser User user,
+                                                           @Valid @RequestPart("request") BoardRequestDto request,
+                                                           @RequestPart(name = "image", required = false) List<MultipartFile> images) {
+        CreateBoardResponseDto board = boardService.createBoard(request, user, images);
         return ApiResponse.onSuccess(board);
     }
 
     @Operation(summary = "게시글 수정", description = "자신의 게시글을 수정합니다. 게시글 작성자 만이 수정 가능")
-    @PutMapping("/{boardId}")
-    public ApiResponse<CreateBoardResponseDto> updateBoard(@PathVariable long boardId,
-                                                           @RequestBody @Valid BoardRequestDto request,
-                                                           @LoginUser User user) {
-        CreateBoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user);
+    @PutMapping(value ="/{boardId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<CreateBoardResponseDto> updateBoard(@LoginUser User user,
+                                                           @PathVariable(name = "boardId") long boardId,
+                                                           @Valid @RequestPart("request") BoardRequestDto request,
+                                                           @RequestPart(name = "image", required = false) List<MultipartFile> images) {
+        CreateBoardResponseDto updatedBoard = boardService.updateBoard(boardId, request, user, images);
         return ApiResponse.onSuccess(updatedBoard);
     }
 
     @Operation(summary = "게시글 삭제", description = "자신의 게시글을 삭제합니다. 게시글 작성자 만이 삭제 가능")
     @DeleteMapping("/{boardId}")
-    public ApiResponse<Object> deleteBoard(@PathVariable Long boardId, @LoginUser User user) {
+    public ApiResponse<Object> deleteBoard(@PathVariable(name = "boardId") Long boardId, @LoginUser User user) {
         boardService.deleteBoard(boardId, user);
         return ApiResponse.noContent();
     }
 
     @Operation(summary = "게시글 좋아요 & 좋아요 취소", description = "게시글에 좋아요를 누르는 기능. 한번 더누르면 좋아요 취소.")
     @PostMapping("/{boardId}/like")
-    public ApiResponse<Object> likeButton(@PathVariable Long boardId, @LoginUser User user) {
+    public ApiResponse<Object> likeButton(@PathVariable(name = "boardId") Long boardId, @LoginUser User user) {
         return boardService.likeButton(boardId, user);
     }
 
     @Operation(summary = "게시글 댓글 달기", description = "게시글에 댓글을 다는 기능. 프로필 생성 후에 작성 가능.")
     @PostMapping("/{boardId}/comment")
-    public ApiResponse<CommentResponseDto> postComment(@PathVariable  Long boardId,
+    public ApiResponse<CommentResponseDto> postComment(@PathVariable(name = "boardId") Long boardId,
                                                        @Valid @RequestBody CreateCommentRequestDto request,
                                                        @LoginUser User user) {
         CommentResponseDto comment = boardService.createComment(boardId, request, user, null);
@@ -113,7 +120,8 @@ public class BoardController {
 
     @Operation(summary = "게시글 대댓글 달기", description = "전술 댓글에 대댓글을 다는 기능. 프로필 생성 후에 작성 가능.")
     @PostMapping("/{boardId}/comment/{parentCommentId}")
-    public ApiResponse<CommentResponseDto> postComment(@PathVariable  Long boardId, @PathVariable Long parentCommentId,
+    public ApiResponse<CommentResponseDto> postComment(@PathVariable(name = "boardId") Long boardId,
+                                                       @PathVariable(name = "parentCommentId") Long parentCommentId,
                                                        @Valid @RequestBody CreateCommentRequestDto request,
                                                        @LoginUser User user) {
         CommentResponseDto comment = boardService.createComment(boardId, request, user, parentCommentId);
@@ -122,14 +130,16 @@ public class BoardController {
 
     @Operation(summary = "게시글 댓글 수정", description = "자신의 댓글을 수정하는 기능. 댓글 작성자 만이 수정 가능.")
     @PutMapping("/comment/{commentId}")
-    public ApiResponse<CommentResponseDto> updateComment(@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequestDto request, @LoginUser User user) {
+    public ApiResponse<CommentResponseDto> updateComment(@PathVariable(name = "commentId") Long commentId,
+                                                         @Valid @RequestBody UpdateCommentRequestDto request,
+                                                         @LoginUser User user) {
         CommentResponseDto updatedComment = boardService.updateComment(commentId, request, user);
         return ApiResponse.onSuccess(updatedComment);
     }
 
     @Operation(summary = "게시글 댓글 삭제", description = "자신의 댓글을 삭제하는 기능. 댓글 작성자 만이 삭제 가능.")
     @DeleteMapping("/comment/{commentId}")
-    public ApiResponse<Void> deleteComment(@PathVariable Long commentId, @LoginUser User user) {
+    public ApiResponse<Void> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
         boardService.deleteComment(commentId, user);
         return ApiResponse.noContent();
     }

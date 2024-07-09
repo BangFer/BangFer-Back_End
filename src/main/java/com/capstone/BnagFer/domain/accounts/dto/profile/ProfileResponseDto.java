@@ -16,7 +16,8 @@ public record ProfileResponseDto(
         String email,
         String description,
         LocalDate dateOfBirth,
-        Gender gender
+        Gender gender,
+        String ProfileImageUrl
 ) {
     public static ProfileResponseDto from(Profile profile, User user) {
         return ProfileResponseDto.builder()
@@ -29,6 +30,7 @@ public record ProfileResponseDto(
                 .description(profile.getDescription())
                 .dateOfBirth(profile.getDateOfBirth())
                 .gender(profile.getGender())
+                .ProfileImageUrl(profile.getProfileImageUrl())
                 .build();
     }
 }

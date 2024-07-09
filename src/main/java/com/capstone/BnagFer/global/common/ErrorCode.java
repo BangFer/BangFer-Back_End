@@ -35,6 +35,10 @@ public enum ErrorCode implements BaseErrorCode {
     FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
     FIREBASE_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "FIREBASE402", "Firebase 토큰을 찾을 수 없습니다."),
 
+    // S3 관련 에러
+    S3_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "S3401", "S3 파일 업로드 실패."),
+    FILE_CONVERT_FAILED(HttpStatus.BAD_REQUEST, "S3401", "S3 파일 변환 실패."),
+
     // Profile 관련 에러
     NICKNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE401", "해당 닉네임이 이미 존재합니다."),
     PROFILE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE402", "프로필이 이미 존재합니다."),
@@ -74,6 +78,8 @@ public enum ErrorCode implements BaseErrorCode {
 
     //Board 관련 에러
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다."),
+    TOO_MUCH_IMAGE(HttpStatus.BAD_REQUEST, "BOARD402", "사진은 최대 10개까지 첨부 가능합니다."),
+
     //Report 관련 에러
     RESTRICTED_CONTENT(HttpStatus.BAD_REQUEST, "REPORT401", "제한된 게시글입니다."),
     CANNOT_REPORT_YOURSELF(HttpStatus.BAD_REQUEST, "REPORT402", "자신을 신고할 수 없습니다."),

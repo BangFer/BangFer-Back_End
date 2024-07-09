@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -55,6 +54,7 @@ public class BoardQueryService {
             commentCount = (long) board.getComments().size();
             redisUtil.boardSaveCommentCount(boardId, commentCount);
         }
+
         return BoardDetailResponseDto.from(board, likeCount, commentCount);
     }
 

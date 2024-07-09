@@ -9,15 +9,22 @@ import com.capstone.BnagFer.domain.board.dto.response.CreateBoardResponseDto;
 import com.capstone.BnagFer.domain.board.entity.*;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardCommentRepository;
+import com.capstone.BnagFer.domain.board.repository.BoardImageRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardLikeRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.util.RedisUtil;
+import com.capstone.BnagFer.global.util.s3.S3Provider;
+import com.capstone.BnagFer.global.util.s3.dto.S3UploadRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,25 +34,60 @@ public class BoardService {
     private final AccountsCommonService accountsCommonService;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardCommentRepository boardCommentRepository;
+    private final BoardImageRepository boardImageRepository;
     private final RedisUtil redisUtil;
+    private final S3Provider s3Provider;
 
-
-
-    public CreateBoardResponseDto createBoard(BoardRequestDto request, User user) {
+    public CreateBoardResponseDto createBoard(BoardRequestDto request, User user, List<MultipartFile> images) {
         accountsCommonService.checkUserProfile(user);
         Board board = request.toEntity(user);
         boardRepository.save(board);
+
+        uploadBoard(user, images, board);
+
         return CreateBoardResponseDto.from(board);
     }
 
-    public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user) {
+    public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user, List<MultipartFile> images) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
         if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
+
+        // 기존 이미지 삭제 후 새 이미지 추가
+        List<BoardImage> currentImages = board.getImages();
+        currentImages.clear();
+        uploadBoard(user, images, board);
+
         board.updateBoard(request);
         boardRepository.save(board);
         return CreateBoardResponseDto.from(board);
+    }
+
+    private void uploadBoard(User user, List<MultipartFile> images, Board board) {
+
+        if (images != null && !images.isEmpty()) {
+
+            if (board.getImages().size() + images.size() > 10) {
+                throw new BoardExceptionHandler(ErrorCode.TOO_MUCH_IMAGE);
+            }
+
+            List<BoardImage> boardImages = images.stream()
+                    .map(image -> {
+                        String imageUrl = s3Provider.uploadFile(image,
+                                S3UploadRequest.builder()
+                                        .userId(user.getId())
+                                        .dirName("freeBoard")
+                                        .build());
+                        return BoardImage.builder()
+                                .imageUrl(imageUrl)
+                                .board(board)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+
+            boardImageRepository.saveAll(boardImages);
+        }
     }
 
     public void deleteBoard(Long boardId, User user) {

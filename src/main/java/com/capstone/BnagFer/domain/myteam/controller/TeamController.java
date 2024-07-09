@@ -31,7 +31,7 @@ public class TeamController {
 
     @Operation(summary = "내 팀정보 조회")
     @GetMapping("/{teamId}")
-    public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable Long teamId, @LoginUser User user) {
+    public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable(name = "teamId") Long teamId, @LoginUser User user) {
         GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId, user);
         return ApiResponse.onSuccess(myTeam);
     }
@@ -52,7 +52,7 @@ public class TeamController {
 
     @Operation(summary = "팀 이름 수정", description = "팀을 이름을 수정하는 기능. 방장만이 수정할 수 있음.")
     @PutMapping("/{teamId}")
-    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable Long teamId, @RequestBody @Valid CUTeamRequestDto request,
+    public ApiResponse<CUTeamResponseDto> updateMyTeam(@PathVariable(name = "teamId") Long teamId, @RequestBody @Valid CUTeamRequestDto request,
                                                        @LoginUser User user) {
         CUTeamResponseDto updatedTeam = teamService.updateMyTeam(request, teamId, user);
         return ApiResponse.onSuccess(updatedTeam);
@@ -60,14 +60,15 @@ public class TeamController {
 
     @Operation(summary = "팀 삭제", description = "팀을 삭제하는 기능. 방장만이 삭제할 수 있음.")
     @DeleteMapping("/{teamId}")
-    public ApiResponse<Object> deleteMyTeam(@PathVariable Long teamId, @LoginUser User user) {
+    public ApiResponse<Object> deleteMyTeam(@PathVariable(name = "teamId") Long teamId, @LoginUser User user) {
         teamService.deleteMyTeam(teamId, user);
         return ApiResponse.noContent();
     }
 
     @Operation(summary = "팀에 전술 적용", description = "팀에 전술을 적용하는 기능. 방장만이 적용할 수 있음. 내 전술 목록에 등록되어있는 전술만 가져올 수 있음.")
     @PostMapping("/tactic/{teamId}/{tacticId}")
-    public ApiResponse<CreateTeamTacticResponseDto> addTacticOnTeam(@PathVariable Long teamId, @PathVariable Long tacticId,
+    public ApiResponse<CreateTeamTacticResponseDto> addTacticOnTeam(@PathVariable(name = "teamId") Long teamId,
+                                                                    @PathVariable(name = "tacticId") Long tacticId,
                                                                     @LoginUser User user) {
         CreateTeamTacticResponseDto tacticAddedTeam = teamTacticService.addTactic(teamId, tacticId, user);
         return ApiResponse.onSuccess(tacticAddedTeam);
@@ -82,14 +83,16 @@ public class TeamController {
 
     @Operation(summary = "팀 전술 해제", description = "팀에 적용된 전술을 해제함. 방장만이 가능.")
     @DeleteMapping("/tactic/{teamId}/{tacticId}")
-    public ApiResponse<Object>deallocateMyTactic(@PathVariable Long teamId, @PathVariable Long tacticId, @LoginUser User user) {
+    public ApiResponse<Object>deallocateMyTactic(@PathVariable(name = "teamId") Long teamId,
+                                                 @PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         teamTacticService.deallocateMyTactic(teamId, tacticId, user);
         return ApiResponse.noContent();
     }
 
     @Operation(summary = "개별 전술 조회", description = "11개의 버튼을 눌러 각각의 개별 전술을 조회")
     @GetMapping("/{teamId}/{positionDetailId}")
-    public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable Long teamId, Long positionDetailId) {
+    public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable(name = "teamId") Long teamId,
+                                                                                   @PathVariable(name = "positionDetailId") Long positionDetailId) {
         GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService.getIndividualDetail(teamId, positionDetailId);
         return ApiResponse.onSuccess(positionDetail);
     }
