@@ -66,7 +66,7 @@ public class ProfileService {
     }
 
     private void uploadProfile(User user, MultipartFile profileImage, Profile profile) {
-        if (profileImage != null) {
+        if (!profileImage.isEmpty()) {
             String profileImageUrl = s3Provider.uploadFile(profileImage,
                     S3UploadRequest.builder()
                             .userId(user.getId())

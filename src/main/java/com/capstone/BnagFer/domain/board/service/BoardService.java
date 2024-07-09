@@ -74,7 +74,7 @@ public class BoardService {
             throw new BoardExceptionHandler(ErrorCode.TOO_MUCH_IMAGE);
         }
 
-        if (images != null && !images.isEmpty()) {
+        if (!images.isEmpty()) {
             List<BoardImage> boardImages = images.stream()
                     .map(image -> {
                         String imageUrl = s3Provider.uploadFile(image,
