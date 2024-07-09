@@ -70,11 +70,12 @@ public class BoardService {
 
     private void uploadBoard(User user, List<MultipartFile> images, Board board) {
 
-        if (board.getImages().size() + images.size() > 10) {
-            throw new BoardExceptionHandler(ErrorCode.TOO_MUCH_IMAGE);
-        }
+        if (images != null && !images.isEmpty()) {
 
-        if (!images.isEmpty()) {
+            if (board.getImages().size() + images.size() > 10) {
+                throw new BoardExceptionHandler(ErrorCode.TOO_MUCH_IMAGE);
+            }
+
             List<BoardImage> boardImages = images.stream()
                     .map(image -> {
                         String imageUrl = s3Provider.uploadFile(image,
