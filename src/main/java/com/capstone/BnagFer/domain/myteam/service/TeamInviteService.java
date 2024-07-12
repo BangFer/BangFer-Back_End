@@ -43,9 +43,11 @@ public class TeamInviteService {
 
         TeamInvite existingInvite = teamInviteRepository.findByTeamAndInvitedUser(team, invitedUser);
         if (existingInvite != null) {
-            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
+            if(existingInvite.getInvitationStatus().equals(InvitationStatus.ACCEPTED))
+                throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
+            else
+                throw new TeamMemberExceptionHandler(ErrorCode.INVITATION_ALREADY_SENT);
         }
-
 
         TeamInvite teamInvite = request.toEntity(invitedUser, team, inviter);
 
