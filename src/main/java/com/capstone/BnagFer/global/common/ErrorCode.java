@@ -71,6 +71,9 @@ public enum ErrorCode implements BaseErrorCode {
     POSITION_ALREADY_DEALLOCATED(HttpStatus.BAD_REQUEST, "TEAMMEMBER408", "이미 포지션이 할당 해제되었습니다."),
     CANNOT_ALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER409", "포지션 할당 권한이 없습니다."),
     CANNOT_DEALLOCATE(HttpStatus.BAD_REQUEST, "TEAMMEMBER410", "포지션 할당 해제 권한이 없습니다."),
+    INVALID_INVITATION_STATUS(HttpStatus.BAD_REQUEST, "TEAMMEMBER411", "이미 초대 승인을 했거나 거절한 사용자입니다."),
+    INVITATION_REJECTED(HttpStatus.BAD_REQUEST, "TEAMMEMBER412", "상대방이 초대를 거절했습니다."),
+    INVITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAMMEMBER413", "초대를 찾을 수 없습니다."),
 
     //CALENDAR_EVENT 관련 에러
     MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
@@ -84,6 +87,7 @@ public enum ErrorCode implements BaseErrorCode {
     RESTRICTED_CONTENT(HttpStatus.BAD_REQUEST, "REPORT401", "제한된 게시글입니다."),
     CANNOT_REPORT_YOURSELF(HttpStatus.BAD_REQUEST, "REPORT402", "자신을 신고할 수 없습니다."),
     USER_BANNED(HttpStatus.BAD_REQUEST, "REPORT403", "차단된 사용자입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

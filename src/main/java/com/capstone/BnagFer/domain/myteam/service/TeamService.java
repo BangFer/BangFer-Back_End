@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.CUTeamRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.CUTeamResponseDto;
+import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
@@ -27,12 +28,12 @@ public class TeamService {
 
         Team team = request.toEntity();
         team.updateLeader(user);
-        TeamMember teamMember = TeamMember.createTeamMember();
+        TeamMember teamMember = TeamMember.createTeamMember(user, Role.LEADER, team);
 
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(team.getLeader());
 
-        teamMember.updateUserRoleAndTeam(user, team);
+        //teamMember.updateUserRoleAndTeam(user, team);
         teamMembersRepository.save(teamMember);
         teamRepository.save(team);
 
