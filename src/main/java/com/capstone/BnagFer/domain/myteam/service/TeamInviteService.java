@@ -37,7 +37,7 @@ public class TeamInviteService {
 
         // 방장이 자기 자신을 초대 못하게 하는 예외처리
         if (inviter.getId().equals(invitedUser.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
+            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
 
         if (!team.getLeader().getId().equals(inviter.getId())) {
@@ -80,8 +80,9 @@ public class TeamInviteService {
                 .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.INVITE_NOT_FOUND));
 
         if (!invite.getInvitedUser().getId().equals(user.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+            throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
+
         invite.accept();
         teamInviteRepository.save(invite);
         TeamMember teamMember = TeamMember.createTeamMember(user, Role.MEMBER, invite.getTeam());
@@ -89,12 +90,13 @@ public class TeamInviteService {
         return TeamMembersResponseDto.from(teamMember);
     }
 
+
     public void rejectInvite(Long inviteId, User user) {
         TeamInvite invite = teamInviteRepository.findById(inviteId)
                 .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.INVITE_NOT_FOUND));
 
         if (!invite.getInvitedUser().getId().equals(user.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
+            throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
         invite.reject();
         teamInviteRepository.delete(invite);

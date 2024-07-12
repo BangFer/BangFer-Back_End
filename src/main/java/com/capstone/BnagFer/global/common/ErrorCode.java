@@ -74,6 +74,9 @@ public enum ErrorCode implements BaseErrorCode {
     INVALID_INVITATION_STATUS(HttpStatus.BAD_REQUEST, "TEAMMEMBER411", "이미 초대 승인을 했거나 거절한 사용자입니다."),
     INVITATION_REJECTED(HttpStatus.BAD_REQUEST, "TEAMMEMBER412", "상대방이 초대를 거절했습니다."),
     INVITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAMMEMBER413", "초대를 찾을 수 없습니다."),
+    CANNOT_INVITE_YOURSELF(HttpStatus.BAD_REQUEST, "TEAMMEMBER414", "자기 자신을 초대할 수 없습니다."),
+    CANNOT_KICK_OUT_YOURSELF(HttpStatus.BAD_REQUEST, "TEAMMEMBER415", "자기 자신을 강퇴할 수 없습니다."),
+    WRONG_INVITATION(HttpStatus.BAD_REQUEST, "TEAMMEMBER416", "자기 자신에게 온 초대가 아닙니다."),
 
     //CALENDAR_EVENT 관련 에러
     MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
