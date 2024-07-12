@@ -6,10 +6,7 @@ import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonServic
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamInviteRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamInviteResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
-import com.capstone.BnagFer.domain.myteam.entity.Role;
-import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
-import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
+import com.capstone.BnagFer.domain.myteam.entity.*;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamInviteRepository;
@@ -98,7 +95,7 @@ public class TeamInviteService {
         if (!invite.getInvitedUser().getId().equals(user.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
-        invite.reject();
-        teamInviteRepository.delete(invite);
+        if(!invite.getInvitationStatus().equals(InvitationStatus.ACCEPTED) && !invite.getInvitationStatus().equals(InvitationStatus.PENDING))
+            teamInviteRepository.delete(invite);
     }
 }

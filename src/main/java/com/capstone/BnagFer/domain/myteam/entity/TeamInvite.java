@@ -37,12 +37,7 @@ public class TeamInvite {
             this.invitationStatus = InvitationStatus.PENDING;
         }
     }
-
     public void accept() {
         this.invitationStatus = InvitationStatus.ACCEPTED;
-    }
-
-    public void reject() {
-        this.invitationStatus = InvitationStatus.REJECTED;
     }
 }
