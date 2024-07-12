@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class TeamMembersService {
-
-    private final AccountsCommonService accountsCommonService;
     private final TeamMembersRepository teamMembersRepository;
-    private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, Long teamId, Long memberId, User user) {

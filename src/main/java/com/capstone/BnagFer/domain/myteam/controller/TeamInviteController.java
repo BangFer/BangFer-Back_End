@@ -37,8 +37,8 @@ public class TeamInviteController {
     @Operation(summary = "초대 승인", description = "팀 초대를 승인하는 기능")
     @PostMapping("/{inviteId}/accept")
     public ApiResponse<TeamMembersResponseDto> acceptInvite(@PathVariable Long inviteId, @LoginUser User user) {
-        TeamMembersResponseDto teamInvited = teamInviteService.acceptInvite(inviteId, user);
-        return ApiResponse.noContent();
+        TeamMembersResponseDto acceptInvitation = teamInviteService.acceptInvite(inviteId, user);
+        return ApiResponse.onSuccess(acceptInvitation);
     }
 
 

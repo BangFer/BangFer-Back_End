@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface TeamInviteRepository extends JpaRepository<TeamInvite, Long> {
     @Query("SELECT ti FROM TeamInvite ti JOIN FETCH ti.team t JOIN FETCH ti.invitedUser iu WHERE t = :team AND iu = :invitedUser")
