@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.myteam.dto.response;
 
 import com.capstone.BnagFer.domain.myteam.entity.InvitationStatus;
 import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
-import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import lombok.Builder;
 
 import java.util.List;

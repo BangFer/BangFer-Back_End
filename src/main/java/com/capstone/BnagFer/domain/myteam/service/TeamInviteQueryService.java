@@ -25,7 +25,7 @@ public class TeamInviteQueryService {
         // PENDING 상태의 초대만 필터링
         List<TeamInvite> pendingInvites = teamInvites.stream()
                 .filter(teamInvite -> teamInvite.getInvitationStatus().equals(InvitationStatus.PENDING))
-                .collect(Collectors.toList());
+                .toList();
 
         if (pendingInvites.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.INVITE_NOT_FOUND);
