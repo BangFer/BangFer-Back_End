@@ -20,7 +20,7 @@ public record GetTeamResponseDto (
         Long leaderId,
         String leaderNickName,
         String teamName,
-        TacticResponse tacticDto,
+        List<TeamTacticDetailResponse> tacticDto,
         List<TeamMembersList> teamMembers,
         LocalDateTime createdAt
 ) {
@@ -28,9 +28,18 @@ public record GetTeamResponseDto (
     public record TeamTacticDetailResponse(
             Long detailId,
             Position position,
-            String nickName,
             String positionDescription
     ) {
+        public static TeamTacticDetailResponse from(TacticPositionDetail tacticPositionDetail){
+            return TeamTacticDetailResponse.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .position(tacticPositionDetail.getPosition())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+        public static List<TeamTacticDetailResponse> from(List<TacticPositionDetail> positions){
+            return positions.stream().map(TeamTacticDetailResponse::from).toList();
+        }
     }
 
     public static GetTeamResponseDto from(Team team) {
@@ -40,7 +49,7 @@ public record GetTeamResponseDto (
                 .leaderNickName(team.getLeader().getProfile().getNickname())
                 .teamName(team.getTeamName())
                 .teamMembers(TeamMembersList.from(team.getTeamMembers()))
-                .tacticDto(team.getTactic() != null ? TacticResponse.from(team.getTactic()) : null)
+                .tacticDto(TeamTacticDetailResponse.from(team.getTactic().getTacticPositionDetails()))
                 .createdAt(team.getCreatedAt())
                 .build();
     }

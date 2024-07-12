@@ -16,7 +16,6 @@ public record TacticDetailResponse(
         String nickname,
         String tacticName,
         Boolean anonymous,
-        String famousCoachName,
         String mainFormation,
         List<DetailList> positionDetail,
         String tacticDetails,
@@ -35,7 +34,6 @@ public record TacticDetailResponse(
                 .nickname(tactic.getUser().getProfile().getNickname())
                 .tacticName(tactic.getTacticName())
                 .anonymous(tactic.isAnonymous())
-                .famousCoachName(tactic.getFamousCoachName())
                 .mainFormation(tactic.getMainFormation())
                 .positionDetail(DetailList.from(tactic.getTacticPositionDetails()))
                 .tacticDetails(tactic.getTacticDetails())

@@ -37,9 +37,6 @@ public class Tactic extends BaseEntity {
     @ColumnDefault("true")
     private boolean anonymous;
 
-    @Column(name = "famous_coach_name", length = 20)
-    private String famousCoachName;
-
     @Column(name = "main_formation", length = 10)
     private String mainFormation;
 
@@ -72,7 +69,6 @@ public class Tactic extends BaseEntity {
         tacticName = tactic.getTacticName();
         user = users;
         anonymous = true;
-        famousCoachName = tactic.getFamousCoachName();
         mainFormation = tactic.getMainFormation();
         tacticDetails = tactic.getTacticDetails();
         attackDetails = tactic.getAttackDetails();
@@ -82,7 +78,6 @@ public class Tactic extends BaseEntity {
     public void updateTactic(TacticUpdateRequest request){
         tacticName = request.tacticName();
         anonymous = request.anonymous();
-        famousCoachName = request.famousCoachName();
         mainFormation = request.mainFormation();
         tacticDetails = request.tacticDetails();
         attackDetails = request.attackDetails();

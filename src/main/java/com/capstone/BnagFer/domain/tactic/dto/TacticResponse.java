@@ -16,19 +16,13 @@ public record TacticResponse(
         String nickname,
         String tacticName,
         Boolean anonymous,
-        String famousCoachName,
         String mainFormation,
-        List<DetailResponse> positionDetail,
         String tacticDetails,
         String attackDetails,
         String defenseDetails,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
     public static TacticResponse from(Tactic tactic) {
-        List<DetailResponse> positionDetail = tactic.getTacticPositionDetails()
-                .stream()
-                .map(DetailResponse::from)
-                .toList();
 
         return new TacticResponse(
                 tactic.getTacticId(),
@@ -36,9 +30,7 @@ public record TacticResponse(
                 tactic.getUser().getProfile().getNickname(),
                 tactic.getTacticName(),
                 tactic.isAnonymous(),
-                tactic.getFamousCoachName(),
                 tactic.getMainFormation(),
-                positionDetail,
                 tactic.getTacticDetails(),
                 tactic.getAttackDetails(),
                 tactic.getDefenseDetails(),
@@ -48,27 +40,11 @@ public record TacticResponse(
     }
 
     @Builder
-    public record DetailResponse(
-            Long detailId,
-            Position position,
-            String positionDescription
-    ) {
-        public static DetailResponse from(TacticPositionDetail tacticPositionDetail) {
-            return DetailResponse.builder()
-                    .detailId(tacticPositionDetail.getDetailId())
-                    .position(tacticPositionDetail.getPosition())
-                    .positionDescription(tacticPositionDetail.getPositionDescription())
-                    .build();
-        }
-    }
-
-    @Builder
     public record TacticList(Long tacticId,
                              Long userId,
                              String nickname,
                              String tacticName,
                              Boolean anonymous,
-                             String famousCoachName,
                              String mainFormation) {
         public static TacticList from(Tactic tactic) {
             return TacticList.builder()
@@ -77,7 +53,6 @@ public record TacticResponse(
                     .nickname(tactic.getUser().getProfile().getNickname())
                     .tacticName(tactic.getTacticName())
                     .anonymous(tactic.isAnonymous())
-                    .famousCoachName(tactic.getFamousCoachName())
                     .mainFormation(tactic.getMainFormation())
                     .build();
         }

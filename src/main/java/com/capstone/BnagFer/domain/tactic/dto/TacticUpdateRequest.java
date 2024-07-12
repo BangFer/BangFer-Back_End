@@ -13,10 +13,8 @@ public record TacticUpdateRequest(
         String tacticName,
         @NotNull(message = "[ERROR] 게시물 공개여부는 필수입니다.")
         Boolean anonymous,
-        @Schema(description = "famousCoachName", example = "퍼거슨")
-        String famousCoachName,
         @NotBlank(message = "[ERROR] 주 포메이션은 필수입니다.")
-        @Schema(description = "famousCoachName", example = "4-4-2")
+        @Schema(description = "mainFormation", example = "4-4-2")
         String mainFormation,
         @NotBlank(message = "[ERROR] 전술 설명은 필수입니다.")
         @Schema(description = "tacticDetails", example = "퍼거슨의 레존두 전술로 전방 압박과...")
