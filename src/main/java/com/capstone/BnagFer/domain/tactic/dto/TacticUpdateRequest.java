@@ -19,10 +19,8 @@ public record TacticUpdateRequest(
         @NotBlank(message = "[ERROR] 전술 설명은 필수입니다.")
         @Schema(description = "tacticDetails", example = "퍼거슨의 레존두 전술로 전방 압박과...")
         String tacticDetails,
-        @Schema(description = "attackDetails", example = "공격시 라인을 끌어올리고...")
-        String attackDetails,
-        @Schema(description = "defenseDetails", example = "수비시 두줄 수비...")
-        String defenseDetails,
+        @Schema(description = "subTactic", example = "공격시 라인을 끌어올리고 수비시는 5백으로 변형하며...")
+        String subTactic,
         @Size(min = 11, max = 11, message = "[ERROR] 포지션 설명은 정확히 11개여야 합니다.")
         @Schema(description = "positionDetails", example = """
             [

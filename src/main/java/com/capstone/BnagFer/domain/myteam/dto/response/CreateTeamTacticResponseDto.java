@@ -52,8 +52,7 @@ public record CreateTeamTacticResponseDto (
             String mainFormation,
             List<TeamTacticDetailResponse> positionDetail,
             String tacticDetails,
-            String attackDetails,
-            String defenseDetails,
+            String subTactic,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -70,8 +69,7 @@ public record CreateTeamTacticResponseDto (
                     .mainFormation(tactic.getMainFormation())
                     .positionDetail(positionDetail)
                     .tacticDetails(tactic.getTacticDetails())
-                    .attackDetails(tactic.getAttackDetails())
-                    .defenseDetails(tactic.getDefenseDetails())
+                    .subTactic(tactic.getSubTactic())
                     .createdAt(tactic.getCreatedAt())
                     .updatedAt(tactic.getUpdatedAt())
                     .build();

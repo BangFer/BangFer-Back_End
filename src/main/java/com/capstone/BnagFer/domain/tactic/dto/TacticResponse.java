@@ -18,8 +18,7 @@ public record TacticResponse(
         Boolean anonymous,
         String mainFormation,
         String tacticDetails,
-        String attackDetails,
-        String defenseDetails,
+        String subTactic,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
     public static TacticResponse from(Tactic tactic) {
@@ -32,8 +31,7 @@ public record TacticResponse(
                 tactic.isAnonymous(),
                 tactic.getMainFormation(),
                 tactic.getTacticDetails(),
-                tactic.getAttackDetails(),
-                tactic.getDefenseDetails(),
+                tactic.getSubTactic(),
                 tactic.getCreatedAt(),
                 tactic.getUpdatedAt()
         );

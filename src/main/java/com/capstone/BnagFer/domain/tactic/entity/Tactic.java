@@ -43,11 +43,8 @@ public class Tactic extends BaseEntity {
     @Column(name = "tactic_details", columnDefinition = "TEXT")
     private String tacticDetails;
 
-    @Column(name = "attack_details", columnDefinition = "TEXT")
-    private String attackDetails;
-
-    @Column(name = "defense_details", columnDefinition = "TEXT")
-    private String defenseDetails;
+    @Column(name = "sub_tactic", columnDefinition = "TEXT")
+    private String subTactic;
 
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -71,8 +68,7 @@ public class Tactic extends BaseEntity {
         anonymous = true;
         mainFormation = tactic.getMainFormation();
         tacticDetails = tactic.getTacticDetails();
-        attackDetails = tactic.getAttackDetails();
-        defenseDetails = tactic.getDefenseDetails();
+        subTactic = tactic.getSubTactic();
     }
 
     public void updateTactic(TacticUpdateRequest request){
@@ -80,8 +76,7 @@ public class Tactic extends BaseEntity {
         anonymous = request.anonymous();
         mainFormation = request.mainFormation();
         tacticDetails = request.tacticDetails();
-        attackDetails = request.attackDetails();
-        defenseDetails = request.defenseDetails();
+        subTactic = request.subTactic();
     }
 
     public static Tactic createTactic() {

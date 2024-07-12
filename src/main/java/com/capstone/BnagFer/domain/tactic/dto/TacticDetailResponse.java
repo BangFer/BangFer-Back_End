@@ -19,8 +19,7 @@ public record TacticDetailResponse(
         String mainFormation,
         List<DetailList> positionDetail,
         String tacticDetails,
-        String attackDetails,
-        String defenseDetails,
+        String subTactic,
         List<CommentList> comments,
         Long likeCnt,
         Long commentCnt,
@@ -37,8 +36,7 @@ public record TacticDetailResponse(
                 .mainFormation(tactic.getMainFormation())
                 .positionDetail(DetailList.from(tactic.getTacticPositionDetails()))
                 .tacticDetails(tactic.getTacticDetails())
-                .attackDetails(tactic.getAttackDetails())
-                .defenseDetails(tactic.getDefenseDetails())
+                .subTactic(tactic.getSubTactic())
                 .comments(CommentList.from(tactic.getComments()))
                 .likeCnt(likeCnt)
                 .commentCnt(commentCnt)
