@@ -51,9 +51,7 @@ public record CreateTeamTacticResponseDto (
             Boolean anonymous,
             String famousCoachName,
             String mainFormation,
-            byte[] attackFormation,
-            byte[] defenseFormation,
-            List<TacticPositionDetail> positionDetail,
+            List<TeamTacticDetailResponse> positionDetail,
             String tacticDetails,
             String attackDetails,
             String defenseDetails,
@@ -72,6 +70,7 @@ public record CreateTeamTacticResponseDto (
                     .anonymous(tactic.isAnonymous())
                     .famousCoachName(tactic.getFamousCoachName())
                     .mainFormation(tactic.getMainFormation())
+                    .positionDetail(positionDetail)
                     .tacticDetails(tactic.getTacticDetails())
                     .attackDetails(tactic.getAttackDetails())
                     .defenseDetails(tactic.getDefenseDetails())
