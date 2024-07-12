@@ -78,6 +78,7 @@ public enum ErrorCode implements BaseErrorCode {
     CANNOT_KICK_OUT_YOURSELF(HttpStatus.BAD_REQUEST, "TEAMMEMBER415", "자기 자신을 강퇴할 수 없습니다."),
     WRONG_INVITATION(HttpStatus.BAD_REQUEST, "TEAMMEMBER416", "자기 자신에게 온 초대가 아닙니다."),
     INVITATION_ALREADY_SENT(HttpStatus.BAD_REQUEST, "TEAMMEMBER417", "이미 초대가 보내졌습니다."),
+    NOT_A_PENDING_STATUS(HttpStatus.BAD_REQUEST, "TEAMMEMBER418", "이미 초대를 거절했거나 승인한 상태입니다."),
 
     //CALENDAR_EVENT 관련 에러
     MATCH_EVENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "CALENDAREVENT401", "매치 일정이 존재하지 않습니다."),
