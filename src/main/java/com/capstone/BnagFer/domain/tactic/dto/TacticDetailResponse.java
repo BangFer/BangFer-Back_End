@@ -1,7 +1,9 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
+import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
+import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ public record TacticDetailResponse(
         Boolean anonymous,
         String famousCoachName,
         String mainFormation,
+        List<DetailList> positionDetail,
         String tacticDetails,
         String attackDetails,
         String defenseDetails,
@@ -34,6 +37,7 @@ public record TacticDetailResponse(
                 .anonymous(tactic.isAnonymous())
                 .famousCoachName(tactic.getFamousCoachName())
                 .mainFormation(tactic.getMainFormation())
+                .positionDetail(DetailList.from(tactic.getTacticPositionDetails()))
                 .tacticDetails(tactic.getTacticDetails())
                 .attackDetails(tactic.getAttackDetails())
                 .defenseDetails(tactic.getDefenseDetails())
@@ -44,6 +48,25 @@ public record TacticDetailResponse(
                 .updatedAt(tactic.getUpdatedAt())
                 .build();
     }
+
+    @Builder
+    public record DetailList(
+            Long detailId,
+            Position position,
+            String positionDescription
+    ){
+        public static DetailList from(TacticPositionDetail tacticPositionDetail){
+            return DetailList.builder()
+                    .detailId(tacticPositionDetail.getDetailId())
+                    .position(tacticPositionDetail.getPosition())
+                    .positionDescription(tacticPositionDetail.getPositionDescription())
+                    .build();
+        }
+        public static List<DetailList> from(List<TacticPositionDetail> positions){
+            return positions.stream().map(DetailList::from).toList();
+        }
+    }
+
     @Builder
     public record CommentList(
             Long tacticCommentId,
