@@ -41,17 +41,12 @@ public class TeamInviteService {
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
         }
 
-        TeamInvite existingInvite = teamInviteRepository.findByTeamAndInvitedUser(team, invitedUser);
-        if (existingInvite != null) {
-            if(existingInvite.getInvitationStatus().equals(InvitationStatus.ACCEPTED))
-                throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
-            else
-                throw new TeamMemberExceptionHandler(ErrorCode.INVITATION_ALREADY_SENT);
-        }
-
         TeamInvite teamInvite = request.toEntity(invitedUser, team, inviter);
-
         teamInviteRepository.save(teamInvite);
+        boolean InviteInTeam = teamMembersRepository.existsByTeamInvite(teamInvite);
+        if (InviteInTeam) {
+            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
+        }
         return TeamInviteResponseDto.from(teamInvite);
     }
 
@@ -82,8 +77,7 @@ public class TeamInviteService {
             throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
 
-        invite.accept();
-        teamInviteRepository.save(invite);
+        //invite.accept();
         TeamMember teamMember = TeamMember.createTeamMember(user, Role.MEMBER, invite.getTeam());
         teamMembersRepository.save(teamMember);
         return TeamMembersResponseDto.from(teamMember);
@@ -97,7 +91,6 @@ public class TeamInviteService {
         if (!invite.getInvitedUser().getId().equals(user.getId())) {
             throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
-        if(!invite.getInvitationStatus().equals(InvitationStatus.ACCEPTED) && !invite.getInvitationStatus().equals(InvitationStatus.PENDING))
-            teamInviteRepository.delete(invite);
+        teamInviteRepository.delete(invite);
     }
 }

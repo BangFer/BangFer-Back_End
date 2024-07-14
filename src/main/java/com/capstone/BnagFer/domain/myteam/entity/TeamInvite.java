@@ -27,17 +27,4 @@ public class TeamInvite {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inviter_id")
     private User inviter;
-
-    @Enumerated(EnumType.STRING)
-    private InvitationStatus invitationStatus;
-
-    @PrePersist
-    protected void onCreate() {
-        if(this.invitationStatus == null) {
-            this.invitationStatus = InvitationStatus.PENDING;
-        }
-    }
-    public void accept() {
-        this.invitationStatus = InvitationStatus.ACCEPTED;
-    }
 }

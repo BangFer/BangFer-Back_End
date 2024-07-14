@@ -2,6 +2,7 @@ package com.capstone.BnagFer.domain.myteam.repository;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
+import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,8 @@ public interface TeamMembersRepository extends JpaRepository<TeamMember, Long> {
     boolean existsByTeamAndId(Team team, Long id);
 
     List<TeamMember> findByUser(User user);
+
+    boolean existsByTeamInvite(TeamInvite teamInvite);
 
 
 }

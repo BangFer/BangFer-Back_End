@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamInviteResponseDto;
-import com.capstone.BnagFer.domain.myteam.entity.InvitationStatus;
 import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
 import com.capstone.BnagFer.domain.myteam.exception.TeamMemberExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamInviteRepository;
@@ -22,16 +21,16 @@ public class TeamInviteQueryService {
     public List<TeamInviteResponseDto> getMyInvitations(User user) {
         List<TeamInvite> teamInvites = teamInviteRepository.findByInvitedUser(user);
 
-        // PENDING 상태의 초대만 필터링
-        List<TeamInvite> pendingInvites = teamInvites.stream()
-                .filter(teamInvite -> teamInvite.getInvitationStatus().equals(InvitationStatus.PENDING))
-                .toList();
+//        // PENDING 상태의 초대만 필터링
+//        List<TeamInvite> pendingInvites = teamInvites.stream()
+//                .filter(teamInvite -> teamInvite.getInvitationStatus().equals(InvitationStatus.PENDING))
+//                .toList();
 
-        if (pendingInvites.isEmpty()) {
+        if (teamInvites.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.INVITE_NOT_FOUND);
         }
 
-        return pendingInvites.stream()
+        return teamInvites.stream()
                 .map(TeamInviteResponseDto::from)
                 .collect(Collectors.toList());
     }

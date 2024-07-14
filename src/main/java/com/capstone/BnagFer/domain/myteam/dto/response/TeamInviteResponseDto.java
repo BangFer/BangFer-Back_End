@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.dto.response;
 
-import com.capstone.BnagFer.domain.myteam.entity.InvitationStatus;
 import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
 import lombok.Builder;
 
@@ -12,8 +11,7 @@ public record TeamInviteResponseDto(
         Long inviteId,
         Long teamId,
         Long invitedUserId,
-        Long inviterId,
-        InvitationStatus invitationStatus) {
+        Long inviterId) {
 
     public static TeamInviteResponseDto from(TeamInvite teamInvite) {
         return TeamInviteResponseDto.builder()
@@ -21,7 +19,6 @@ public record TeamInviteResponseDto(
                 .teamId(teamInvite.getTeam().getId())
                 .invitedUserId(teamInvite.getInvitedUser().getId())
                 .inviterId(teamInvite.getInviter().getId())
-                .invitationStatus(teamInvite.getInvitationStatus())
                 .build();
     }
     public static List<TeamInviteResponseDto> from(List<TeamInvite> teamInvites) {
