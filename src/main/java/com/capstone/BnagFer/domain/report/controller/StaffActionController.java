@@ -7,11 +7,13 @@ import com.capstone.BnagFer.domain.report.service.StaffActionQueryService;
 import com.capstone.BnagFer.domain.report.service.StaffActionService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Tag(name = "staff 전용 API")
 @RequestMapping("/staff")
 @RequiredArgsConstructor
 public class StaffActionController {
