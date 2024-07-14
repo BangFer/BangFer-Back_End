@@ -21,15 +21,9 @@ public class TeamInviteQueryService {
     public List<TeamInviteResponseDto> getMyInvitations(User user) {
         List<TeamInvite> teamInvites = teamInviteRepository.findByInvitedUser(user);
 
-//        // PENDING 상태의 초대만 필터링
-//        List<TeamInvite> pendingInvites = teamInvites.stream()
-//                .filter(teamInvite -> teamInvite.getInvitationStatus().equals(InvitationStatus.PENDING))
-//                .toList();
-
         if (teamInvites.isEmpty()) {
             throw new TeamMemberExceptionHandler(ErrorCode.INVITE_NOT_FOUND);
         }
-
         return teamInvites.stream()
                 .map(TeamInviteResponseDto::from)
                 .collect(Collectors.toList());
