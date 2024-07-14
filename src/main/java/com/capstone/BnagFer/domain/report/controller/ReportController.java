@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name = "staff 전용 API")
+@Tag(name = "신고 API")
 @RequestMapping("/report")
 @RequiredArgsConstructor
 public class ReportController{
