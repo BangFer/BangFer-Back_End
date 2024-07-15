@@ -37,20 +37,14 @@ public class Tactic extends BaseEntity {
     @ColumnDefault("true")
     private boolean anonymous;
 
-    @Column(name = "famous_coach_name", length = 20)
-    private String famousCoachName;
-
     @Column(name = "main_formation", length = 10)
     private String mainFormation;
 
     @Column(name = "tactic_details", columnDefinition = "TEXT")
     private String tacticDetails;
 
-    @Column(name = "attack_details", columnDefinition = "TEXT")
-    private String attackDetails;
-
-    @Column(name = "defense_details", columnDefinition = "TEXT")
-    private String defenseDetails;
+    @Column(name = "sub_tactic", columnDefinition = "TEXT")
+    private String subTactic;
 
     @Builder.Default
     @OneToMany(mappedBy = "tactic", cascade = CascadeType.ALL)
@@ -75,21 +69,17 @@ public class Tactic extends BaseEntity {
         tacticName = tactic.getTacticName();
         user = users;
         anonymous = true;
-        famousCoachName = tactic.getFamousCoachName();
         mainFormation = tactic.getMainFormation();
         tacticDetails = tactic.getTacticDetails();
-        attackDetails = tactic.getAttackDetails();
-        defenseDetails = tactic.getDefenseDetails();
+        subTactic = tactic.getSubTactic();
     }
 
     public void updateTactic(TacticUpdateRequest request){
         tacticName = request.tacticName();
         anonymous = request.anonymous();
-        famousCoachName = request.famousCoachName();
         mainFormation = request.mainFormation();
         tacticDetails = request.tacticDetails();
-        attackDetails = request.attackDetails();
-        defenseDetails = request.defenseDetails();
+        subTactic = request.subTactic();
     }
 
     public static Tactic createTactic() {

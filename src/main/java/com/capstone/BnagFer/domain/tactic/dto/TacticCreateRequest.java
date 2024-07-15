@@ -15,18 +15,14 @@ public record TacticCreateRequest(
         String tacticName,
         @NotNull(message = "[ERROR] 익명성 입력은 필수입니다.")
         Boolean anonymous,
-        @Schema(description = "famousCoachName", example = "퍼거슨")
-        String famousCoachName,
         @NotBlank(message = "[ERROR] 주 포메이션은 필수입니다.")
-        @Schema(description = "famousCoachName", example = "4-4-2")
+        @Schema(description = "mainFormation", example = "4-4-2")
         String mainFormation,
         @NotBlank(message = "[ERROR] 전술 설명은 필수입니다.")
         @Schema(description = "tacticDetails", example = "퍼거슨의 레존두 전술로 전방 압박과...")
         String tacticDetails,
-        @Schema(description = "attackDetails", example = "공격시 라인을 끌어올리고...")
-        String attackDetails,
-        @Schema(description = "defenseDetails", example = "수비시 두줄 수비...")
-        String defenseDetails,
+        @Schema(description = "subTactic", example = "공격시 라인을 끌어올리고 수비시는 5백으로 변형하며...")
+        String subTactic,
         @Size(min = 11, max = 11, message = "[ERROR] 포지션 설명은 정확히 11개여야 합니다.")
         @Schema(description = "positionDetails", example = """
             [
@@ -50,11 +46,9 @@ public record TacticCreateRequest(
                 .tacticName(tacticName)
                 .user(user)
                 .anonymous(anonymous)
-                .famousCoachName(famousCoachName)
                 .mainFormation(mainFormation)
                 .tacticDetails(tacticDetails)
-                .attackDetails(attackDetails)
-                .defenseDetails(defenseDetails)
+                .subTactic(subTactic)
                 .build();
     }
 }

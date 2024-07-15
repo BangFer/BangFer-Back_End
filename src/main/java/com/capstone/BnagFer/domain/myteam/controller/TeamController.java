@@ -29,7 +29,7 @@ public class TeamController {
     private final TeamTacticService teamTacticService;
     private final TeamTacticQueryService teamTacticQueryService;
 
-    @Operation(summary = "내 팀정보 조회")
+    @Operation(summary = "개별 팀 정보 조회")
     @GetMapping("/{teamId}")
     public ApiResponse<GetTeamResponseDto> getMyTeam(@PathVariable(name = "teamId") Long teamId, @LoginUser User user) {
         GetTeamResponseDto myTeam = teamQueryService.getMyTeamById(teamId, user);
