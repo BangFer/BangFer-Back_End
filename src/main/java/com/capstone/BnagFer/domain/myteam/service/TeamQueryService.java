@@ -30,7 +30,10 @@ public class TeamQueryService {
 
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
-        if (!user.getTeam().contains(team)) {
+        boolean isMember = team.getTeamMembers().stream()
+                .anyMatch(teamMember -> teamMember.getUser().equals(user));
+
+        if (!isMember) {
             throw new TeamExceptionHandler(ErrorCode.NO_AUTHORIZATION);
         }
 
