@@ -1,7 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.dto;
 
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record DetailUpdateRequest(

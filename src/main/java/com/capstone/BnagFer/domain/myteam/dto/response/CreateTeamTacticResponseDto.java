@@ -49,14 +49,10 @@ public record CreateTeamTacticResponseDto (
             Long tacticId,
             String tacticName,
             Boolean anonymous,
-            String famousCoachName,
             String mainFormation,
-            byte[] attackFormation,
-            byte[] defenseFormation,
-            List<TacticPositionDetail> positionDetail,
+            List<TeamTacticDetailResponse> positionDetail,
             String tacticDetails,
-            String attackDetails,
-            String defenseDetails,
+            String subTactic,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -70,11 +66,10 @@ public record CreateTeamTacticResponseDto (
                     .tacticId(tactic.getTacticId())
                     .tacticName(tactic.getTacticName())
                     .anonymous(tactic.isAnonymous())
-                    .famousCoachName(tactic.getFamousCoachName())
                     .mainFormation(tactic.getMainFormation())
+                    .positionDetail(positionDetail)
                     .tacticDetails(tactic.getTacticDetails())
-                    .attackDetails(tactic.getAttackDetails())
-                    .defenseDetails(tactic.getDefenseDetails())
+                    .subTactic(tactic.getSubTactic())
                     .createdAt(tactic.getCreatedAt())
                     .updatedAt(tactic.getUpdatedAt())
                     .build();
