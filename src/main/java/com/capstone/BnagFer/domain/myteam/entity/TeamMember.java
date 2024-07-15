@@ -33,10 +33,6 @@ import lombok.*;
     @Column(name = "position")
     private Position position;
 
-    @OneToOne
-    @JoinColumn(name = "team_invite_id")
-    private TeamInvite teamInvite;
-
    public void updatePosition(Position updatePosition) { position = updatePosition; }
 
     public static TeamMember createTeamMember(User user, Role role, Team team) {

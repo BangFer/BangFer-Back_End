@@ -52,7 +52,7 @@ public class TeamInviteController {
         return ApiResponse.noContent();
     }
 
-    @Operation(summary = "내가 받은 초대 조회", description = "InvitationStatus가 PENDING인 데이터만 조회를 해주는 기능")
+    @Operation(summary = "내가 받은 초대 조회", description = "내가 받은 초대를 조회해주느 기능")
     @GetMapping("/myinvitation")
     public ApiResponse<List<TeamInviteResponseDto>> getMyInvitations(@LoginUser User user) {
         List<TeamInviteResponseDto> myInvitation = teamInviteQueryService.getMyInvitations(user);
