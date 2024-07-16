@@ -4,9 +4,6 @@ import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
-import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
-import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
@@ -15,7 +12,6 @@ import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.ErrorCode;
-import com.capstone.BnagFer.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,59 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class TeamMembersService {
-
-    private final AccountsCommonService accountsCommonService;
     private final TeamMembersRepository teamMembersRepository;
-    private final UserJpaRepository userJpaRepository;
     private final TeamRepository teamRepository;
-
-    public TeamMembersResponseDto inviteTeamMembers(TeamMemberRequestDto request, User user) {
-
-        User invitedUser = userJpaRepository.findById(request.userId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Team team = teamRepository.findById(request.teamId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
-        //방장이 자기 자신을 초대 못하게 해주는 예외처리
-        if (user.getId().equals(invitedUser.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
-        }
-
-        if (!team.getLeader().getId().equals(user.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-        }
-
-        TeamMember existingMember = teamMembersRepository.findByTeamAndUser(team, invitedUser);
-        if (existingMember != null) {
-            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
-        }
-
-        //팀원 생성
-        TeamMember teamMember = request.toEntity(invitedUser, team);
-        // 프로필 존재 확인
-        accountsCommonService.checkUserProfile(teamMember.getUser());
-        teamMember.updateRole(Role.MEMBER);
-        teamMembersRepository.save(teamMember);
-
-        return TeamMembersResponseDto.from(teamMember);
-    }
-
-    public void kickOutMembers(Long memberId, User user) {
-        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
-        Team team = teamRepository.findById(teamMember.getTeam().getId()).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        // 프로필 존재 확인
-        accountsCommonService.checkUserProfile(teamMember.getUser());
-        //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
-        if (user.getId().equals(memberId)) {
-            throw new TeamMemberExceptionHandler(ErrorCode._BAD_REQUEST);
-        }
-        //이미 강퇴당한 팀원 예외처리
-        if (teamMember.getId() == null)
-            throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
-        //방장에게만 강퇴 권한
-        if (team.getLeader().getId().equals(user.getId()))
-            teamMembersRepository.deleteById(memberId);
-        else
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-    }
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, Long teamId, Long memberId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() ->new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
