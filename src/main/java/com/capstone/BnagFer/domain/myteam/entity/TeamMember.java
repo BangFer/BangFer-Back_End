@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.myteam.entity;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,19 +33,13 @@ import lombok.*;
     @Column(name = "position")
     private Position position;
 
-   public void updateRole(Role upateRole) {
-      role = upateRole;
-   }
-
-   public void updateUserRoleAndTeam(User updateUser, Team updateTeam) {
-      user = updateUser;
-      role = Role.LEADER;
-      team  = updateTeam;
-   }
-
    public void updatePosition(Position updatePosition) { position = updatePosition; }
 
-    public static TeamMember createTeamMember() {
-        return new TeamMember();
+    public static TeamMember createTeamMember(User user, Role role, Team team) {
+        TeamMember teamMember = new TeamMember();
+        teamMember.user = user;
+        teamMember.role = role;
+        teamMember.team = team;
+        return teamMember;
     }
 }

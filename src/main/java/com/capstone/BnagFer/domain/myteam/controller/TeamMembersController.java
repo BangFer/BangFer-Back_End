@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.controller;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
-import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersQueryService;
 import com.capstone.BnagFer.domain.myteam.service.TeamMembersService;
@@ -31,20 +30,6 @@ public class TeamMembersController {
     public ApiResponse<List<TeamMembersResponseDto>> getMembers(@PathVariable(name = "teamId") Long teamId) {
         List<TeamMembersResponseDto> myTeam = teamMembersQueryService.getMembers(teamId);
         return ApiResponse.onSuccess(myTeam);
-    }
-
-    @Operation(summary = "멤버 초대", description = "팀에 멤버를 초대하는 기능. 방장만이 초대 가능. 팀 멤버는 프로필에 생성된 후에 참여 가능")
-    @PostMapping("/invite")
-    public ApiResponse<TeamMembersResponseDto> addMembers(@RequestBody @Valid TeamMemberRequestDto request, @LoginUser User user) {
-        TeamMembersResponseDto myTeam = teamMembersService.inviteTeamMembers(request, user);
-        return ApiResponse.onSuccess(myTeam);
-    }
-
-    @Operation(summary = "멤버 강퇴", description = "팀 멤버를 강제로 추방하는 기능. 방장만이 강퇴 가능")
-    @DeleteMapping("/kickout/{memberId}")
-    public ApiResponse<Object> kickOutMembers(@PathVariable(name = "memberId") Long memberId, @LoginUser User user) {
-        teamMembersService.kickOutMembers(memberId, user);
-        return ApiResponse.noContent();
     }
 
     @Operation(summary = "멤버 포지션 할당", description = "포지션에 멤버를 할당하는 기능. 방장만이 할당 가능")

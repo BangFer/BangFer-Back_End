@@ -49,8 +49,6 @@ public class Team extends BaseEntity {
         leader = updateLeader;
     }
 
-    public void updateTactic(Tactic updateTactic) { tactic = updateTactic; }
-
     public void updateLeaderAndTactic(User updateLeader, Tactic updateTactic) {
         leader = updateLeader;
         tactic = updateTactic;
