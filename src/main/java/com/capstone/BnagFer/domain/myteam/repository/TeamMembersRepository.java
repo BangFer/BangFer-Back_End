@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.myteam.repository;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
-import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
