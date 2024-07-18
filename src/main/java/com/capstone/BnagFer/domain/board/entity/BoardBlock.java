@@ -27,5 +27,4 @@ public class BoardBlock extends BaseEntity {
 
     @Column(name = "blocked_at")
     private LocalDateTime blockedAt;
-
 }

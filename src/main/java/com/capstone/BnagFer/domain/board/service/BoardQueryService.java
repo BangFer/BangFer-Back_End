@@ -7,14 +7,20 @@ import com.capstone.BnagFer.domain.board.dto.response.BoardDetailResponseDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardListDto;
 import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
+import com.capstone.BnagFer.domain.board.repository.BoardBlockRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +30,18 @@ public class BoardQueryService {
     private final BoardRepository boardRepository;
     private final RedisUtil redisUtil;
     private final UserJpaRepository userJpaRepository;
-    public Page<BoardListDto> getBoards(Pageable pageable) {
+    private final BoardBlockRepository boardBlockRepository;
+    public Page<BoardListDto> getBoards(User user, Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
-        return boards.map(BoardListDto::from);
+
+        // `Page<Board>`를 `List<Board>`로 변환
+        List<BoardListDto> filteredBoards = boards.stream()
+                .filter(board -> !isUserBlocked(user, board.getUser()))
+                .map(BoardListDto::from)
+                .collect(Collectors.toList());
+
+        // `List<BoardListDto>`를 `Page<BoardListDto>`로 변환하여 반환
+        return new PageImpl<>(filteredBoards, pageable, boards.getTotalElements());
     }
 
     public Page<BoardListDto> getMyBoards(User user, Pageable pageable) {
@@ -60,5 +75,9 @@ public class BoardQueryService {
 
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {
         return boardRepository.findByUser(user, pageable);
+    }
+
+    public boolean isUserBlocked(User blockUser, User isBlockedUser) {
+        return boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, isBlockedUser);
     }
 }

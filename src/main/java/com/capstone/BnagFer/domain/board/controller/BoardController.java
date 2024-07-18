@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.*;
+import com.capstone.BnagFer.domain.board.service.BoardBlockService;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
 import com.capstone.BnagFer.domain.board.service.BoardService;
 import com.capstone.BnagFer.global.annotation.LoginUser;
@@ -30,6 +31,7 @@ import static com.capstone.BnagFer.global.common.ApiResponse.onSuccess;
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
+    private final BoardBlockService boardBlockService;
     private final BoardQueryService boardQueryService;
 
 
@@ -38,10 +40,11 @@ public class BoardController {
     public ApiResponse<Page<BoardListDto>> getBoardsList(
 
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size)
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser User user)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardListDto> boardsList = boardQueryService.getBoards(pageable);
+        Page<BoardListDto> boardsList = boardQueryService.getBoards(user, pageable);
         return onSuccess(boardsList);
 
     }
@@ -142,5 +145,11 @@ public class BoardController {
     public ApiResponse<Void> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
         boardService.deleteComment(commentId, user);
         return ApiResponse.noContent();
+    }
+    @Operation(summary = "자유게시판 사용자 차단", description = "차단을 하게되면, 차단한 사용자의 댓글, 게시글을 볼 수 없다.")
+    @PostMapping("/block/{isBlockedUserId}")
+    public ApiResponse<BoardBlockResponseDto> blockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {
+        BoardBlockResponseDto boardBlockResponseDto = boardBlockService.blockUser(user, isBlockedUserId);
+        return ApiResponse.onSuccess(boardBlockResponseDto);
     }
 }
