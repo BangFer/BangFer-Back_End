@@ -10,9 +10,11 @@ import com.capstone.BnagFer.domain.board.repository.BoardBlockRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = false)
 public class BoardBlockService {
     private final BoardBlockRepository boardBlockRepository;
     private final UserJpaRepository userRepository;
@@ -23,10 +25,22 @@ public class BoardBlockService {
         if (blockUser.getId().equals(isBlockedUserId)) {
             throw new BoardExceptionHandler(ErrorCode.CANNOT_REPORT_YOURSELF);
         }
+        if(boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, blockedUser)){
+            throw new BoardExceptionHandler(ErrorCode.ALREADY_BLOCKED);
+        }
         BoardBlockRequestDto request = new BoardBlockRequestDto();
         BoardBlock boardBlock = request.toEntity(blockUser, blockedUser);
         boardBlockRepository.save(boardBlock);
         return BoardBlockResponseDto.from(boardBlock);
+    }
+
+    public void unblockUser(User blockUser, Long isBlockedUserId) {
+        User blockedUser = userRepository.findById(isBlockedUserId)
+                .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        if (blockUser.getId().equals(isBlockedUserId)) {
+            throw new BoardExceptionHandler(ErrorCode.CANNOT_UNBLOCK_YOURSELF);
+        }
+        boardBlockRepository.deleteByBlockUserAndIsBlockedUser(blockUser, blockedUser);
     }
 
 

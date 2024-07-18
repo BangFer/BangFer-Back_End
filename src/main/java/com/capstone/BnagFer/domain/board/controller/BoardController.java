@@ -73,10 +73,11 @@ public class BoardController {
     public ApiResponse<Page<BoardListDto>> getUserBoardsList(
             @PathVariable(name = "userId") Long userId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size)
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser User user)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<BoardListDto> userBoardsList = boardQueryService.getUserBoards(userId, pageable);
+        Page<BoardListDto> userBoardsList = boardQueryService.getUserBoards(user, userId, pageable);
         return onSuccess(userBoardsList);
     }
 
@@ -152,4 +153,12 @@ public class BoardController {
         BoardBlockResponseDto boardBlockResponseDto = boardBlockService.blockUser(user, isBlockedUserId);
         return ApiResponse.onSuccess(boardBlockResponseDto);
     }
+
+    @Operation(summary = "자유게시판 사용자 차단해제", description = "차단을 해제하는 기능.")
+    @DeleteMapping("/block/{isBlockedUserId}")
+    public ApiResponse<Void> unblockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {
+        boardBlockService.unblockUser(user, isBlockedUserId);
+        return ApiResponse.noContent();
+    }
+
 }

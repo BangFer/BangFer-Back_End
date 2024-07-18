@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardBlockRepository extends JpaRepository<BoardBlock, Long> {
     boolean existsByBlockUserAndIsBlockedUser(User blockUser, User isBlockedUser);
+
+    void deleteByBlockUserAndIsBlockedUser(User blockUser, User isBlockedUser);
 }

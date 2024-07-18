@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,10 +32,9 @@ public class BoardQueryService {
     private final BoardBlockRepository boardBlockRepository;
     public Page<BoardListDto> getBoards(User user, Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
-
         // `Page<Board>`를 `List<Board>`로 변환
         List<BoardListDto> filteredBoards = boards.stream()
-                .filter(board -> !isUserBlocked(user, board.getUser()))
+                .filter(board -> !UserBlocked(user, board.getUser()))
                 .map(BoardListDto::from)
                 .collect(Collectors.toList());
 
@@ -49,9 +47,12 @@ public class BoardQueryService {
         return boards.map(BoardListDto::from);
     }
 
-    public Page<BoardListDto> getUserBoards(Long userId, Pageable pageable) {
-        User user = userJpaRepository.findById(userId)
+    public Page<BoardListDto> getUserBoards(User user, Long isBlockedUserId, Pageable pageable) {
+        User isBlockedUser = userJpaRepository.findById(isBlockedUserId)
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        if(UserBlocked(user, isBlockedUser)) {
+            throw new BoardExceptionHandler(ErrorCode.IS_BLOCKED_USER);
+        }
         Page<Board> boards = getBoardsByUser(user, pageable);
         return boards.map(BoardListDto::from);
     }
@@ -77,7 +78,7 @@ public class BoardQueryService {
         return boardRepository.findByUser(user, pageable);
     }
 
-    public boolean isUserBlocked(User blockUser, User isBlockedUser) {
+    public boolean UserBlocked(User blockUser, User isBlockedUser) {
         return boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, isBlockedUser);
     }
 }
