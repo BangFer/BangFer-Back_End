@@ -162,7 +162,7 @@ public class BoardController {
         boardBlockService.unblockUser(user, isBlockedUserId);
         return ApiResponse.noContent();
     }
-
+    @Operation(summary = "내가 차단한 사용자 조회", description = "내가 차단한 사용자를 조회해주는 기능")
     @GetMapping("/blocked-users")
     public ApiResponse<List<GetMyBoardBlockResponseDto>> getBlockedUsers(@LoginUser User currentUser) {
         List<GetMyBoardBlockResponseDto> blockedUsers = boardBlockQueryService.getBlockedUsers(currentUser);
