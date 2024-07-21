@@ -7,6 +7,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 public record BoardDetailResponseDto(
@@ -20,7 +21,7 @@ public record BoardDetailResponseDto(
         Long likeCount,
         Long commentCount
 ) {
-    public static BoardDetailResponseDto from(Board board, Long likeCount, Long commentCount) {
+    public static BoardDetailResponseDto from(Board board, Long likeCount, Long commentCount, List<Comment> filteredComments) {
         return BoardDetailResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getUser().getId())
@@ -28,7 +29,7 @@ public record BoardDetailResponseDto(
                 .boardTitle(board.getBoardTitle())
                 .boardContent(board.getBoardContent())
                 .images(BoardImageList.from(board.getImages()))
-                .commentList(CommentList.from(board.getComments()))
+                .commentList(CommentList.from(filteredComments))
                 .likeCount(likeCount)
                 .commentCount(commentCount)
                 .build();

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = false)
+@Transactional
 public class BoardBlockService {
     private final BoardBlockRepository boardBlockRepository;
     private final UserJpaRepository userRepository;

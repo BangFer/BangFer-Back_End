@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.CreateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.request.UpdateCommentRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.*;
+import com.capstone.BnagFer.domain.board.service.BoardBlockQueryService;
 import com.capstone.BnagFer.domain.board.service.BoardBlockService;
 import com.capstone.BnagFer.domain.board.service.BoardQueryService;
 import com.capstone.BnagFer.domain.board.service.BoardService;
@@ -33,6 +34,7 @@ public class BoardController {
     private final BoardService boardService;
     private final BoardBlockService boardBlockService;
     private final BoardQueryService boardQueryService;
+    private final BoardBlockQueryService boardBlockQueryService;
 
 
     @GetMapping //게시판 리스트 조회
@@ -51,8 +53,8 @@ public class BoardController {
 
     @Operation(summary = "개별 게시물 조회", description = "단일 게시물의 내용을 조회합니다.")
     @GetMapping("/{boardId}")
-    public ApiResponse<BoardDetailResponseDto> getBoard (@PathVariable(name = "boardId") Long boardId) {
-        BoardDetailResponseDto board = boardQueryService.getBoard(boardId);
+    public ApiResponse<BoardDetailResponseDto> getBoard (@LoginUser User user, @PathVariable(name = "boardId") Long boardId) {
+        BoardDetailResponseDto board = boardQueryService.getBoard(user, boardId);
         return ApiResponse.onSuccess(board);
     }
 
@@ -159,6 +161,12 @@ public class BoardController {
     public ApiResponse<Void> unblockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {
         boardBlockService.unblockUser(user, isBlockedUserId);
         return ApiResponse.noContent();
+    }
+
+    @GetMapping("/blocked-users")
+    public ApiResponse<List<GetMyBoardBlockResponseDto>> getBlockedUsers(@LoginUser User currentUser) {
+        List<GetMyBoardBlockResponseDto> blockedUsers = boardBlockQueryService.getBlockedUsers(currentUser);
+        return ApiResponse.onSuccess(blockedUsers);
     }
 
 }

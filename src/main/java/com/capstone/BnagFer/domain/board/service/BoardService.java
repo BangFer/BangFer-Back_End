@@ -104,7 +104,15 @@ public class BoardService {
 
         Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
 
-        long likeCount = redisUtil.boardGetLikeCount(boardId);
+        Long likeCountFromRedis = redisUtil.boardGetLikeCount(boardId);
+        long likeCount;
+
+        if (likeCountFromRedis == null) {
+            likeCount = boardLikeRepository.countByBoard(board);
+            redisUtil.boardSaveLikeCount(boardId, likeCount);
+        } else {
+            likeCount = likeCountFromRedis;
+        }
 
         if (like.isPresent()) {
             boardLikeRepository.delete(like.get());
