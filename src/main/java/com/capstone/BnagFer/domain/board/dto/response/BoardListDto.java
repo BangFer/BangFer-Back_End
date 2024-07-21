@@ -1,8 +1,6 @@
 package com.capstone.BnagFer.domain.board.dto.response;
 
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.board.entity.Board;
-import com.capstone.BnagFer.domain.board.repository.BoardBlockRepository;
 import lombok.Builder;
 
 import java.util.List;
