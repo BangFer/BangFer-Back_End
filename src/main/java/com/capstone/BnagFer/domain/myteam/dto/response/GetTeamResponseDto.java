@@ -3,6 +3,7 @@ import com.capstone.BnagFer.domain.myteam.entity.Role;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
+import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
 import com.google.firebase.database.annotations.Nullable;
 import lombok.*;
@@ -18,10 +19,32 @@ public record GetTeamResponseDto (
         Long leaderId,
         String leaderNickName,
         String teamName,
+        TacticDetails tactic,
+
         List<TeamTacticDetailResponse> tacticDto,
         List<TeamMembersList> teamMembers,
         LocalDateTime createdAt
 ) {
+
+    @Builder
+    public record TacticDetails(
+            Long tacticId,
+            String mainFormation,
+            String tacticName,
+            String tacticDetails,
+            String subTactic
+    ) {
+        public static TacticDetails from(Tactic tactic) {
+            return TacticDetails.builder()
+                    .tacticId(tactic.getTacticId())
+                    .mainFormation(tactic.getMainFormation())
+                    .tacticName(tactic.getTacticName())
+                    .tacticDetails(tactic.getTacticDetails())
+                    .subTactic(tactic.getSubTactic())
+                    .build();
+        }
+    }
+
     @Builder
     public record TeamTacticDetailResponse(
             Long detailId,
@@ -47,6 +70,7 @@ public record GetTeamResponseDto (
                 .leaderNickName(team.getLeader().getProfile().getNickname())
                 .teamName(team.getTeamName())
                 .teamMembers(TeamMembersList.from(team.getTeamMembers()))
+                .tactic(TacticDetails.from(team.getTactic()))
                 .tacticDto(TeamTacticDetailResponse.from(team.getTactic().getTacticPositionDetails()))
                 .createdAt(team.getCreatedAt())
                 .build();
@@ -78,6 +102,9 @@ public record GetTeamResponseDto (
     @Builder
     public record TeamList(
             Long teamId,
+            Long tacticId,
+            String mainFormation,
+            String tacticName,
             String teamName,
             Long teamMemberId,
             String leaderNickName
@@ -85,6 +112,9 @@ public record GetTeamResponseDto (
         public static TeamList from(Team team, TeamMember teamMember) {
             return TeamList.builder()
                     .teamId(team.getId())
+                    .tacticId(team.getTactic().getTacticId())
+                    .mainFormation(team.getTactic().getMainFormation())
+                    .tacticName(team.getTactic().getTacticName())
                     .teamName(team.getTeamName())
                     .teamMemberId(teamMember.getId())
                     .leaderNickName(team.getLeader().getProfile().getNickname())

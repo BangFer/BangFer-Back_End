@@ -60,6 +60,7 @@ public enum ErrorCode implements BaseErrorCode {
     //TEAM 관련 에러
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM401", "팀이 없습니다."),
     NO_AUTHORIZATION(HttpStatus.BAD_REQUEST,"TEAM402", "권한이 없습니다."),
+    USER_TEAM_TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TEAM403", "팀에 적용 가능한 전술이 없습니다."),
 
     //TEAM_MEMBER 관련 에러
     CANNOT_INVITE(HttpStatus.BAD_REQUEST, "TEAMMEMBER401", "팀원을 초대할 수 없습니다."),

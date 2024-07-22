@@ -30,13 +30,13 @@ public class ProfileService {
 
         uploadProfile(user, profileImage, profile);
 
-        if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
-            throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
-        }
-
         // 프로필 이미 존재
         if (profileJpaRepository.existsByUser(user)) {
             throw new ProfileExceptionHandler(ErrorCode.PROFILE_ALREADY_EXIST);
+        }
+
+        if (profileJpaRepository.existsByNickname(requestDto.nickname())) {
+            throw new ProfileExceptionHandler(ErrorCode.NICKNAME_ALREADY_EXIST);
         }
 
         return ProfileResponseDto.from(profileJpaRepository.save(profile), user);

@@ -7,8 +7,6 @@ import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
-import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,6 @@ import java.util.List;
 public class TeamQueryService {
 
     private final TeamRepository teamRepository;
-    private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final TeamMembersRepository teamMembersRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId, User user) {
@@ -53,17 +50,17 @@ public class TeamQueryService {
         return teamLists;
     }
 
-    public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
-
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
-
-        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
-        TeamMember byTeamAndPosition = teamMembersRepository.findByTeamAndPosition(team, tacticPositionDetail.getPosition());
-
-        if (tacticPositionDetails.contains(tacticPositionDetail)) {
-            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, byTeamAndPosition);
-        } else
-            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, null);
-    }
+//    public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
+//
+//        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+//        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
+//
+//        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
+//        TeamMember byTeamAndPosition = teamMembersRepository.findByTeamAndPosition(team, tacticPositionDetail.getPosition());
+//
+//        if (tacticPositionDetails.contains(tacticPositionDetail)) {
+//            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, byTeamAndPosition);
+//        } else
+//            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, null);
+//    }
 }

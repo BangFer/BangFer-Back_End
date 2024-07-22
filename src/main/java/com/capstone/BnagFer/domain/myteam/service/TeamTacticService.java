@@ -1,4 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.service;
+
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.myteam.dto.response.CreateTeamTacticResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -19,15 +20,17 @@ public class TeamTacticService {
     private final TeamRepository teamRepository;
     private final TacticRepository tacticRepository;
 
-    public CreateTeamTacticResponseDto addTactic(Long teamId, Long tacticId, User user) {
+    public CreateTeamTacticResponseDto changeTactic(Long teamId, Long tacticId, User user) {
 
         // 전술 찾기
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
         // 팀 찾기
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-
         // 사용자 검증 및 전술 업데이트
         validateAndUpdateTeam(team, user, tactic);
+        // 팀 멤버들의 포지션 초기화
+        resetTeamMemberPositions(team);
+
         // 팀 저장
         teamRepository.save(team);
 
@@ -64,5 +67,9 @@ public class TeamTacticService {
 
         // 팀 정보 업데이트
         team.updateLeaderAndTactic(user, tactic);
+    }
+
+    private void resetTeamMemberPositions(Team team) {
+        team.getTeamMembers().forEach(member -> member.updatePosition(null));
     }
 }
