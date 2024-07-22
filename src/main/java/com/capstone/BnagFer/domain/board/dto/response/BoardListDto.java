@@ -16,22 +16,25 @@ public record BoardListDto(
         Long commentCount
 
 ) {
-    public static BoardListDto from(Board board, Long commentCount, Long likeCount) {
+    public static BoardListDto from(Board board) {
         return BoardListDto.builder()
                 .id(board.getId())
                 .userId(board.getUser().getId())
                 .writerNickName(board.getUser().getProfile().getNickname())
                 .boardTitle(board.getBoardTitle())
-                .likeCount(likeCount)
-                .commentCount(commentCount)
+                .likeCount((long) board.getLikes().size())
+                .commentCount((long) board.getComments().size())
                 .build();
     }
-    public static BoardListDto from(Board board) {
-        return from(board, 0L, 0L);
+
+    public static List<BoardListDto> from(List<Board> boards, List<Long> blockedUserIds) {
+        return boards.stream()
+                .filter(board -> !blockedUserIds.contains(board.getUser().getId()))
+                .map(BoardListDto::from)
+                .collect(Collectors.toList());
     }
-    public static List<BoardListDto> from(List<Board> boards) {
-        return boards.stream().map(board -> from(board, 0L, 0L)).collect(Collectors.toList());
-    }
+
+
 }
 
 
