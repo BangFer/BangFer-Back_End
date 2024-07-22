@@ -89,12 +89,12 @@ public class TeamController {
         return ApiResponse.noContent();
     }
 
-    @Operation(summary = "개별 전술 조회", description = "11개의 버튼을 눌러 각각의 개별 전술을 조회")
-    @GetMapping("/{teamId}/{positionDetailId}")
-    public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable(name = "teamId") Long teamId,
-                                                                                   @PathVariable(name = "positionDetailId") Long positionDetailId) {
-        GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService.getIndividualDetail(teamId, positionDetailId);
-        return ApiResponse.onSuccess(positionDetail);
-    }
+//    @Operation(summary = "개별 전술 조회", description = "11개의 버튼을 눌러 각각의 개별 전술을 조회")
+//    @GetMapping("/{teamId}/{positionDetailId}")
+//    public ApiResponse<GetTeamResponseDto.getIndividualDetail> getIndividualDetail(@PathVariable(name = "teamId") Long teamId,
+//                                                                                   @PathVariable(name = "positionDetailId") Long positionDetailId) {
+//        GetTeamResponseDto.getIndividualDetail positionDetail = teamQueryService.getIndividualDetail(teamId, positionDetailId);
+//        return ApiResponse.onSuccess(positionDetail);
+//    }
 
 }
