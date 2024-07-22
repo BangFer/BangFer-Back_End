@@ -70,7 +70,7 @@ public class TeamController {
     public ApiResponse<CreateTeamTacticResponseDto> addTacticOnTeam(@PathVariable(name = "teamId") Long teamId,
                                                                     @PathVariable(name = "tacticId") Long tacticId,
                                                                     @LoginUser User user) {
-        CreateTeamTacticResponseDto tacticAddedTeam = teamTacticService.addTactic(teamId, tacticId, user);
+        CreateTeamTacticResponseDto tacticAddedTeam = teamTacticService.changeTactic(teamId, tacticId, user);
         return ApiResponse.onSuccess(tacticAddedTeam);
     }
 
