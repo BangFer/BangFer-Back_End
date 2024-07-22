@@ -15,6 +15,6 @@ public interface BoardBlockRepository extends JpaRepository<BoardBlock, Long> {
 
     List<BoardBlock> findByBlockUser(User blockUser);
 
-    @Query("SELECT bb.isBlockedUser.id FROM BoardBlock bb WHERE bb.blockUser.id = :userId")
-    List<Long> findIsBlockUserIdsByBlockUserId(@Param("userId") Long userId);
+    @Query("SELECT b.isBlockedUser.id FROM BoardBlock b WHERE b.blockUser.id = :blockUserId")
+    List<Long> findIsBlockUserIdsByBlockUserId(Long blockUserId);
 }

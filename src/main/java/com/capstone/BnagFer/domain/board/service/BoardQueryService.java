@@ -54,13 +54,19 @@ public class BoardQueryService {
         return boards.map(BoardListDto::from);
     }
 
-    public Page<BoardListDto> getUserBoards(User user, Long isBlockedUserId, Pageable pageable) {
-        User isBlockedUser = userJpaRepository.findById(isBlockedUserId)
+    public Page<BoardListDto> getUserBoards(User user, Long userId, Pageable pageable) {
+        User targetUser = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        if(isUserBlocked(user, isBlockedUser)) {
+
+        // 사용자가 차단한 다른 사용자들의 ID 목록을 가져온다
+        List<Long> blockedUserIds = boardBlockRepository.findIsBlockUserIdsByBlockUserId(user.getId());
+
+        // 만약 조회하려는 사용자가 차단된 사용자 목록에 있으면 예외를 던진다
+        if (blockedUserIds.contains(userId)) {
             throw new BoardExceptionHandler(ErrorCode.IS_BLOCKED_USER);
         }
-        Page<Board> boards = getBoardsByUser(user, pageable);
+
+        Page<Board> boards = getBoardsByUserId(userId, pageable);
         return boards.map(BoardListDto::from);
     }
 
@@ -89,7 +95,14 @@ public class BoardQueryService {
         return boardRepository.findByUser(user, pageable);
     }
 
+    // 특정 사용자 ID로 게시글을 조회하는 메소드
+    public Page<Board> getBoardsByUserId(Long userId, Pageable pageable) {
+        return boardRepository.findByUserId(userId, pageable);
+    }
+
     public boolean isUserBlocked(User blockUser, User isBlockedUser) {
         return boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, isBlockedUser);
     }
+
+
 }
