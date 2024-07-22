@@ -7,8 +7,6 @@ import com.capstone.BnagFer.domain.myteam.entity.TeamMember;
 import com.capstone.BnagFer.domain.myteam.exception.TeamExceptionHandler;
 import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
-import com.capstone.BnagFer.domain.tactic.entity.TacticPositionDetail;
-import com.capstone.BnagFer.domain.tactic.repository.TacticPositionDetailRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,6 @@ import java.util.List;
 public class TeamQueryService {
 
     private final TeamRepository teamRepository;
-    private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final TeamMembersRepository teamMembersRepository;
 
     public GetTeamResponseDto getMyTeamById(Long teamId, User user) {

@@ -70,8 +70,6 @@ public class TeamTacticService {
     }
 
     private void resetTeamMemberPositions(Team team) {
-        team.getTeamMembers().forEach(member -> {
-            member.updatePosition(null);
-        });
+        team.getTeamMembers().forEach(member -> member.updatePosition(null));
     }
 }
