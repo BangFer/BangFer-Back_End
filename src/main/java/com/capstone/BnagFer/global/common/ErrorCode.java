@@ -87,6 +87,10 @@ public enum ErrorCode implements BaseErrorCode {
     //Board 관련 에러
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOARD401", "게시글이 없습니다."),
     TOO_MUCH_IMAGE(HttpStatus.BAD_REQUEST, "BOARD402", "사진은 최대 10개까지 첨부 가능합니다."),
+    CANNOT_BLOCK_YOURSELF(HttpStatus.BAD_REQUEST, "BOARD403", "자신을 차단할 수 없습니다."),
+    IS_BLOCKED_USER(HttpStatus.BAD_REQUEST, "BOARD404", "차단한 사용자입니다."),
+    ALREADY_BLOCKED(HttpStatus.BAD_REQUEST, "BOARD405", "이미 차단된 사용자입니다."),
+    CANNOT_UNBLOCK_YOURSELF(HttpStatus.BAD_REQUEST, "BOARD406", "자신을 차단해제할 수 없습니다."),
 
     //Report 관련 에러
     RESTRICTED_CONTENT(HttpStatus.BAD_REQUEST, "REPORT401", "제한된 게시글입니다."),

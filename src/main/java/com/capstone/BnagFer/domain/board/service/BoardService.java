@@ -104,7 +104,15 @@ public class BoardService {
 
         Optional<Like> like = boardLikeRepository.findByUserAndBoard(user, board);
 
-        long likeCount = redisUtil.boardGetLikeCount(boardId);
+        Long likeCountFromRedis = redisUtil.boardGetLikeCount(boardId);
+        long likeCount;
+
+        if (likeCountFromRedis == null) {
+            likeCount = boardLikeRepository.countByBoard(board);
+            redisUtil.boardSaveLikeCount(boardId, likeCount);
+        } else {
+            likeCount = likeCountFromRedis;
+        }
 
         if (like.isPresent()) {
             boardLikeRepository.delete(like.get());
@@ -119,21 +127,43 @@ public class BoardService {
         }
     }
 
+//    public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
+//        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+//        long commentCount = redisUtil.boardGetCommentCount(boardId);
+//        Comment parent = null;
+//        if (parentCommentId != null) {
+//            parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
+//        }
+////        if(user.getIsBlocked()) {
+////            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
+////        }
+//        Comment comment = request.toEntity(user, board, parent);
+//        accountsCommonService.checkUserProfile(user);
+//        boardCommentRepository.save(comment);
+//        commentCount++;
+//        redisUtil.boardSaveCommentCount(boardId, commentCount);
+//        return CommentResponseDto.from(comment);
+//    }
+
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-        long commentCount = redisUtil.boardGetCommentCount(boardId);
+
+        // 기본값 설정을 위한 수정된 부분
+        Long commentCountObj = redisUtil.boardGetCommentCount(boardId);
+        long commentCount = (commentCountObj != null) ? commentCountObj : 0L;
+
         Comment parent = null;
         if (parentCommentId != null) {
             parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
         }
-//        if(user.getIsBlocked()) {
-//            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
-//        }
+
         Comment comment = request.toEntity(user, board, parent);
         accountsCommonService.checkUserProfile(user);
         boardCommentRepository.save(comment);
+
         commentCount++;
         redisUtil.boardSaveCommentCount(boardId, commentCount);
+
         return CommentResponseDto.from(comment);
     }
 

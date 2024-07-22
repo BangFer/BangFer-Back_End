@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface BoardLikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByUserAndBoard(User user, Board board);
+    Long countByBoard(Board board);
 }
