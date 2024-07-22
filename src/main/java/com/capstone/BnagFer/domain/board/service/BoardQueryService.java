@@ -55,7 +55,7 @@ public class BoardQueryService {
     }
 
     public Page<BoardListDto> getUserBoards(User user, Long userId, Pageable pageable) {
-        User targetedUser = userJpaRepository.findById(userId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        User targetedUser = userJpaRepository.findById(userId).orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
         // 사용자가 차단한 다른 사용자들의 ID 목록을 가져온다
         List<Long> blockedUserIds = boardBlockRepository.findIsBlockUserIdsByBlockUserId(user.getId());
 
