@@ -55,18 +55,15 @@ public class BoardQueryService {
     }
 
     public Page<BoardListDto> getUserBoards(User user, Long userId, Pageable pageable) {
-        User targetUser = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new AccountsExceptionHandler(ErrorCode.USER_NOT_FOUND));
-
+        User targetedUser = userJpaRepository.findById(userId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
         // 사용자가 차단한 다른 사용자들의 ID 목록을 가져온다
         List<Long> blockedUserIds = boardBlockRepository.findIsBlockUserIdsByBlockUserId(user.getId());
 
         // 만약 조회하려는 사용자가 차단된 사용자 목록에 있으면 예외를 던진다
-        if (blockedUserIds.contains(userId)) {
+        if (blockedUserIds.contains(targetedUser.getId())) {
             throw new BoardExceptionHandler(ErrorCode.IS_BLOCKED_USER);
         }
-
-        Page<Board> boards = getBoardsByUserId(userId, pageable);
+        Page<Board> boards = getBoardsByUserId(targetedUser.getId(), pageable);
         return boards.map(BoardListDto::from);
     }
 
