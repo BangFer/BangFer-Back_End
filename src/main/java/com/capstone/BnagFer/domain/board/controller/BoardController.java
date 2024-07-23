@@ -24,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.capstone.BnagFer.global.common.ApiResponse.onSuccess;
-
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "자유 게시판 API")

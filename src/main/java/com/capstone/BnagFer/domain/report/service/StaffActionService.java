@@ -1,5 +1,4 @@
 package com.capstone.BnagFer.domain.report.service;
-import com.capstone.BnagFer.domain.board.entity.Board;
 import com.capstone.BnagFer.domain.board.entity.Comment;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;
 import com.capstone.BnagFer.domain.board.repository.BoardCommentRepository;
@@ -9,7 +8,6 @@ import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.exception.ReportExceptionHandler;
-import com.capstone.BnagFer.domain.tactic.entity.Tactic;
 import com.capstone.BnagFer.domain.tactic.entity.TacticComment;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
 import com.capstone.BnagFer.domain.tactic.repository.CommentRepository;

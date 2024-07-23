@@ -1,12 +1,10 @@
 package com.capstone.BnagFer.domain.report.controller;
 
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.report.dto.UserResponseDto;
 import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.service.StaffActionQueryService;
 import com.capstone.BnagFer.domain.report.service.StaffActionService;
-import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
