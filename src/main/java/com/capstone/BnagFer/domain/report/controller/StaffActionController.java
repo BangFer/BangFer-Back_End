@@ -1,10 +1,12 @@
 package com.capstone.BnagFer.domain.report.controller;
 
+import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.report.dto.UserResponseDto;
 import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.service.StaffActionQueryService;
 import com.capstone.BnagFer.domain.report.service.StaffActionService;
+import com.capstone.BnagFer.global.annotation.LoginUser;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequestMapping("/staff")
 @RequiredArgsConstructor
 public class StaffActionController {
+
     private final StaffActionService staffActionService;
     private final StaffActionQueryService staffActionQueryService;
     @Operation(summary = "UserActivity값을 기준으로 한 조회")
@@ -50,5 +53,33 @@ public class StaffActionController {
         // isStaff 값을 false로 설정하여 revokeStaffAuthority 호출
         UserResponseDto responseDto = staffActionService.revokeStaffAuthority(userId);
         return ApiResponse.onSuccess(responseDto);
+    }
+
+    @Operation(summary = "악의적 게시글 삭제")
+    @DeleteMapping("/{boardId}")
+    public ApiResponse<Object> adminDeleteBoard(@PathVariable(name = "boardId") Long boardId) {
+        staffActionService.deleteBoard(boardId);
+        return ApiResponse.noContent();
+    }
+
+    @Operation(summary = "악의적 게시글 댓글 삭제")
+    @DeleteMapping("/{boardCommentId}")
+    public ApiResponse<Object> adminDeleteComment(@PathVariable(name = "boardCommentId") Long boardCommentId) {
+        staffActionService.deleteComment(boardCommentId);
+        return ApiResponse.noContent();
+    }
+
+    @Operation(summary = "악의적 전술 댓글 삭제")
+    @DeleteMapping("/{tacticCommentId}")
+    public ApiResponse<Object> adminDeleteTacticComment(@PathVariable(name = "tacticCommentId") Long tacticCommentId) {
+        staffActionService.deleteTacticComment(tacticCommentId);
+        return ApiResponse.noContent();
+    }
+
+    @Operation(summary = "악의적 전술 삭제")
+    @DeleteMapping("/{tacticId}")
+    public ApiResponse<Object> adminDeleteTactic(@PathVariable(name = "tacticId") Long tacticId) {
+        staffActionService.deleteTactic(tacticId);
+        return ApiResponse.noContent();
     }
 }

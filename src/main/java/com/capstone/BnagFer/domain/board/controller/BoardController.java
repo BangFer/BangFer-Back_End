@@ -47,7 +47,7 @@ public class BoardController {
     {
         Pageable pageable = PageRequest.of(page, size);
         Page<BoardListDto> boardsList = boardQueryService.getBoards(user, pageable);
-        return onSuccess(boardsList);
+        return ApiResponse.onSuccess(boardsList);
 
     }
 
@@ -67,7 +67,7 @@ public class BoardController {
     {
         Pageable pageable = PageRequest.of(page, size);
         Page<BoardListDto> myBoardsList = boardQueryService.getMyBoards(user, pageable);
-        return onSuccess(myBoardsList);
+        return ApiResponse.onSuccess(myBoardsList);
     }
 
     @Operation(summary = "사용자 게시물 목록 조회", description = "특정 사람이 작성한 게시글 목록 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
@@ -80,7 +80,7 @@ public class BoardController {
     {
         Pageable pageable = PageRequest.of(page, size);
         Page<BoardListDto> userBoardsList = boardQueryService.getUserBoards(user, userId, pageable);
-        return onSuccess(userBoardsList);
+        return ApiResponse.onSuccess(userBoardsList);
     }
 
     @Operation(summary = "게시글 생성", description = "게시글을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
