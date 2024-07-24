@@ -34,7 +34,10 @@ public class TacticService {
     private final LikeRepository likeRepository;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
+
         Tactic tactic = request.toEntity(user);
+
+        accountsCommonService.checkUserActivity(user);
 
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(user);
@@ -59,6 +62,8 @@ public class TacticService {
     public TacticResponse updateTactic(Long tacticId, TacticUpdateRequest request, User user) {
 
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
+
+        accountsCommonService.checkUserActivity(user);
 
         if(!tactic.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
@@ -103,6 +108,8 @@ public class TacticService {
 
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
+        accountsCommonService.checkUserActivity(user);
+
         long commentCount = redisUtil.getCommentCount(tacticId);
 
         TacticComment parent = null;
@@ -124,6 +131,8 @@ public class TacticService {
     public CommentResponse updateComment(Long commentId, CommentUpdateRequest request, User user) {
 
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
+
+        accountsCommonService.checkUserActivity(user);
 
         if(!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);

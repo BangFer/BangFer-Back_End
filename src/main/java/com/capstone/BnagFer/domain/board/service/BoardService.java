@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class BoardService {
+
     private final BoardRepository boardRepository;
     private final AccountsCommonService accountsCommonService;
     private final BoardLikeRepository boardLikeRepository;
@@ -39,6 +40,8 @@ public class BoardService {
     private final S3Provider s3Provider;
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user, List<MultipartFile> images) {
+
+        accountsCommonService.checkUserActivity(user);
         accountsCommonService.checkUserProfile(user);
         Board board = request.toEntity(user);
         boardRepository.save(board);
@@ -49,7 +52,11 @@ public class BoardService {
     }
 
     public CreateBoardResponseDto updateBoard(Long boardId, BoardRequestDto request, User user, List<MultipartFile> images) {
+
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+
+        accountsCommonService.checkUserActivity(user);
+
         if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
@@ -146,7 +153,10 @@ public class BoardService {
 //    }
 
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
+
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+
+        accountsCommonService.checkUserActivity(user);
 
         // 기본값 설정을 위한 수정된 부분
         Long commentCountObj = redisUtil.boardGetCommentCount(boardId);
@@ -169,6 +179,9 @@ public class BoardService {
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
+
+        accountsCommonService.checkUserActivity(user);
+
         if (!comment.getUser().getId().equals(user.getId()))
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         comment.updateComment(request);
