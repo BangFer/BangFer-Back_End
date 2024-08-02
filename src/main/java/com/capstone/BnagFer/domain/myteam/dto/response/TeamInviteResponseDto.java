@@ -11,6 +11,7 @@ public record TeamInviteResponseDto(
         Long inviteId,
         Long teamId,
         Long invitedUserId,
+        String nickName,
         Long inviterId) {
 
     public static TeamInviteResponseDto from(TeamInvite teamInvite) {
@@ -18,6 +19,7 @@ public record TeamInviteResponseDto(
                 .inviteId(teamInvite.getId())
                 .teamId(teamInvite.getTeam().getId())
                 .invitedUserId(teamInvite.getInvitedUser().getId())
+                .nickName(teamInvite.getInvitedUser().getProfile().getNickname())
                 .inviterId(teamInvite.getInviter().getId())
                 .build();
     }

@@ -1,6 +1,8 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
+import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamInviteRequestDto;
@@ -27,12 +29,16 @@ public class TeamInviteService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final UserJpaRepository userJpaRepository;
+    private final ProfileJpaRepository profileJpaRepository;
     public TeamInviteResponseDto inviteTeamMembers(TeamInviteRequestDto request, User inviter) {
-        // 초대하려는 사용자를 ID로 찾아오고, 없으면 USER_NOT_FOUND 예외를 던진다
-        User invitedUser = userJpaRepository.findById(request.userId())
-                .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND));
-
-        // 초대가 이루어질 팀을 ID로 찾아오고, 없으면 TEAM_NOT_FOUND 예외를 던진다
+        Profile profile = profileJpaRepository.findByNickname(request.nickName());
+        if(profile==null){
+            throw new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        }
+        User invitedUser = profile.getUser();
+        if(!request.nickName().equals(invitedUser.getProfile().getNickname()))
+            throw new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND);
+         //초대가 이루어질 팀을 ID로 찾아오고, 없으면 TEAM_NOT_FOUND 예외를 던진다
         Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
