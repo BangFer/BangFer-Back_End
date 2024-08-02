@@ -51,4 +51,11 @@ public class TacticQueryService {
 
         return TacticDetailResponse.from(tactic, likeCount, commentCount);
     }
+
+    public Page<TacticResponse.TacticList> searchByTitle(String title, Pageable pageable) {
+        if (title == null) title = "";
+
+        Page<Tactic> byTitleContaining = tacticRepository.findByTacticNameContainingAndAnonymousFalse(title, pageable);
+        return byTitleContaining.map(TacticResponse.TacticList::from);
+    }
 }
