@@ -33,8 +33,6 @@ public class TeamInviteService {
             throw new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
         User invitedUser = profile.getUser();
-        if(!request.nickName().equals(invitedUser.getProfile().getNickname()))
-            throw new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND);
          //초대가 이루어질 팀을 ID로 찾아오고, 없으면 TEAM_NOT_FOUND 예외를 던진다
         Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
