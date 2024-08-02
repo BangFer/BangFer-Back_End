@@ -23,12 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class TeamInviteService {
-
     private final TeamInviteRepository teamInviteRepository;
     private final AccountsCommonService accountsCommonService;
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
-    private final UserJpaRepository userJpaRepository;
     private final ProfileJpaRepository profileJpaRepository;
     public TeamInviteResponseDto inviteTeamMembers(TeamInviteRequestDto request, User inviter) {
         Profile profile = profileJpaRepository.findByNickname(request.nickName());
