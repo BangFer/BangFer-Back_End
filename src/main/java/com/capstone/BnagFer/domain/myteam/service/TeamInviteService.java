@@ -3,7 +3,6 @@ package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamInviteRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamInviteResponseDto;
