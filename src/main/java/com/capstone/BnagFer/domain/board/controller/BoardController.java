@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -165,6 +166,18 @@ public class BoardController {
     public ApiResponse<List<GetMyBoardBlockResponseDto>> getBlockedUsers(@LoginUser User currentUser) {
         List<GetMyBoardBlockResponseDto> blockedUsers = boardBlockQueryService.getBlockedUsers(currentUser);
         return ApiResponse.onSuccess(blockedUsers);
+    }
+
+    @Operation(summary = "제목으로 게시판 검색", description = "제목으로 게시판을 검색. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
+    @GetMapping("/search")
+    public ApiResponse<Page<BoardListDto>> searchTitle(
+            @RequestParam(value ="title",required = false) String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser User user) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<BoardListDto> boardLists = boardQueryService.searchByTitle(title, user, pageable);
+        return ApiResponse.onSuccess(boardLists);
     }
 
 }
