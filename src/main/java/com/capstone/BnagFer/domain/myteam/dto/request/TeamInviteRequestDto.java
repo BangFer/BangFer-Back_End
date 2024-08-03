@@ -5,7 +5,7 @@ import com.capstone.BnagFer.domain.myteam.entity.Team;
 import com.capstone.BnagFer.domain.myteam.entity.TeamInvite;
 
 public record TeamInviteRequestDto(
-        Long userId,
+        String nickName,
         Long teamId) {
 
     public TeamInvite toEntity(User invitedUser, Team team, User inviter) {
