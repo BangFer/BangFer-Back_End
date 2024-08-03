@@ -105,18 +105,20 @@ public record GetTeamResponseDto (
             Long tacticId,
             String mainFormation,
             String tacticName,
+            List<TeamMembersList> teamMembers,
+            int memberCount,
             String teamName,
-            Long teamMemberId,
             String leaderNickName
     ) {
-        public static TeamList from(Team team, TeamMember teamMember) {
+        public static TeamList from(Team team) {
             return TeamList.builder()
                     .teamId(team.getId())
                     .tacticId(team.getTactic().getTacticId())
                     .mainFormation(team.getTactic().getMainFormation())
                     .tacticName(team.getTactic().getTacticName())
                     .teamName(team.getTeamName())
-                    .teamMemberId(teamMember.getId())
+                    .teamMembers(TeamMembersList.from(team.getTeamMembers()))
+                    .memberCount(team.getTeamMembers().size())
                     .leaderNickName(team.getLeader().getProfile().getNickname())
                     .build();
         }
