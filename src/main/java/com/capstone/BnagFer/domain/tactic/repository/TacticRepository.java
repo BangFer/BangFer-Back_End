@@ -16,4 +16,5 @@ public interface TacticRepository extends JpaRepository<Tactic, Long> {
 
     Page<Tactic> findAllByAnonymousFalse(Pageable pageable);
     Page<Tactic> findAllByUser(User user, Pageable pageable);
+    Page<Tactic> findByTacticNameContainingAndAnonymousFalse(String title, Pageable pageable);
 }
