@@ -76,7 +76,7 @@ public class BoardQueryService {
         }
 
         Long commentCount = redisUtil.boardGetCommentCount(boardId);
-        if(commentCount == null){
+        if (commentCount == null) {
             commentCount = (long) board.getComments().size();
             redisUtil.boardSaveCommentCount(boardId, commentCount);
         }
@@ -97,9 +97,20 @@ public class BoardQueryService {
         return boardRepository.findByUserId(userId, pageable);
     }
 
+    //자유게시판 검색 기능
+    public Page<BoardListDto> searchByTitle(String title, User user, Pageable pageable) {
+        if (title == null) title = "";
+        Page<Board> byTitleContaining = boardRepository.findByBoardTitleContaining(title, pageable);
+        // 사용자가 차단한 다른 사용자들의 ID 목록을 가져온다
+        List<Long> blockedUserIds = boardBlockRepository.findIsBlockUserIdsByBlockUserId(user.getId());
+        // 차단한 사용자의 게시글이 제외된 리스트 생성
+        List<BoardListDto> filteredBoards = byTitleContaining.getContent().stream()
+                .filter(board -> !blockedUserIds.contains(board.getUser().getId()) || board.getUser().getId().equals(user.getId()))
+                .map(BoardListDto::from)
+                .toList();
+        return new PageImpl<>(filteredBoards, pageable, byTitleContaining.getTotalElements());
+    }
     public boolean isUserBlocked(User blockUser, User isBlockedUser) {
         return boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, isBlockedUser);
     }
-
-
 }
