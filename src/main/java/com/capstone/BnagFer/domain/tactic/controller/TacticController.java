@@ -53,6 +53,17 @@ public class TacticController {
         return ApiResponse.onSuccess(userTacticLists);
     }
 
+    @Operation(summary = "제목으로 전술 검색", description = "제목으로 전술을 검색합니다. 단, 공개(anonymous가 false) 인 전술만 검색가능. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
+    @GetMapping("/search")
+    public ApiResponse<Page<TacticResponse.TacticList>> searchTitle(
+            @RequestParam(value ="title",required = false) String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.searchByTitle(title, pageable);
+        return ApiResponse.onSuccess(tacticLists);
+    }
+
     @Operation(summary = "전술 생성", description = "전술을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
     @PostMapping
     public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
