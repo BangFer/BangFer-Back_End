@@ -11,11 +11,6 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-  - object: /home/ubuntu/cicd/scripts
-    pattern: "*.sh"
-    owner: ubuntu
-    group: ubuntu
-    mode: 755
 
 hooks:
   AfterInstall:
