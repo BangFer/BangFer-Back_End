@@ -44,7 +44,7 @@ public class TeamQueryService {
 
         for (TeamMember teamMember : teamMembers) {
             Team team = teamMember.getTeam();
-            teamLists.add(GetTeamResponseDto.TeamList.from(team, teamMember));
+            teamLists.add(GetTeamResponseDto.TeamList.from(team));
         }
 
         return teamLists;
