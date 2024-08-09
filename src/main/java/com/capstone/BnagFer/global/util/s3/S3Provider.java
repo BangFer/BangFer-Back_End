@@ -26,7 +26,14 @@ public class S3Provider {
 
     public String uploadFile(MultipartFile file, S3UploadRequest request){
 
-        String fileName = request.dirName() + "/" + request.userId() + File.separator + UUID.randomUUID();
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+        }
+
+        String fileName = request.dirName() + "/" + request.userId() + File.separator + UUID.randomUUID() + extension;
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
