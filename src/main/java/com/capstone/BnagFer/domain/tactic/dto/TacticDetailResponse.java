@@ -70,6 +70,7 @@ public record TacticDetailResponse(
             Long userId,
             String nickname,
             String comment,
+            boolean deleted,
             LocalDateTime createdAt,
             LocalDateTime updateAt,
             List<CommentList> children
@@ -81,6 +82,7 @@ public record TacticDetailResponse(
                     .userId(comment.getUser().getId())
                     .nickname(comment.getUser().getProfile().getNickname())
                     .comment(comment.getComment())
+                    .deleted(comment.isDeleted())
                     .createdAt(comment.getCreatedAt())
                     .updateAt(comment.getUpdatedAt())
                     .children(comment.getChildren().stream().map(CommentList::from).toList())
