@@ -144,10 +144,11 @@ public class BoardController {
 
     @Operation(summary = "게시글 댓글 삭제", description = "자신의 댓글을 삭제하는 기능. 댓글 작성자 만이 삭제 가능.")
     @DeleteMapping("/comment/{commentId}")
-    public ApiResponse<Void> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
+    public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
         boardService.deleteComment(commentId, user);
-        return ApiResponse.noContent();
+        return ApiResponse.onSuccess("댓글이 삭제 되었습니다.");
     }
+
     @Operation(summary = "자유게시판 사용자 차단", description = "차단을 하게되면, 차단한 사용자의 댓글, 게시글을 볼 수 없다.")
     @PostMapping("/block/{isBlockedUserId}")
     public ApiResponse<BoardBlockResponseDto> blockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {

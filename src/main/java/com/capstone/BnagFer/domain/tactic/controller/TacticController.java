@@ -125,7 +125,7 @@ public class TacticController {
     @DeleteMapping("/comment/{commentId}")
     public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user){
         tacticService.deleteComment(commentId, user);
-        return ApiResponse.noContent();
+        return ApiResponse.onSuccess("댓글이 삭제 되었습니다.");
     }
 
     @Operation(summary = "전술 좋아요 & 좋아요 취소", description = "전술에 좋아요를 누르는 기능. 한번 더누르면 좋아요 취소.")

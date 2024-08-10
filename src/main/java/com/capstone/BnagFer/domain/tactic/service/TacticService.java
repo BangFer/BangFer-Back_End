@@ -145,18 +145,9 @@ public class TacticService {
     public void deleteComment(Long commentId, User user) {
 
         TacticComment tacticComment = commentRepository.findById(commentId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-
-        long tacticId = tacticComment.getTactic().getTacticId();
-
-        long commentCount = redisUtil.getCommentCount(tacticId);
-        long chlidCnt = tacticComment.getChildren().size();
-
         if (!tacticComment.getUser().getId().equals(user.getId()))
             throw new TacticExceptionHandler(ErrorCode.USER_NOT_MATCHED);
-
-        commentRepository.deleteById(commentId);
-        commentCount -= (chlidCnt + 1L);
-        redisUtil.saveCommentCount(tacticId, commentCount);
+        tacticComment.deleteComment();
     }
 
     public ApiResponse<Object> likeButton(Long tacticId, User user) {
