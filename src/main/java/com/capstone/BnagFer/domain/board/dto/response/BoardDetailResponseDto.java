@@ -41,6 +41,7 @@ public record BoardDetailResponseDto(
             Long userId,
             String nickName,
             String commentText,
+            boolean deleted,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
             List<CommentList> children
@@ -52,6 +53,7 @@ public record BoardDetailResponseDto(
                     .boardId(comment.getBoard().getId())
                     .nickName(comment.getUser().getProfile().getNickname())
                     .commentText(comment.getCommentText())
+                    .deleted(comment.isDeleted())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
                     .children(comment.getChildren().stream().map(CommentList::from).toList())

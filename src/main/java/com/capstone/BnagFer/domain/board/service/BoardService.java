@@ -190,16 +190,12 @@ public class BoardService {
     }
 
     public void deleteComment(Long commentId, User user) {
+
         Comment comment = boardCommentRepository.findById(commentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-        long boardId = comment.getBoard().getId();
-        long commentCount = redisUtil.boardGetCommentCount(boardId);
-        long childCnt = comment.getChildren().size();
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
-        boardCommentRepository.deleteById(commentId);
-        commentCount -= (childCnt + 1L);
-        redisUtil.boardSaveCommentCount(boardId, commentCount);
+        comment.deleteComment();
     }
 }
 

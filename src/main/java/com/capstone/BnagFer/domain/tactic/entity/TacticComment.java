@@ -5,6 +5,7 @@ import com.capstone.BnagFer.domain.tactic.dto.CommentUpdateRequest;
 import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,10 @@ public class TacticComment extends BaseEntity {
     @Column(name = "comment", nullable = false)
     private String comment;
 
+    @Column(name = "deleted")
+    @ColumnDefault("false")
+    private boolean deleted;  // true면 삭제된 댓글
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TacticComment parent;
@@ -50,5 +55,10 @@ public class TacticComment extends BaseEntity {
     }
     public void updateComment(CommentUpdateRequest request){
         comment = request.comment();
+    }
+
+    public void deleteComment() {
+        comment = "삭제된 댓글 입니다.";
+        deleted = true;
     }
 }

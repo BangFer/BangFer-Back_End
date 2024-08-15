@@ -19,7 +19,7 @@ public record TeamInviteResponseDto(
                 .inviteId(teamInvite.getId())
                 .teamId(teamInvite.getTeam().getId())
                 .invitedUserId(teamInvite.getInvitedUser().getId())
-                .nickName(teamInvite.getInvitedUser().getProfile().getNickname())
+                .nickName(teamInvite.getInviter().getProfile().getNickname())
                 .inviterId(teamInvite.getInviter().getId())
                 .build();
     }
