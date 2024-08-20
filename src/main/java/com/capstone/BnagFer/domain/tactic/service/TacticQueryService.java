@@ -22,9 +22,9 @@ public class TacticQueryService {
     private final TacticRepository tacticRepository;
     private final RedisUtil redisUtil;
 
-    public Page<TacticResponse.TacticList> getTactics(Pageable pageable) {
+    public Page<TacticDetailResponse.AllTacticList> getTactics(Pageable pageable) {
         Page<Tactic> tactics = tacticRepository.findAllByAnonymousFalse(pageable);
-        return tactics.map(TacticResponse.TacticList::from);
+        return tactics.map(TacticDetailResponse.AllTacticList::from);
     }
 
     public Page<TacticResponse.TacticList> getUserTactics(User user, Pageable pageable) {
