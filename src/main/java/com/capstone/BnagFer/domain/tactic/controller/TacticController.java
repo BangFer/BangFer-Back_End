@@ -27,11 +27,11 @@ public class TacticController {
 
     @Operation(summary = "전술 목록 조회", description = "전체 전술 목록을 조회합니다. 단, 공개(anonymous가 false) 인 전술만 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping
-    public ApiResponse<Page<TacticResponse.TacticList>> getTacticList(
+    public ApiResponse<Page<TacticDetailResponse.AllTacticList>> getTacticList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics(pageable);
+        Page<TacticDetailResponse.AllTacticList> tacticLists = tacticQueryService.getTactics(pageable);
         return ApiResponse.onSuccess(tacticLists);
     }
 
@@ -56,7 +56,7 @@ public class TacticController {
     @Operation(summary = "제목으로 전술 검색", description = "제목으로 전술을 검색합니다. 단, 공개(anonymous가 false) 인 전술만 검색가능. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping("/search")
     public ApiResponse<Page<TacticResponse.TacticList>> searchTitle(
-            @RequestParam(value ="title",required = false) String title,
+            @RequestParam(value = "title", required = false) String title,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -66,7 +66,7 @@ public class TacticController {
 
     @Operation(summary = "전술 생성", description = "전술을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
     @PostMapping
-    public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
+    public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user) {
         TacticResponse tacticDetail = tacticService.createTactic(request, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
@@ -82,14 +82,14 @@ public class TacticController {
 
     @Operation(summary = "전술 복사후 가져오기", description = "다른 사람의 전술을 복사해서 작성자를 자신으로 하여 저장.")
     @PostMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user){
+    public ApiResponse<TacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         TacticResponse tacticDetail = tacticService.copyTactic(tacticId, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
     @Operation(summary = "전술 삭제", description = "자신의 전술 삭제. 전술 작성자 만이 삭제 가능.")
     @DeleteMapping("/{tacticId}")
-    public ApiResponse<Object> deleteTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user){
+    public ApiResponse<Object> deleteTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         tacticService.deleteTactic(tacticId, user);
         return ApiResponse.noContent();
     }
@@ -123,7 +123,7 @@ public class TacticController {
 
     @Operation(summary = "전술 댓글 삭제", description = "자신의 댓글을 삭제하는 기능. 댓글 작성자 만이 삭제 가능.")
     @DeleteMapping("/comment/{commentId}")
-    public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user){
+    public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
         tacticService.deleteComment(commentId, user);
         return ApiResponse.onSuccess("댓글이 삭제 되었습니다.");
     }
