@@ -1,4 +1,5 @@
 package com.capstone.BnagFer.domain.board.service;
+
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.board.dto.request.BoardRequestDto;
@@ -12,6 +13,8 @@ import com.capstone.BnagFer.domain.board.repository.BoardCommentRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardImageRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardLikeRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
+import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
+import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.capstone.BnagFer.global.util.RedisUtil;
@@ -38,6 +41,7 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
     private final RedisUtil redisUtil;
     private final S3Provider s3Provider;
+    private final FcmNotificationService fcmNotificationService;
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user, List<MultipartFile> images) {
 
@@ -134,24 +138,6 @@ public class BoardService {
         }
     }
 
-//    public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
-//        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-//        long commentCount = redisUtil.boardGetCommentCount(boardId);
-//        Comment parent = null;
-//        if (parentCommentId != null) {
-//            parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-//        }
-////        if(user.getIsBlocked()) {
-////            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
-////        }
-//        Comment comment = request.toEntity(user, board, parent);
-//        accountsCommonService.checkUserProfile(user);
-//        boardCommentRepository.save(comment);
-//        commentCount++;
-//        redisUtil.boardSaveCommentCount(boardId, commentCount);
-//        return CommentResponseDto.from(comment);
-//    }
-
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
@@ -174,7 +160,40 @@ public class BoardService {
         commentCount++;
         redisUtil.boardSaveCommentCount(boardId, commentCount);
 
+        // FCM 알림 전송
+        if (parentCommentId == null) {
+            // 일반 댓글인 경우
+            sendCommentNotification(board.getUser(), user);
+        } else {
+            // 대댓글인 경우
+            sendReplyNotification(board.getUser(), parent.getUser(), user);
+        }
+
         return CommentResponseDto.from(comment);
+    }
+
+    private void sendCommentNotification(User boardOwner, User commenter) {
+
+        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
+                "새 댓글",
+                commenter.getProfile().getNickname() + "님이 회원님의 게시글에 댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(alarmRequestDto, boardOwner.getId());
+
+    }
+
+    private void sendReplyNotification(User boardOwner, User parentCommentOwner, User replier) {
+        FcmNotificationRequestDto boardOwnerAlarmDto = new FcmNotificationRequestDto(
+                "새 댓글",
+                replier.getProfile().getNickname() + "님이 회원님의 게시글에 댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(boardOwnerAlarmDto, boardOwner.getId());
+
+        FcmNotificationRequestDto parentCommentOwnerAlarmDto = new FcmNotificationRequestDto(
+                "새 대댓글",
+                replier.getProfile().getNickname() + "님이 회원님의 댓글에 대댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(parentCommentOwnerAlarmDto, parentCommentOwner.getId());
     }
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {

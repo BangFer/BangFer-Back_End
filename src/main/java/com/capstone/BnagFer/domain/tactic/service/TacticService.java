@@ -1,5 +1,7 @@
 package com.capstone.BnagFer.domain.tactic.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
+import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.tactic.dto.*;
@@ -32,6 +34,7 @@ public class TacticService {
     private final CommentRepository commentRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
+    private final FcmNotificationService fcmNotificationService;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
 
@@ -125,7 +128,40 @@ public class TacticService {
         commentCount++;
         redisUtil.saveCommentCount(tacticId, commentCount);
 
+        // FCM 알림 전송
+        if (parentCommentId == null) {
+            // 일반 댓글인 경우
+            sendCommentNotification(tactic.getUser(), user);
+        } else {
+            // 대댓글인 경우
+            sendReplyNotification(tactic.getUser(), parent.getUser(), user);
+        }
+
         return CommentResponse.from(tacticComment);
+    }
+
+    private void sendCommentNotification(User tacticOwner, User commenter) {
+
+        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
+                "새 댓글",
+                commenter.getProfile().getNickname() + "님이 회원님의 전술에 댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(alarmRequestDto, tacticOwner.getId());
+
+    }
+
+    private void sendReplyNotification(User tacticOwner, User parentCommentOwner, User replier) {
+        FcmNotificationRequestDto tacticOwnerAlarmDto = new FcmNotificationRequestDto(
+                "새 댓글",
+                replier.getProfile().getNickname() + "님이 회원님의 전술에 댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(tacticOwnerAlarmDto, tacticOwner.getId());
+
+        FcmNotificationRequestDto parentCommentOwnerAlarmDto = new FcmNotificationRequestDto(
+                "새 대댓글",
+                replier.getProfile().getNickname() + "님이 회원님의 댓글에 대댓글을 달았습니다."
+        );
+        fcmNotificationService.sendAlarm(parentCommentOwnerAlarmDto, parentCommentOwner.getId());
     }
 
     public CommentResponse updateComment(Long commentId, CommentUpdateRequest request, User user) {
