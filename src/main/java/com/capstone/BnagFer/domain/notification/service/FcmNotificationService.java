@@ -1,10 +1,12 @@
-package com.capstone.BnagFer.domain.firebase.service;
+package com.capstone.BnagFer.domain.notification.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.notification.entity.FcmNotification;
+import com.capstone.BnagFer.domain.notification.repository.FcmNotificationRepository;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.firebase.dto.FCMAlarmRequestDto;
-import com.capstone.BnagFer.domain.firebase.exception.FirebaseExceptionHandler;
+import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
+import com.capstone.BnagFer.domain.notification.exception.FcmNotificationExceptionHandler;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -12,18 +14,24 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class FcmAlarmService {
+@Transactional
+public class FcmNotificationService {
 
     private final FirebaseMessaging firebaseMessaging;
     private final UserJpaRepository userJpaRepository;
     private final RedisUtil redisUtil;
+    private final FcmNotificationRepository fcmNotificationRepository;
 
-    public String sendAlarm(FCMAlarmRequestDto requestDto, Long userId) {
+    public String sendAlarm(FcmNotificationRequestDto requestDto, Long userId) {
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new FirebaseExceptionHandler(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new FcmNotificationExceptionHandler(ErrorCode.USER_NOT_FOUND));
+
+        FcmNotification fcmNotification = requestDto.toEntity(user);
+        fcmNotificationRepository.save(fcmNotification);
 
         String fcmToken = redisUtil.getFCMToken(user.getEmail());
         if (fcmToken != null) {
@@ -42,10 +50,10 @@ public class FcmAlarmService {
                 return "알림을 성공적으로 전송했습니다. targetUserId = " + userId;
             } catch (FirebaseMessagingException e) {
                 e.printStackTrace();
-                throw new FirebaseExceptionHandler(ErrorCode.FIREBASE_MESSAGING_ERROR);
+                throw new FcmNotificationExceptionHandler(ErrorCode.FIREBASE_MESSAGING_ERROR);
             }
         } else {
-            throw new FirebaseExceptionHandler(ErrorCode.FIREBASE_TOKEN_NOT_FOUND);
+            throw new FcmNotificationExceptionHandler(ErrorCode.FIREBASE_TOKEN_NOT_FOUND);
         }
     }
 }
