@@ -14,6 +14,7 @@ import com.capstone.BnagFer.domain.board.repository.BoardImageRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardLikeRepository;
 import com.capstone.BnagFer.domain.board.repository.BoardRepository;
 import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
+import com.capstone.BnagFer.domain.notification.event.CommentCreatedEvent;
 import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
@@ -21,6 +22,7 @@ import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.global.util.s3.S3Provider;
 import com.capstone.BnagFer.global.util.s3.dto.S3UploadRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +43,7 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
     private final RedisUtil redisUtil;
     private final S3Provider s3Provider;
-    private final FcmNotificationService fcmNotificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public CreateBoardResponseDto createBoard(BoardRequestDto request, User user, List<MultipartFile> images) {
 
@@ -155,45 +157,15 @@ public class BoardService {
 
         Comment comment = request.toEntity(user, board, parent);
         accountsCommonService.checkUserProfile(user);
-        boardCommentRepository.save(comment);
+        Comment savedComment = boardCommentRepository.save(comment);
 
         commentCount++;
         redisUtil.boardSaveCommentCount(boardId, commentCount);
 
         // FCM 알림 전송
-        if (parentCommentId == null) {
-            // 일반 댓글인 경우
-            sendCommentNotification(board.getUser(), user);
-        } else {
-            // 대댓글인 경우
-            sendReplyNotification(board.getUser(), parent.getUser(), user);
-        }
+        eventPublisher.publishEvent(new CommentCreatedEvent(savedComment));
 
         return CommentResponseDto.from(comment);
-    }
-
-    private void sendCommentNotification(User boardOwner, User commenter) {
-
-        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
-                "새 댓글",
-                commenter.getProfile().getNickname() + "님이 회원님의 게시글에 댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(alarmRequestDto, boardOwner.getId());
-
-    }
-
-    private void sendReplyNotification(User boardOwner, User parentCommentOwner, User replier) {
-        FcmNotificationRequestDto boardOwnerAlarmDto = new FcmNotificationRequestDto(
-                "새 댓글",
-                replier.getProfile().getNickname() + "님이 회원님의 게시글에 댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(boardOwnerAlarmDto, boardOwner.getId());
-
-        FcmNotificationRequestDto parentCommentOwnerAlarmDto = new FcmNotificationRequestDto(
-                "새 대댓글",
-                replier.getProfile().getNickname() + "님이 회원님의 댓글에 대댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(parentCommentOwnerAlarmDto, parentCommentOwner.getId());
     }
 
     public CommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto request, User user) {
