@@ -17,6 +17,11 @@ public class TeamInviteEventHandler extends BaseNotificationEventHandler<TeamInv
     }
 
     @Override
+    protected Class<TeamInviteCreatedEvent> getSupportedEventType() {
+        return TeamInviteCreatedEvent.class;
+    }
+
+    @Override
     protected FcmNotificationRequestDto createNotificationRequest(TeamInviteCreatedEvent event) {
         Map<String, String> params = new HashMap<>();
         params.put("inviterNickname", event.getInviterNickname());

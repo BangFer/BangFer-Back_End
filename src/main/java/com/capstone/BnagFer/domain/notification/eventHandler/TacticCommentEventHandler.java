@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.notification.eventHandler;
 
-import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
 import com.capstone.BnagFer.domain.notification.entity.NotificationTemplate;
@@ -29,6 +28,11 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
         this.tacticRepository = tacticRepository;
         this.commentRepository = commentRepository;
         this.userJpaRepository = userJpaRepository;
+    }
+
+    @Override
+    protected Class<TacticCommentCreatedEvent> getSupportedEventType() {
+        return TacticCommentCreatedEvent.class;
     }
 
     @Override

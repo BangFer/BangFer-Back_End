@@ -23,6 +23,11 @@ public class PositionAllocatedEventHandler extends BaseNotificationEventHandler<
     }
 
     @Override
+    protected Class<PositionAllocatedEvent> getSupportedEventType() {
+        return PositionAllocatedEvent.class;
+    }
+
+    @Override
     protected FcmNotificationRequestDto createNotificationRequest(PositionAllocatedEvent event) {
         Map<String, String> params = new HashMap<>();
         params.put("teamName", event.getTeamName());

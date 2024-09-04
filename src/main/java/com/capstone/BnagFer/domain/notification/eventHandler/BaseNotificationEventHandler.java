@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.notification.eventHandler;
 
 import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
 import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
@@ -14,18 +13,26 @@ import org.springframework.scheduling.annotation.Async;
  */
 
 
-@RequiredArgsConstructor
 public abstract class BaseNotificationEventHandler<T> {
     protected final FcmNotificationService fcmNotificationService;
 
+    protected BaseNotificationEventHandler(FcmNotificationService fcmNotificationService) {
+        this.fcmNotificationService = fcmNotificationService;
+    }
+
     @Async
     @EventListener
-    public void handle(T event) {
-        FcmNotificationRequestDto requestDto = createNotificationRequest(event);
-        Long recipientId = getRecipientId(event);
-        fcmNotificationService.sendAlarm(requestDto, recipientId);
+    public void handle(Object event) {
+        if (getSupportedEventType().isInstance(event)) {
+            @SuppressWarnings("unchecked")
+            T typedEvent = (T) event;
+            FcmNotificationRequestDto requestDto = createNotificationRequest(typedEvent);
+            Long recipientId = getRecipientId(typedEvent);
+            fcmNotificationService.sendAlarm(requestDto, recipientId);
+        }
     }
 
     protected abstract FcmNotificationRequestDto createNotificationRequest(T event);
     protected abstract Long getRecipientId(T event);
+    protected abstract Class<T> getSupportedEventType();
 }

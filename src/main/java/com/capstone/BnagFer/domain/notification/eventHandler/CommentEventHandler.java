@@ -31,6 +31,11 @@ public class CommentEventHandler extends BaseNotificationEventHandler<CommentCre
     }
 
     @Override
+    protected Class<CommentCreatedEvent> getSupportedEventType() {
+        return CommentCreatedEvent.class;
+    }
+
+    @Override
     protected FcmNotificationRequestDto createNotificationRequest(CommentCreatedEvent event) {
         String commenterNickname = userJpaRepository.findById(event.getAuthorId())
                 .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND))
