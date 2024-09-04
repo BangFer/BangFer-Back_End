@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "board")
+@Table(name = "notification")
 public class FcmNotification extends BaseEntity {
 
     @Id
