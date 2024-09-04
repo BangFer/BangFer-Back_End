@@ -1,9 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
 import com.capstone.BnagFer.domain.notification.event.PositionAllocatedEvent;
-import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;

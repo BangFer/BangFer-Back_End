@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.tactic.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
 import com.capstone.BnagFer.domain.notification.event.TacticCommentCreatedEvent;
 import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.global.util.RedisUtil;
@@ -36,7 +35,6 @@ public class TacticService {
     private final CommentRepository commentRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
-    private final FcmNotificationService fcmNotificationService;
     private final ApplicationEventPublisher eventPublisher;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
