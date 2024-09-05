@@ -1,6 +1,5 @@
 package com.capstone.BnagFer.domain.notification.event;
 
-import com.capstone.BnagFer.domain.board.entity.Comment;
 import lombok.Getter;
 
 @Getter
