@@ -5,15 +5,18 @@ import lombok.Getter;
 
 @Getter
 public class CommentCreatedEvent {
-    private final Long boardId;
-    private final Long commentId;
     private final Long authorId;
-    private final Long parentCommentId;
+    private final Long recipientId;
+    private final NotificationType notificationType;
 
-    public CommentCreatedEvent(Comment comment) {
-        this.boardId = comment.getBoard().getId();
-        this.commentId = comment.getCommentId();
-        this.authorId = comment.getUser().getId();
-        this.parentCommentId = comment.getParent() != null ? comment.getParent().getCommentId() : null;
+    public enum NotificationType {
+        NEW_COMMENT,
+        NEW_REPLY
+    }
+
+    public CommentCreatedEvent(Long authorId, Long recipientId, NotificationType notificationType) {
+        this.authorId = authorId;
+        this.recipientId = recipientId;
+        this.notificationType = notificationType;
     }
 }
