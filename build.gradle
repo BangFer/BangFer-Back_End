@@ -70,6 +70,8 @@ dependencies {
 	//firebase
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 
+	implementation 'org.redisson:redisson-spring-boot-starter:3.27.0'
+
 	//S3
 	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4'
 	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-secrets-manager-config', version: '2.4.4'
