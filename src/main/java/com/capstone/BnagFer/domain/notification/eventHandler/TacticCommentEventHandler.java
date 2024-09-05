@@ -6,8 +6,6 @@ import com.capstone.BnagFer.domain.notification.entity.NotificationTemplate;
 import com.capstone.BnagFer.domain.notification.event.TacticCommentCreatedEvent;
 import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.domain.tactic.exception.TacticExceptionHandler;
-import com.capstone.BnagFer.domain.tactic.repository.CommentRepository;
-import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import org.springframework.stereotype.Component;
 
@@ -16,17 +14,11 @@ import java.util.Map;
 
 @Component
 public class TacticCommentEventHandler extends BaseNotificationEventHandler<TacticCommentCreatedEvent> {
-    private final TacticRepository tacticRepository;
-    private final CommentRepository commentRepository;
     private final UserJpaRepository userJpaRepository;
 
     public TacticCommentEventHandler(FcmNotificationService fcmNotificationService,
-                                     TacticRepository tacticRepository,
-                                     CommentRepository commentRepository,
                                      UserJpaRepository userJpaRepository) {
         super(fcmNotificationService);
-        this.tacticRepository = tacticRepository;
-        this.commentRepository = commentRepository;
         this.userJpaRepository = userJpaRepository;
     }
 
@@ -45,7 +37,7 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
         params.put("nickname", commenterNickname);
         params.put("contentType", "전술");
 
-        NotificationTemplate template = event.getParentCommentId() == null ?
+        NotificationTemplate template = event.getNotificationType() == TacticCommentCreatedEvent.NotificationType.NEW_COMMENT ?
                 NotificationTemplate.NEW_COMMENT : NotificationTemplate.NEW_REPLY;
 
         return new FcmNotificationRequestDto(
@@ -56,14 +48,6 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
 
     @Override
     protected Long getRecipientId(TacticCommentCreatedEvent event) {
-        if (event.getParentCommentId() == null) {
-            return tacticRepository.findById(event.getTacticId())
-                    .orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND))
-                    .getUser().getId();
-        } else {
-            return commentRepository.findById(event.getParentCommentId())
-                    .orElseThrow(() -> new TacticExceptionHandler(ErrorCode.COMMENT_NOT_FOUND))
-                    .getUser().getId();
-        }
+        return event.getRecipientId();
     }
 }

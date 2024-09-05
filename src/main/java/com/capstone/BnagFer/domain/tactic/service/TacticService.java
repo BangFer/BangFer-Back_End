@@ -124,12 +124,29 @@ public class TacticService {
 
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(user);
-        TacticComment savedComment = commentRepository.save(tacticComment);
+        commentRepository.save(tacticComment);
         commentCount++;
         redisUtil.saveCommentCount(tacticId, commentCount);
 
         // FCM 알림 전송
-        eventPublisher.publishEvent(new TacticCommentCreatedEvent(savedComment));
+        if (parentCommentId == null) {
+            // 새 댓글인 경우
+            if (!user.getId().equals(tactic.getUser().getId())) {
+                // 전술 작성자가 댓글을 단 경우가 아닐 때만 알림 발송
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), tactic.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+        } else {
+            // 대댓글인 경우
+            if (!user.getId().equals(tactic.getUser().getId())) {
+                // 전술 작성자가 대댓글을 단 경우가 아닐 때 게시글 작성자에게 알림
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), tactic.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+
+            if (!user.getId().equals(parent.getUser().getId()) && !parent.getUser().getId().equals(tactic.getUser().getId())) {
+                // 부모 댓글 작성자가 대댓글을 단 경우가 아니고, 부모 댓글 작성자가 전술 작성자가 아닐 때 부모 댓글 작성자에게 알림
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), parent.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_REPLY));
+            }
+        }
 
         return CommentResponse.from(tacticComment);
     }
