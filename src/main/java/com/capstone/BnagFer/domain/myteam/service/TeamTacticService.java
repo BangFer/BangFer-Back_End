@@ -48,7 +48,6 @@ public class TeamTacticService {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND);
         }
     }
-
     private void validateAndUpdateTeam(Team team, User user, Tactic tactic) {
 
         // 팀 리더 검증
