@@ -28,7 +28,7 @@ public class TeamMembersService {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
 
         if(!team.getId().equals(teamMember.getTeam().getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
+            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_NOT_IN_TEAM);
         }
 
         Position requestedPosition = request.position();
