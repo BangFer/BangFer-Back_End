@@ -1,7 +1,5 @@
 package com.capstone.BnagFer.domain.myteam.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -45,7 +43,6 @@ public class TeamMembersService {
                     }
                     // 요청한 멤버에게 포지션 할당
                     teamMember.updatePosition(requestedPosition);
-                    teamMembersRepository.save(teamMember);
                 }
             } else
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
