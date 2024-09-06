@@ -68,6 +68,7 @@ public class TeamInviteService {
         return TeamInviteResponseDto.from(teamInvite);
     }
 
+    
     public void kickOutMembers(Long memberId, Long teamId, User user) {
         TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));

@@ -67,7 +67,6 @@ public class BoardService {
         uploadBoard(user, images, board);
 
         board.updateBoard(request);
-        boardRepository.save(board);
         return CreateBoardResponseDto.from(board);
     }
 
@@ -134,23 +133,6 @@ public class BoardService {
         }
     }
 
-//    public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
-//        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
-//        long commentCount = redisUtil.boardGetCommentCount(boardId);
-//        Comment parent = null;
-//        if (parentCommentId != null) {
-//            parent = boardCommentRepository.findById(parentCommentId).orElseThrow(() -> new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
-//        }
-////        if(user.getIsBlocked()) {
-////            throw new BoardExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
-////        }
-//        Comment comment = request.toEntity(user, board, parent);
-//        accountsCommonService.checkUserProfile(user);
-//        boardCommentRepository.save(comment);
-//        commentCount++;
-//        redisUtil.boardSaveCommentCount(boardId, commentCount);
-//        return CommentResponseDto.from(comment);
-//    }
 
     public CommentResponseDto createComment(Long boardId, CreateCommentRequestDto request, User user, Long parentCommentId) {
 
