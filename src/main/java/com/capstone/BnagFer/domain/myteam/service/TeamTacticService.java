@@ -31,9 +31,6 @@ public class TeamTacticService {
         // 팀 멤버들의 포지션 초기화
         resetTeamMemberPositions(team);
 
-        // 팀 저장
-        teamRepository.save(team);
-
         return CreateTeamTacticResponseDto.from(team, CreateTeamTacticResponseDto.TacticDto.from(tactic));
     }
 
@@ -47,7 +44,6 @@ public class TeamTacticService {
         }
         if (team.getTactic() != null && team.getTactic().getTacticId().equals(tacticId)) {
             team.deleteMyTactic();
-            teamRepository.save(team);
         } else {
             throw new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND);
         }

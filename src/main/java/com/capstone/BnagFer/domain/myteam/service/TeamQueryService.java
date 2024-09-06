@@ -49,18 +49,4 @@ public class TeamQueryService {
 
         return teamLists;
     }
-
-//    public GetTeamResponseDto.getIndividualDetail getIndividualDetail(Long teamId, Long tacticPositionDetailId) {
-//
-//        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-//        TacticPositionDetail tacticPositionDetail = tacticPositionDetailRepository.findById(tacticPositionDetailId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.DETAIL_NOT_FOUND));
-//
-//        List<TacticPositionDetail> tacticPositionDetails = team.getTactic().getTacticPositionDetails();
-//        TeamMember byTeamAndPosition = teamMembersRepository.findByTeamAndPosition(team, tacticPositionDetail.getPosition());
-//
-//        if (tacticPositionDetails.contains(tacticPositionDetail)) {
-//            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, byTeamAndPosition);
-//        } else
-//            return GetTeamResponseDto.getIndividualDetail.from(team, tacticPositionDetail, null);
-//    }
 }
