@@ -74,13 +74,6 @@ public class TeamInviteService {
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(teamMember.getUser());
 
-        //방장에게만 강퇴 권한
-        if (team.getLeader().getId().equals(user.getId()))
-            teamMembersRepository.delete(teamMember);
-        else
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-
-
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
         if (user.getId().equals(memberId)) {
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_KICK_OUT_YOURSELF);
@@ -88,6 +81,12 @@ public class TeamInviteService {
         //이미 강퇴당한 팀원 예외처리
         if (teamMember.getId() == null)
             throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
+
+        //방장에게만 강퇴 권한
+        if (team.getLeader().getId().equals(user.getId()))
+            teamMembersRepository.delete(teamMember);
+        else
+            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
     }
 
     public TeamMembersResponseDto acceptInvite(Long inviteId, User user) {
