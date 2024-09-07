@@ -30,8 +30,8 @@ public class PositionAllocatedEventHandler extends BaseNotificationEventHandler<
     @Override
     protected FcmNotificationRequestDto createNotificationRequest(PositionAllocatedEvent event) {
         Map<String, String> params = new HashMap<>();
-        params.put("teamName", event.getTeamName());
-        params.put("position", event.getPosition().name());
+        params.put("teamName", event.teamName());
+        params.put("position", event.position().name());
 
         return new FcmNotificationRequestDto(
                 NotificationTemplate.POSITION_ALLOCATED.getTitle(),
@@ -41,7 +41,7 @@ public class PositionAllocatedEventHandler extends BaseNotificationEventHandler<
 
     @Override
     protected Long getRecipientId(PositionAllocatedEvent event) {
-        return teamMembersRepository.findById(event.getMemberId())
+        return teamMembersRepository.findById(event.memberId())
                 .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER))
                 .getUser().getId();
     }

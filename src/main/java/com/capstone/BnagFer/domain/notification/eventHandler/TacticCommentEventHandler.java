@@ -29,7 +29,7 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
 
     @Override
     protected FcmNotificationRequestDto createNotificationRequest(TacticCommentCreatedEvent event) {
-        String commenterNickname = userJpaRepository.findById(event.getAuthorId())
+        String commenterNickname = userJpaRepository.findById(event.authorId())
                 .orElseThrow(() -> new TacticExceptionHandler(ErrorCode.USER_NOT_FOUND))
                 .getProfile().getNickname();
 
@@ -37,7 +37,7 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
         params.put("nickname", commenterNickname);
         params.put("contentType", "전술");
 
-        NotificationTemplate template = event.getNotificationType() == TacticCommentCreatedEvent.NotificationType.NEW_COMMENT ?
+        NotificationTemplate template = event.notificationType() == TacticCommentCreatedEvent.NotificationType.NEW_COMMENT ?
                 NotificationTemplate.NEW_COMMENT : NotificationTemplate.NEW_REPLY;
 
         return new FcmNotificationRequestDto(
@@ -48,6 +48,6 @@ public class TacticCommentEventHandler extends BaseNotificationEventHandler<Tact
 
     @Override
     protected Long getRecipientId(TacticCommentCreatedEvent event) {
-        return event.getRecipientId();
+        return event.recipientId();
     }
 }

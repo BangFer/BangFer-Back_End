@@ -29,7 +29,7 @@ public class CommentEventHandler extends BaseNotificationEventHandler<CommentCre
 
     @Override
     protected FcmNotificationRequestDto createNotificationRequest(CommentCreatedEvent event) {
-        String commenterNickname = userJpaRepository.findById(event.getAuthorId())
+        String commenterNickname = userJpaRepository.findById(event.authorId())
                 .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND))
                 .getProfile().getNickname();
 
@@ -37,7 +37,7 @@ public class CommentEventHandler extends BaseNotificationEventHandler<CommentCre
         params.put("nickname", commenterNickname);
         params.put("contentType", "게시글");
 
-        NotificationTemplate template = event.getNotificationType() == CommentCreatedEvent.NotificationType.NEW_COMMENT ?
+        NotificationTemplate template = event.notificationType() == CommentCreatedEvent.NotificationType.NEW_COMMENT ?
                 NotificationTemplate.NEW_COMMENT : NotificationTemplate.NEW_REPLY;
 
         return new FcmNotificationRequestDto(
@@ -48,6 +48,6 @@ public class CommentEventHandler extends BaseNotificationEventHandler<CommentCre
 
     @Override
     protected Long getRecipientId(CommentCreatedEvent event) {
-        return event.getRecipientId();
+        return event.recipientId();
     }
 }

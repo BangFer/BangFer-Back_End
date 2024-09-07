@@ -24,8 +24,8 @@ public class TeamInviteEventHandler extends BaseNotificationEventHandler<TeamInv
     @Override
     protected FcmNotificationRequestDto createNotificationRequest(TeamInviteCreatedEvent event) {
         Map<String, String> params = new HashMap<>();
-        params.put("inviterNickname", event.getInviterNickname());
-        params.put("teamName", event.getTeamName());
+        params.put("inviterNickname", event.inviterNickname());
+        params.put("teamName", event.teamName());
 
         return new FcmNotificationRequestDto(
                 NotificationTemplate.TEAM_INVITE.getTitle(),
@@ -35,6 +35,6 @@ public class TeamInviteEventHandler extends BaseNotificationEventHandler<TeamInv
 
     @Override
     protected Long getRecipientId(TeamInviteCreatedEvent event) {
-        return event.getInvitedUserId();
+        return event.invitedUserId();
     }
 }
