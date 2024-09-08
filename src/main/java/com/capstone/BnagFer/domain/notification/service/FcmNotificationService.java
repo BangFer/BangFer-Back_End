@@ -34,6 +34,7 @@ public class FcmNotificationService {
     private static final String LOCK_PREFIX = "fcm_notification:";
 
     // 항상 새로운 트랜잭션에서 실행
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public FcmNotification saveNotification(FcmNotificationRequestDto requestDto, User user) {
         String lockKey = LOCK_PREFIX + user.getId();
         RLock lock = redissonClient.getLock(lockKey);
