@@ -161,24 +161,7 @@ public class BoardService {
         redisUtil.boardSaveCommentCount(boardId, commentCount);
 
         // FCM 알림 전송
-        if (parentCommentId == null) {
-            // 새 댓글인 경우
-            if (!user.getId().equals(board.getUser().getId())) {
-                // 게시글 작성자가 댓글을 단 경우가 아닐 때만 알림 발송
-                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), board.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_COMMENT));
-            }
-        } else {
-            // 대댓글인 경우
-            if (!user.getId().equals(board.getUser().getId())) {
-                // 게시글 작성자가 대댓글을 단 경우가 아닐 때 게시글 작성자에게 알림
-                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), board.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_COMMENT));
-            }
-
-            if (!user.getId().equals(parent.getUser().getId()) && !parent.getUser().getId().equals(board.getUser().getId())) {
-                // 부모 댓글 작성자가 대댓글을 단 경우가 아니고, 부모 댓글 작성자가 게시글 작성자가 아닐 때 부모 댓글 작성자에게 알림
-                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), parent.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_REPLY));
-            }
-        }
+        sendNotification(user, board, parentCommentId, parent);
 
         return CommentResponseDto.from(comment);
     }
@@ -202,6 +185,27 @@ public class BoardService {
             throw new BoardExceptionHandler(ErrorCode.USER_NOT_MATCHED);
         }
         comment.deleteComment();
+    }
+
+    private void sendNotification(User user, Board board, Long parentCommentId, Comment parent) {
+        if (parentCommentId == null) {
+            // 새 댓글인 경우
+            if (!user.getId().equals(board.getUser().getId())) {
+                // 게시글 작성자가 댓글을 단 경우가 아닐 때만 알림 발송
+                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), board.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+        } else {
+            // 대댓글인 경우
+            if (!user.getId().equals(board.getUser().getId())) {
+                // 게시글 작성자가 대댓글을 단 경우가 아닐 때 게시글 작성자에게 알림
+                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), board.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+
+            if (!user.getId().equals(parent.getUser().getId()) && !parent.getUser().getId().equals(board.getUser().getId())) {
+                // 부모 댓글 작성자가 대댓글을 단 경우가 아니고, 부모 댓글 작성자가 게시글 작성자가 아닐 때 부모 댓글 작성자에게 알림
+                eventPublisher.publishEvent(new CommentCreatedEvent(user.getId(), parent.getUser().getId(), CommentCreatedEvent.NotificationType.NEW_REPLY));
+            }
+        }
     }
 }
 
