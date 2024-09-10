@@ -1,6 +1,10 @@
 package com.capstone.BnagFer.domain.tactic.controller;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
+import com.capstone.BnagFer.domain.board.dto.response.BoardBlockResponseDto;
+import com.capstone.BnagFer.domain.board.dto.response.GetMyBoardBlockResponseDto;
+import com.capstone.BnagFer.domain.board.service.BoardBlockQueryService;
+import com.capstone.BnagFer.domain.board.service.BoardBlockService;
 import com.capstone.BnagFer.domain.tactic.dto.*;
 import com.capstone.BnagFer.domain.tactic.service.TacticQueryService;
 import com.capstone.BnagFer.domain.tactic.service.TacticService;
@@ -16,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "전술 API")
@@ -24,14 +30,17 @@ public class TacticController {
 
     private final TacticService tacticService;
     private final TacticQueryService tacticQueryService;
+    private final BoardBlockService boardBlockService;
+    private final BoardBlockQueryService boardBlockQueryService;
 
     @Operation(summary = "전술 목록 조회", description = "전체 전술 목록을 조회합니다. 단, 공개(anonymous가 false) 인 전술만 조회. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping
-    public ApiResponse<Page<TacticResponse.TacticList>> getTacticList(
+    public ApiResponse<Page<TacticDetailResponse.AllTacticList>> getTacticList(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser User user) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.getTactics(pageable);
+        Page<TacticDetailResponse.AllTacticList> tacticLists = tacticQueryService.getTactics(user, pageable);
         return ApiResponse.onSuccess(tacticLists);
     }
 
@@ -56,17 +65,18 @@ public class TacticController {
     @Operation(summary = "제목으로 전술 검색", description = "제목으로 전술을 검색합니다. 단, 공개(anonymous가 false) 인 전술만 검색가능. 페이징 적용, 생성 날짜 기준 내림차순 정렬.")
     @GetMapping("/search")
     public ApiResponse<Page<TacticResponse.TacticList>> searchTitle(
-            @RequestParam(value ="title",required = false) String title,
+            @RequestParam(value = "title", required = false) String title,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser User user) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.searchByTitle(title, pageable);
+        Page<TacticResponse.TacticList> tacticLists = tacticQueryService.searchByTitle(title, user, pageable);
         return ApiResponse.onSuccess(tacticLists);
     }
 
     @Operation(summary = "전술 생성", description = "전술을 생성합니다. 프로필이 생성이 된 후에 작성 가능.")
     @PostMapping
-    public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user){
+    public ApiResponse<TacticResponse> createTactic(@Valid @RequestBody TacticCreateRequest request, @LoginUser User user) {
         TacticResponse tacticDetail = tacticService.createTactic(request, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
@@ -82,14 +92,14 @@ public class TacticController {
 
     @Operation(summary = "전술 복사후 가져오기", description = "다른 사람의 전술을 복사해서 작성자를 자신으로 하여 저장.")
     @PostMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user){
+    public ApiResponse<TacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         TacticResponse tacticDetail = tacticService.copyTactic(tacticId, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
     @Operation(summary = "전술 삭제", description = "자신의 전술 삭제. 전술 작성자 만이 삭제 가능.")
     @DeleteMapping("/{tacticId}")
-    public ApiResponse<Object> deleteTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user){
+    public ApiResponse<Object> deleteTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         tacticService.deleteTactic(tacticId, user);
         return ApiResponse.noContent();
     }
@@ -123,7 +133,7 @@ public class TacticController {
 
     @Operation(summary = "전술 댓글 삭제", description = "자신의 댓글을 삭제하는 기능. 댓글 작성자 만이 삭제 가능.")
     @DeleteMapping("/comment/{commentId}")
-    public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user){
+    public ApiResponse<Object> deleteComment(@PathVariable(name = "commentId") Long commentId, @LoginUser User user) {
         tacticService.deleteComment(commentId, user);
         return ApiResponse.onSuccess("댓글이 삭제 되었습니다.");
     }
@@ -132,5 +142,25 @@ public class TacticController {
     @PostMapping("/{tacticId}/like")
     public ApiResponse<Object> likeToggle(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
         return tacticService.likeButton(tacticId, user);
+    }
+
+    @Operation(summary = "전술게시판 사용자 차단", description = "차단을 하게되면, 차단한 사용자의 댓글, 게시글을 볼 수 없다.")
+    @PostMapping("/block/{isBlockedUserId}")
+    public ApiResponse<BoardBlockResponseDto> blockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {
+        BoardBlockResponseDto boardBlockResponseDto = boardBlockService.blockUser(user, isBlockedUserId);
+        return ApiResponse.onSuccess(boardBlockResponseDto);
+    }
+
+    @Operation(summary = "전술게시판 사용자 차단해제", description = "차단을 해제하는 기능.")
+    @DeleteMapping("/block/{isBlockedUserId}")
+    public ApiResponse<Void> unblockUser(@LoginUser User user, @PathVariable(name = "isBlockedUserId") Long isBlockedUserId) {
+        boardBlockService.unblockUser(user, isBlockedUserId);
+        return ApiResponse.noContent();
+    }
+    @Operation(summary = "내가 차단한 사용자 조회", description = "내가 차단한 사용자를 조회해주는 기능")
+    @GetMapping("/blocked-users")
+    public ApiResponse<List<GetMyBoardBlockResponseDto>> getBlockedUsers(@LoginUser User currentUser) {
+        List<GetMyBoardBlockResponseDto> blockedUsers = boardBlockQueryService.getBlockedUsers(currentUser);
+        return ApiResponse.onSuccess(blockedUsers);
     }
 }

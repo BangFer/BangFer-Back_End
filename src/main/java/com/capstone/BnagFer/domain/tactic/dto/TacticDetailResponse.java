@@ -8,6 +8,8 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Builder
 public record TacticDetailResponse(
@@ -43,6 +45,35 @@ public record TacticDetailResponse(
                 .createdAt(tactic.getCreatedAt())
                 .updatedAt(tactic.getUpdatedAt())
                 .build();
+    }
+
+    @Builder
+    public record AllTacticList(Long tacticId,
+                                Long userId,
+                                String nickname,
+                                String tacticName,
+                                Boolean anonymous,
+                                String mainFormation,
+                                Long likeCnt,
+                                Long commentCnt){
+        public static AllTacticList from(Tactic tactic, Long likeCnt, Long commentCnt){
+            return TacticDetailResponse.AllTacticList.builder()
+                    .tacticId(tactic.getTacticId())
+                    .userId(tactic.getUser().getId())
+                    .nickname(tactic.getUser().getProfile().getNickname())
+                    .tacticName(tactic.getTacticName())
+                    .anonymous(tactic.isAnonymous())
+                    .mainFormation(tactic.getMainFormation())
+                    .likeCnt(likeCnt)
+                    .commentCnt(commentCnt)
+                    .build();
+        }
+
+        public static List<AllTacticList> from(List<Tactic> tactics, Map<Long, Long> likeCnt, Map<Long, Long> commentCnt) {
+            return tactics.stream()
+                    .map(tactic -> from(tactic, likeCnt.getOrDefault(tactic.getTacticId(), 0L), commentCnt.getOrDefault(tactic.getTacticId(), 0L)))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Builder
