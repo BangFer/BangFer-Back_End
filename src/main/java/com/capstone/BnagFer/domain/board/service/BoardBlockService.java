@@ -1,8 +1,6 @@
 package com.capstone.BnagFer.domain.board.service;
-
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
-import com.capstone.BnagFer.domain.board.dto.request.BoardBlockRequestDto;
 import com.capstone.BnagFer.domain.board.dto.response.BoardBlockResponseDto;
 import com.capstone.BnagFer.domain.board.entity.BoardBlock;
 import com.capstone.BnagFer.domain.board.exception.BoardExceptionHandler;

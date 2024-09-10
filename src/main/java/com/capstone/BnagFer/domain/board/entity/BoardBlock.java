@@ -5,6 +5,7 @@ import com.capstone.BnagFer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Getter
