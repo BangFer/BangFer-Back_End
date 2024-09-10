@@ -37,4 +37,13 @@ public class UserReport {
     private void setCreatedAt() {
         reportedAt = LocalDateTime.now();
     }
+
+    public static UserReport create(User reporter, User reportedUser, ReportActivity reportActivity) {
+        UserReport userReport = new UserReport();
+        userReport.reporter = reporter;
+        userReport.reportedUser = reportedUser;
+        userReport.reportActivity = reportActivity;
+        return userReport;
+
+    }
 }
