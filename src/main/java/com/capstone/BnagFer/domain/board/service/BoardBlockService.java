@@ -20,11 +20,8 @@ public class BoardBlockService {
     private final UserJpaRepository userRepository;
 
     public BoardBlockResponseDto blockUser(User blockUser, Long isBlockedUserId) {
-        User blockedUser = userRepository.findById(isBlockedUserId)
-                .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        if (blockUser.getId().equals(isBlockedUserId)) {
-            throw new BoardExceptionHandler(ErrorCode.CANNOT_REPORT_YOURSELF);
-        }
+        User blockedUser = checkIfIsBlocked(isBlockedUserId);
+        validateSelfAction(blockUser, isBlockedUserId, ErrorCode.CANNOT_REPORT_YOURSELF);
         if(boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, blockedUser)){
             throw new BoardExceptionHandler(ErrorCode.ALREADY_BLOCKED);
         }
@@ -35,12 +32,20 @@ public class BoardBlockService {
     }
 
     public void unblockUser(User blockUser, Long isBlockedUserId) {
-        User blockedUser = userRepository.findById(isBlockedUserId)
-                .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
-        if (blockUser.getId().equals(isBlockedUserId)) {
-            throw new BoardExceptionHandler(ErrorCode.CANNOT_UNBLOCK_YOURSELF);
-        }
+        User blockedUser = checkIfIsBlocked(isBlockedUserId);
+        validateSelfAction(blockUser, isBlockedUserId, ErrorCode.CANNOT_UNBLOCK_YOURSELF);
         boardBlockRepository.deleteByBlockUserAndIsBlockedUser(blockUser, blockedUser);
+    }
+
+    private User checkIfIsBlocked(Long isBlockedUserId) {
+        return userRepository.findById(isBlockedUserId)
+                .orElseThrow(() -> new BoardExceptionHandler(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private void validateSelfAction(User blockUser, Long isBlockedUserId, ErrorCode errorCode){
+        if (blockUser.getId().equals(isBlockedUserId)) {
+            throw new BoardExceptionHandler(errorCode);
+        }
     }
 
 
