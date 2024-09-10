@@ -27,4 +27,12 @@ public class BoardBlock extends BaseEntity {
 
     @Column(name = "blocked_at")
     private LocalDateTime blockedAt;
+
+    public static BoardBlock create(User blockUser, User isBlockedUser) {
+        BoardBlock boardBlock = new BoardBlock();
+        boardBlock.blockUser = blockUser;
+        boardBlock.isBlockedUser = isBlockedUser;
+        return boardBlock;
+
+    }
 }

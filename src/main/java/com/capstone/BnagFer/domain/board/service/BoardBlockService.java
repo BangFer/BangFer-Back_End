@@ -25,8 +25,8 @@ public class BoardBlockService {
         if(boardBlockRepository.existsByBlockUserAndIsBlockedUser(blockUser, blockedUser)){
             throw new BoardExceptionHandler(ErrorCode.ALREADY_BLOCKED);
         }
-        BoardBlockRequestDto request = new BoardBlockRequestDto();
-        BoardBlock boardBlock = request.toEntity(blockUser, blockedUser);
+
+        BoardBlock boardBlock = BoardBlock.create(blockUser, blockedUser);
         boardBlockRepository.save(boardBlock);
         return BoardBlockResponseDto.from(boardBlock);
     }
