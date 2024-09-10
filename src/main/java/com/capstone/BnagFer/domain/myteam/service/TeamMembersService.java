@@ -26,45 +26,17 @@ public class TeamMembersService {
     private final FcmNotificationService fcmNotificationService;
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, Long teamId, Long memberId, User user) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+        Team team = findTeamById(teamId);
+        TeamMember teamMember = findTeamMemberById(memberId);
 
-        if(!team.getId().equals(teamMember.getTeam().getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_NOT_IN_TEAM);
-          
-        if (!team.getId().equals(teamMember.getTeam().getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
-
-        }
+        validateTeamMemberIsInTeam(team, teamMember);
+        validateLeaderAuthorization(team, user);
 
         Position requestedPosition = request.position();
-        // 요청한 포지션(requestedPosition)이 이미 다른 멤버에게 할당되어 있는지 확인
-        TeamMember existingMemberWithPosition = teamMembersRepository.findByTeamAndPosition(team, requestedPosition);
-        boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, memberId);
-        if (team.getLeader().getId().equals(user.getId())) {
-            if (teamMemberInTeam) {
-                if (existingMemberWithPosition == null || !existingMemberWithPosition.equals(teamMember)) {
-                    // 이미 다른 멤버가 요청한 포지션을 가지고 있으면 그 멤버의 포지션을 null로 설정
-                    if (existingMemberWithPosition != null) {
-                        existingMemberWithPosition.updatePosition(null);
-                        teamMembersRepository.save(existingMemberWithPosition);
-                    }
-                    // 요청한 멤버에게 포지션 할당
-                    teamMember.updatePosition(requestedPosition);
+        TeamMember existingMemberWithPosition = findExistingMemberWithPosition(team, requestedPosition);
 
-                    teamMembersRepository.save(teamMember);
+        allocateTeamMemberPosition(team, teamMember, existingMemberWithPosition, requestedPosition);
 
-                    // FCM 알림 전송
-                    FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
-                            "포지션 할당",
-                            team.getTeamName() + " 팀에서 " + requestedPosition.name() + " 포지션이 할당되었습니다."
-                    );
-                    fcmNotificationService.sendAlarm(alarmRequestDto, teamMember.getUser().getId());
-                }
-            } else
-                throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
-        } else
-            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
         return TeamMemberPositionResponseDto.from(request.toEntity(teamMember));
     }
 
@@ -82,5 +54,57 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
+    }
+
+    private Team findTeamById(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+    }
+
+    private TeamMember findTeamMemberById(Long memberId) {
+        return teamMembersRepository.findById(memberId)
+                .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
+    }
+
+    private void validateTeamMemberIsInTeam(Team team, TeamMember teamMember) {
+        if (!team.getId().equals(teamMember.getTeam().getId())) {
+            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_NOT_IN_TEAM);
+        }
+    }
+
+    private void validateLeaderAuthorization(Team team, User user) {
+        if (!team.getLeader().getId().equals(user.getId())) {
+            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
+        }
+    }
+
+    private TeamMember findExistingMemberWithPosition(Team team, Position requestedPosition) {
+        return teamMembersRepository.findByTeamAndPosition(team, requestedPosition);
+    }
+
+    private void allocateTeamMemberPosition(Team team, TeamMember teamMember, TeamMember existingMemberWithPosition, Position requestedPosition) {
+        boolean teamMemberInTeam = teamMembersRepository.existsByTeamAndId(team, teamMember.getId());
+
+        if (!teamMemberInTeam) {
+            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
+        }
+
+        if (existingMemberWithPosition != null && !existingMemberWithPosition.equals(teamMember)) {
+            existingMemberWithPosition.updatePosition(null);
+            teamMembersRepository.save(existingMemberWithPosition);
+        }
+
+        teamMember.updatePosition(requestedPosition);
+        teamMembersRepository.save(teamMember);
+
+        sendPositionAllocationNotification(team, teamMember, requestedPosition);
+    }
+
+    private void sendPositionAllocationNotification(Team team, TeamMember teamMember, Position requestedPosition) {
+        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
+                "포지션 할당",
+                team.getTeamName() + " 팀에서 " + requestedPosition.name() + " 포지션이 할당되었습니다."
+        );
+        fcmNotificationService.sendAlarm(alarmRequestDto, teamMember.getUser().getId());
     }
 }
