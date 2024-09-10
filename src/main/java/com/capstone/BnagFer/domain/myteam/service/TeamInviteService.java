@@ -33,36 +33,19 @@ public class TeamInviteService {
 
     public TeamInviteResponseDto inviteTeamMembers(TeamInviteRequestDto request, User inviter) {
         Profile profile = profileJpaRepository.findByNickname(request.nickName());
-        if(profile==null){
+        if (profile == null) {
             throw new TeamMemberExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
         User invitedUser = profile.getUser();
-         //초대가 이루어질 팀을 ID로 찾아오고, 없으면 TEAM_NOT_FOUND 예외를 던진다
+
         Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
 
-        // 방장이 자기 자신을 초대 못하게 하는 예외처리
-        if (inviter.getId().equals(invitedUser.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_INVITE_YOURSELF);
-        }
-
-        // 초대하려는 사용자가 팀의 리더가 아닌 경우 예외를 던진다
-        if (!team.getLeader().getId().equals(inviter.getId())) {
-            throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
-        }
-
         // 초대받은 사용자가 이미 팀 멤버인지 확인한다
-        boolean isAlreadyMember = team.getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getUser().equals(invitedUser));
-        if (isAlreadyMember) {
-            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
-        }
+        checkIfAlreadyMember(team, invitedUser);
 
         // 초대받은 사용자가 이미 초대되었는지 확인한다
-        boolean isAlreadyInvited = teamInviteRepository.existsByTeamAndInvitedUser(team, invitedUser);
-        if (isAlreadyInvited) {
-            throw new TeamMemberExceptionHandler(ErrorCode.INVITATION_ALREADY_SENT);
-        }
+        checkIfAlreadyInvited(team, invitedUser);
 
         // 초대 엔티티를 생성하고 저장한다
         TeamInvite teamInvite = request.toEntity(invitedUser, team, inviter);
@@ -75,7 +58,6 @@ public class TeamInviteService {
         );
         fcmNotificationService.sendAlarm(alarmRequestDto, invitedUser.getId());
 
-        // 초대 정보를 응답 DTO로 변환하여 반환한다
         return TeamInviteResponseDto.from(teamInvite);
     }
 
@@ -122,5 +104,20 @@ public class TeamInviteService {
             throw new TeamMemberExceptionHandler(ErrorCode.WRONG_INVITATION);
         }
         teamInviteRepository.delete(invite);
+    }
+
+    private void checkIfAlreadyMember(Team team, User invitedUser) {
+        boolean isAlreadyMember = team.getTeamMembers().stream()
+                .anyMatch(teamMember -> teamMember.getUser().equals(invitedUser));
+        if (isAlreadyMember) {
+            throw new TeamMemberExceptionHandler(ErrorCode.TEAMMEMBER_EXISTS);
+        }
+    }
+
+    private void checkIfAlreadyInvited(Team team, User invitedUser) {
+        boolean isAlreadyInvited = teamInviteRepository.existsByTeamAndInvitedUser(team, invitedUser);
+        if (isAlreadyInvited) {
+            throw new TeamMemberExceptionHandler(ErrorCode.INVITATION_ALREADY_SENT);
+        }
     }
 }
