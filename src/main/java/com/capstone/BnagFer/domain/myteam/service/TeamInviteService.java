@@ -79,9 +79,9 @@ public class TeamInviteService {
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
 
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
-        if (user.getId().equals(memberId)) {
+        if (user.getId().equals(memberId))
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_KICK_OUT_YOURSELF);
-        }
+
         //이미 강퇴당한 팀원 예외처리
         if (teamMember.getId() == null)
             throw new TeamMemberExceptionHandler(ErrorCode.ALREAY_KICKED_OUT);
