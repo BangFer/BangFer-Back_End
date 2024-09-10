@@ -26,8 +26,8 @@ public class TeamMembersService {
     private final FcmNotificationService fcmNotificationService;
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, Long teamId, Long memberId, User user) {
-        Team team = findTeamById(teamId);
-        TeamMember teamMember = findTeamMemberById(memberId);
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
+        TeamMember teamMember = teamMembersRepository.findById(memberId).orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
 
         validateTeamMemberIsInTeam(team, teamMember);
         validateLeaderAuthorization(team, user);
@@ -54,16 +54,6 @@ public class TeamMembersService {
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);
         } else
             throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_ALLOCATE);
-    }
-
-    private Team findTeamById(Long teamId) {
-        return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
-    }
-
-    private TeamMember findTeamMemberById(Long memberId) {
-        return teamMembersRepository.findById(memberId)
-                .orElseThrow(() -> new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER));
     }
 
     private void validateTeamMemberIsInTeam(Team team, TeamMember teamMember) {
