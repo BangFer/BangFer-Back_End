@@ -27,7 +27,6 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
-    private final String ePw = createKey();
     private static final String AUTH_CODE_PREFIX = "AuthCode ";
 
     @Value("${spring.mail.username}")
@@ -36,15 +35,15 @@ public class EmailService {
     @Value("${spring.mail.smtp.timeout}")
     private long codeExpTime;
 
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
-        log.info("보내는 대상: " + to);
-        log.info("인증 번호: " + ePw);
+    public MimeMessage createMessage(String to, String authCode) throws MessagingException, UnsupportedEncodingException {
+//        log.info("보내는 대상: " + to);
+//        log.info("인증 번호: " + authCode);
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(MimeMessage.RecipientType.TO, to); // 보낼 대상
         message.setSubject("방구석 퍼거슨 인증 코드"); // 메일 제목
 
-        String msg = getString();
+        String msg = getString(authCode);
 
         message.setText(msg, "utf-8", "html"); //내용, charset타입, subtype
         message.setFrom(new InternetAddress(id,"bangFer"));
@@ -52,12 +51,12 @@ public class EmailService {
         return message;
     }
 
-    private String getString() {
+    private String getString(String authCode) {
         String msg="";
         msg += "<h1 style=\"font-size: 30px; padding-right: 30px; padding-left: 30px;\">이메일 주소 확인</h1>";
         msg += "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">아래 확인 코드를 화면에서 입력해주세요.</p>";
         msg += "<div style=\"padding-right: 30px; padding-left: 30px; margin: 32px 0 40px;\"><table style=\"border-collapse: collapse; border: 0; background-color: #F4F4F4; height: 70px; table-layout: fixed; word-wrap: break-word; border-radius: 6px;\"><tbody><tr><td style=\"text-align: center; vertical-align: middle; font-size: 30px;\">";
-        msg += ePw;
+        msg += authCode;
         msg += "</td></tr></tbody></table></div>";
         return msg;
     }
@@ -75,23 +74,28 @@ public class EmailService {
 
     @Transactional
     public String sendMessage(String to) throws Exception {
-        MimeMessage message = createMessage(to);
+        String authCode = createKey();
+        MimeMessage message = createMessage(to, authCode);
         try {
             javaMailSender.send(message);
         } catch (MailException es) {
             es.printStackTrace();
             throw new AccountsExceptionHandler(ErrorCode.UNABLE_TO_SEND_EMAIL);
         }
-        redisUtil.save(AUTH_CODE_PREFIX + to, ePw, codeExpTime, TimeUnit.MILLISECONDS);
-        return ePw;
+        redisUtil.save(AUTH_CODE_PREFIX + to, authCode, codeExpTime, TimeUnit.MILLISECONDS);
+        return authCode;
     }
 
     @Transactional
     public boolean verifyCode(EmailVerifyDto requestDto) {
-        if (!(redisUtil.hasKey(AUTH_CODE_PREFIX + requestDto.email()))) {
+        String key = AUTH_CODE_PREFIX + requestDto.email();
+
+        if (!(redisUtil.hasKey(key))) {
             throw new CustomException(ErrorCode.CODE_IS_NOT_VALID);
         }
-        else if (redisUtil.get(AUTH_CODE_PREFIX + requestDto.email()).toString().equals(requestDto.code())) {
+        String savedCode = redisUtil.get(key).toString();
+        if (savedCode.equals(requestDto.code())) {
+            redisUtil.delete(key);  // 인증 후 삭제
             return true;
         }
         else {
