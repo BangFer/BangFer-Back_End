@@ -4,8 +4,6 @@ import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
-import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
-import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamInviteRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamInviteResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
@@ -17,6 +15,7 @@ import com.capstone.BnagFer.domain.myteam.repository.TeamMembersRepository;
 import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class TeamInviteService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final ProfileJpaRepository profileJpaRepository;
-    private final FcmNotificationService fcmNotificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TeamInviteResponseDto inviteTeamMembers(TeamInviteRequestDto request, User inviter) {
         Profile profile = profileJpaRepository.findByNickname(request.nickName());
@@ -52,11 +51,7 @@ public class TeamInviteService {
         teamInviteRepository.save(teamInvite);
 
         // FCM 알림 전송
-        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
-                "팀 초대",
-                inviter.getProfile().getNickname() + "님이 " + team.getTeamName() + " 팀에 초대하였습니다."
-        );
-        fcmNotificationService.sendAlarm(alarmRequestDto, invitedUser.getId());
+        eventPublisher.publishEvent(new TeamInviteCreatedEvent(savedInvite));
 
         return TeamInviteResponseDto.from(teamInvite);
     }
