@@ -35,6 +35,8 @@ public enum ErrorCode implements BaseErrorCode {
     // Firebase 관련 에러
     FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
     FIREBASE_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "FIREBASE402", "Firebase 토큰을 찾을 수 없습니다."),
+    LOCK_ACQUISITION_FAILED(HttpStatus.CONFLICT, "FIREBASE403", "알림 저장을 위한 락 획득에 실패했습니다."),
+    NOTIFICATION_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE404", "알림 저장 중 오류가 발생했습니다."),
 
     // S3 관련 에러
     S3_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "S3401", "S3 파일 업로드 실패."),

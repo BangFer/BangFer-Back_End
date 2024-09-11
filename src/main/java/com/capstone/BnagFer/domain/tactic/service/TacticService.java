@@ -1,7 +1,6 @@
 package com.capstone.BnagFer.domain.tactic.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
-import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
+import com.capstone.BnagFer.domain.notification.event.TacticCommentCreatedEvent;
 import com.capstone.BnagFer.global.util.RedisUtil;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.tactic.dto.*;
@@ -17,6 +16,7 @@ import com.capstone.BnagFer.domain.tactic.repository.TacticRepository;
 import com.capstone.BnagFer.global.common.ApiResponse;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ public class TacticService {
     private final CommentRepository commentRepository;
     private final TacticPositionDetailRepository tacticPositionDetailRepository;
     private final LikeRepository likeRepository;
-    private final FcmNotificationService fcmNotificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TacticResponse createTactic(TacticCreateRequest request, User user){
 
@@ -129,39 +129,9 @@ public class TacticService {
         redisUtil.saveCommentCount(tacticId, commentCount);
 
         // FCM 알림 전송
-        if (parentCommentId == null) {
-            // 일반 댓글인 경우
-            sendCommentNotification(tactic.getUser(), user);
-        } else {
-            // 대댓글인 경우
-            sendReplyNotification(tactic.getUser(), parent.getUser(), user);
-        }
+        sendNotification(user, tactic, parentCommentId, parent);
 
         return CommentResponse.from(tacticComment);
-    }
-
-    private void sendCommentNotification(User tacticOwner, User commenter) {
-
-        FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
-                "새 댓글",
-                commenter.getProfile().getNickname() + "님이 회원님의 전술에 댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(alarmRequestDto, tacticOwner.getId());
-
-    }
-
-    private void sendReplyNotification(User tacticOwner, User parentCommentOwner, User replier) {
-        FcmNotificationRequestDto tacticOwnerAlarmDto = new FcmNotificationRequestDto(
-                "새 댓글",
-                replier.getProfile().getNickname() + "님이 회원님의 전술에 댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(tacticOwnerAlarmDto, tacticOwner.getId());
-
-        FcmNotificationRequestDto parentCommentOwnerAlarmDto = new FcmNotificationRequestDto(
-                "새 대댓글",
-                replier.getProfile().getNickname() + "님이 회원님의 댓글에 대댓글을 달았습니다."
-        );
-        fcmNotificationService.sendAlarm(parentCommentOwnerAlarmDto, parentCommentOwner.getId());
     }
 
     public CommentResponse updateComment(Long commentId, CommentUpdateRequest request, User user) {
@@ -204,6 +174,27 @@ public class TacticService {
             likeCount++;
             redisUtil.saveLikeCount(tacticId, likeCount);
             return ApiResponse.SUCCESS_LIKE();
+        }
+    }
+
+    private void sendNotification(User user, Tactic tactic, Long parentCommentId, TacticComment parent) {
+        if (parentCommentId == null) {
+            // 새 댓글인 경우
+            if (!user.getId().equals(tactic.getUser().getId())) {
+                // 전술 작성자가 댓글을 단 경우가 아닐 때만 알림 발송
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), tactic.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+        } else {
+            // 대댓글인 경우
+            if (!user.getId().equals(tactic.getUser().getId())) {
+                // 전술 작성자가 대댓글을 단 경우가 아닐 때 게시글 작성자에게 알림
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), tactic.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_COMMENT));
+            }
+
+            if (!user.getId().equals(parent.getUser().getId()) && !parent.getUser().getId().equals(tactic.getUser().getId())) {
+                // 부모 댓글 작성자가 대댓글을 단 경우가 아니고, 부모 댓글 작성자가 전술 작성자가 아닐 때 부모 댓글 작성자에게 알림
+                eventPublisher.publishEvent(new TacticCommentCreatedEvent(user.getId(), parent.getUser().getId(), TacticCommentCreatedEvent.NotificationType.NEW_REPLY));
+            }
         }
     }
 

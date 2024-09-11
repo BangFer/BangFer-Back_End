@@ -4,6 +4,7 @@ import com.capstone.BnagFer.domain.accounts.entity.Profile;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.ProfileJpaRepository;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
+import com.capstone.BnagFer.domain.notification.event.TeamInviteCreatedEvent;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamInviteRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamInviteResponseDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMembersResponseDto;
@@ -48,7 +49,7 @@ public class TeamInviteService {
 
         // 초대 엔티티를 생성하고 저장한다
         TeamInvite teamInvite = request.toEntity(invitedUser, team, inviter);
-        teamInviteRepository.save(teamInvite);
+        TeamInvite savedInvite = teamInviteRepository.save(teamInvite);
 
         // FCM 알림 전송
         eventPublisher.publishEvent(new TeamInviteCreatedEvent(savedInvite));
