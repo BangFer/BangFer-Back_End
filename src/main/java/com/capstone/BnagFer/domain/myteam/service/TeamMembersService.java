@@ -1,8 +1,7 @@
 package com.capstone.BnagFer.domain.myteam.service;
 
 import com.capstone.BnagFer.domain.accounts.entity.User;
-import com.capstone.BnagFer.domain.notification.dto.FcmNotificationRequestDto;
-import com.capstone.BnagFer.domain.notification.service.FcmNotificationService;
+import com.capstone.BnagFer.domain.notification.event.PositionAllocatedEvent;
 import com.capstone.BnagFer.domain.myteam.dto.request.TeamMemberPositionRequestDto;
 import com.capstone.BnagFer.domain.myteam.dto.response.TeamMemberPositionResponseDto;
 import com.capstone.BnagFer.domain.myteam.entity.Team;
@@ -14,6 +13,7 @@ import com.capstone.BnagFer.domain.myteam.repository.TeamRepository;
 import com.capstone.BnagFer.domain.tactic.entity.Position;
 import com.capstone.BnagFer.global.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamMembersService {
     private final TeamMembersRepository teamMembersRepository;
     private final TeamRepository teamRepository;
-    private final FcmNotificationService fcmNotificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TeamMemberPositionResponseDto allocatePosition(TeamMemberPositionRequestDto request, Long teamId, Long memberId, User user) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamExceptionHandler(ErrorCode.TEAM_NOT_FOUND));
@@ -50,11 +50,7 @@ public class TeamMembersService {
                     teamMembersRepository.save(teamMember);
 
                     // FCM 알림 전송
-                    FcmNotificationRequestDto alarmRequestDto = new FcmNotificationRequestDto(
-                            "포지션 할당",
-                            team.getTeamName() + " 팀에서 " + requestedPosition.name() + " 포지션이 할당되었습니다."
-                    );
-                    fcmNotificationService.sendAlarm(alarmRequestDto, teamMember.getUser().getId());
+                    eventPublisher.publishEvent(new PositionAllocatedEvent(teamMember, requestedPosition));
                 }
             } else
                 throw new TeamMemberExceptionHandler(ErrorCode.CANNOT_FIND_TEAMMEMBER);

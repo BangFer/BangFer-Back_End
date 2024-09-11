@@ -2,7 +2,6 @@ package com.capstone.BnagFer.domain.report.service;
 import com.capstone.BnagFer.domain.accounts.entity.User;
 import com.capstone.BnagFer.domain.accounts.repository.UserJpaRepository;
 import com.capstone.BnagFer.domain.report.dto.UserReportResponseDto;
-import com.capstone.BnagFer.domain.report.dto.UserReportRequest;
 import com.capstone.BnagFer.domain.report.entity.ReportActivity;
 import com.capstone.BnagFer.domain.report.entity.UserActivity;
 import com.capstone.BnagFer.domain.report.entity.UserReport;
@@ -30,9 +29,8 @@ public class ReportService {
         User reportedUser = userRepository.findById(reportedUserId).orElseThrow(() -> new ReportExceptionHandler(ErrorCode.USER_NOT_FOUND));
         validateSelfReport(reporter.getId(), reportedUser.getId());
         validateUserBanned(reportedUser);
-        UserReportRequest request = new UserReportRequest();
         reportedUser.changeActivity(UserActivity.FLAGGED);
-        UserReport userReport = request.toEntity(reporter, reportedUser, reportActivity);
+        UserReport userReport = UserReport.create(reporter, reportedUser, reportActivity);
         userReportRepository.save(userReport);
         return UserReportResponseDto.from(userReport);
     }
