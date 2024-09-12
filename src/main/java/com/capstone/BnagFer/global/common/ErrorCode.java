@@ -31,6 +31,7 @@ public enum ErrorCode implements BaseErrorCode {
     EMAIL_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER414", "이메일이 맞지 않습니다."),
     CANNOT_USE_SAME_PASSWORD(HttpStatus.BAD_REQUEST, "USER415", "기존 비밀번호와 동일합니다."),
     USER_IS_BANNED(HttpStatus.BAD_REQUEST, "USER416", "사용이 정지된 유저입니다."),
+    EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER417", "해당 이메일이 이미 존재합니다."),
 
     // Firebase 관련 에러
     FIREBASE_MESSAGING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FIREBASE401", "Firebase 메시징 예외가 발생했습니다."),
@@ -47,7 +48,6 @@ public enum ErrorCode implements BaseErrorCode {
     PROFILE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE402", "프로필이 이미 존재합니다."),
     PROFILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PROFILE403", "해당 프로필이 존재하지 않습니다."),
     PROFILE_AND_USER_NOT_MATCHED(HttpStatus.BAD_REQUEST, "PROFILE404", "자신의 프로필이 아닙니다. 권한이 없습니다."),
-    EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PROFILE404", "해당 이메일이 이미 존재합니다."),
 
     // Tactic 관련 에러
     TACTIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "TACTIC401", "전술이 없습니다."),
