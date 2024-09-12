@@ -31,6 +31,7 @@ public class AccountsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
+    private final AccountsCommonService accountsCommonService;
 
     public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
 
@@ -67,9 +68,7 @@ public class AccountsService {
             throw new AccountsExceptionHandler(ErrorCode.PASSWORD_NOT_EQUAL);
 
         // 이메일 중복 확인
-        if (userJpaRepository.existsByEmail(requestDto.email())) {
-            throw new AccountsExceptionHandler(ErrorCode.USER_ALREADY_EXIST);
-        }
+        accountsCommonService.checkUserEmail(requestDto.email());
 
         String encodedPw = passwordEncoder.encode(requestDto.password());
         User user = requestDto.toEntity(encodedPw);
@@ -144,9 +143,7 @@ public class AccountsService {
         }
 
         // 새 이메일이 이미 사용 중인지 확인
-        if (userJpaRepository.existsByEmail(requestDto.newEmail())) {
-            throw new AccountsExceptionHandler(ErrorCode.EMAIL_ALREADY_EXIST);
-        }
+        accountsCommonService.checkUserEmail(requestDto.newEmail());
 
         // 이메일 변경
         user.updateEmail(requestDto);
