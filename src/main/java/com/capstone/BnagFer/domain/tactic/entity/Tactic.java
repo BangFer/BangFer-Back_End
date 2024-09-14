@@ -85,4 +85,8 @@ public class Tactic extends BaseEntity {
     public static Tactic createTactic() {
         return new Tactic();
     }
+
+    public void setTacticPositionDetails(List<TacticPositionDetail> tacticPositionDetails) {
+        this.tacticPositionDetails = tacticPositionDetails;
+    }
 }

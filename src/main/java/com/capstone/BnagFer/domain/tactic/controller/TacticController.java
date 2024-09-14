@@ -92,8 +92,8 @@ public class TacticController {
 
     @Operation(summary = "전술 복사후 가져오기", description = "다른 사람의 전술을 복사해서 작성자를 자신으로 하여 저장.")
     @PostMapping("/{tacticId}")
-    public ApiResponse<TacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
-        TacticResponse tacticDetail = tacticService.copyTactic(tacticId, user);
+    public ApiResponse<CopyTacticResponse> copyTactic(@PathVariable(name = "tacticId") Long tacticId, @LoginUser User user) {
+        CopyTacticResponse tacticDetail = tacticService.copyTactic(tacticId, user);
         return ApiResponse.onSuccess(tacticDetail);
     }
 
