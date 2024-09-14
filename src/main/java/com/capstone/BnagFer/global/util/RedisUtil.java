@@ -1,19 +1,26 @@
 package com.capstone.BnagFer.global.util;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 public class RedisUtil {
     private final RedisTemplate<String, Object> redisTemplate;
+    private static final long ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60; // 일주일을 초로 표현
 
     public void save(String key, Object val, Long time, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, val, time, timeUnit);
     }
 
+    private void saveWithOneWeekTTL(String key, Object val) {
+        redisTemplate.opsForValue().set(key, val, ONE_WEEK_IN_SECONDS, TimeUnit.SECONDS);
+    }
+
     public void saveLikeCount(Long tacticId, Long likeCount) {
-        redisTemplate.opsForValue().set("tactic:" + tacticId + ":likeCount", likeCount.toString());
+        saveWithOneWeekTTL("tactic:" + tacticId + ":likeCount", likeCount.toString());
     }
 
     public Long getLikeCount(Long tacticId) {
@@ -22,7 +29,7 @@ public class RedisUtil {
     }
 
     public void boardSaveLikeCount(Long boardId, Long likeCount) {
-        redisTemplate.opsForValue().set("board:" + boardId + ":likeCount", likeCount.toString());
+        saveWithOneWeekTTL("board:" + boardId + ":likeCount", likeCount.toString());
     }
 
     public Long boardGetLikeCount(Long boardId) {
@@ -31,19 +38,19 @@ public class RedisUtil {
     }
 
     public void boardSaveCommentCount(Long boardId, Long commentCount) {
-        redisTemplate.opsForValue().set("board:" + boardId + ":commentCount", commentCount.toString());
+        saveWithOneWeekTTL("board:" + boardId + ":commentCount", commentCount.toString());
     }
 
-    public Long boardGetCommentCount(Long boardId){
+    public Long boardGetCommentCount(Long boardId) {
         String commentCountStr = (String) redisTemplate.opsForValue().get("board:" + boardId + ":commentCount");
         return commentCountStr != null ? Long.valueOf(commentCountStr) : null;
     }
 
-    public void saveCommentCount(Long tacticId, Long commentCount){
-        redisTemplate.opsForValue().set("tactic:" + tacticId + ":commentCount", commentCount.toString());
+    public void saveCommentCount(Long tacticId, Long commentCount) {
+        saveWithOneWeekTTL("tactic:" + tacticId + ":commentCount", commentCount.toString());
     }
 
-    public Long getCommentCount(Long tacticId){
+    public Long getCommentCount(Long tacticId) {
         String commentCountStr = (String) redisTemplate.opsForValue().get("tactic:" + tacticId + ":commentCount");
         return commentCountStr != null ? Long.valueOf(commentCountStr) : null;
     }
@@ -64,6 +71,7 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(userEmail, fcmToken);
         redisTemplate.expire(userEmail, 30, TimeUnit.DAYS);
     }
+
     public String getFCMToken(String userEmail) {
         Object tokenObj = redisTemplate.opsForValue().get(userEmail);
         if (tokenObj != null) {
@@ -72,6 +80,7 @@ public class RedisUtil {
             return null;
         }
     }
+
     public void removeFCMToken(String userEmail) {
         redisTemplate.delete(userEmail);
     }

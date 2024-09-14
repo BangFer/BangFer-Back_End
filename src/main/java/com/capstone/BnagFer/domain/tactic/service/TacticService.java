@@ -36,6 +36,15 @@ public class TacticService {
     private final LikeRepository likeRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    private void saveUserTactic(User user, Object tacticOrComment) {
+        accountsCommonService.checkUserProfile(user);
+        if (tacticOrComment instanceof Tactic) {
+            tacticRepository.save((Tactic) tacticOrComment);
+        } else if (tacticOrComment instanceof TacticComment) {
+            commentRepository.save((TacticComment) tacticOrComment);
+        }
+    }
+
     public TacticResponse createTactic(TacticCreateRequest request, User user){
 
         Tactic tactic = request.toEntity(user);
@@ -43,8 +52,7 @@ public class TacticService {
         accountsCommonService.checkUserActivity(user);
 
         // 프로필 존재 확인
-        accountsCommonService.checkUserProfile(user);
-        tacticRepository.save(tactic);
+        saveUserTactic(user, tactic);
 
         // 11개의 개별 포지션에 대한 설명
         createPositionDetails(request.positionDetails(), tactic);
@@ -101,8 +109,7 @@ public class TacticService {
         copyTactic.setCopyDetail(user, tactic);
 
         // 프로필 존재 확인
-        accountsCommonService.checkUserProfile(user);
-        tacticRepository.save(copyTactic);
+        saveUserTactic(user, copyTactic);
 
         return TacticResponse.from(copyTactic);
     }
@@ -123,8 +130,7 @@ public class TacticService {
         TacticComment tacticComment = request.toEntity(user, tactic, parent);
 
         // 프로필 존재 확인
-        accountsCommonService.checkUserProfile(user);
-        commentRepository.save(tacticComment);
+        saveUserTactic(user, tacticComment);
         commentCount++;
         redisUtil.saveCommentCount(tacticId, commentCount);
 
