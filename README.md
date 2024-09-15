@@ -1,6 +1,9 @@
 # BangFer-Back_End
 방구석 퍼거슨 벡엔드 리포지토리
 
+![image](https://github.com/user-attachments/assets/809dbaeb-b0b6-4eaf-ab32-6caaa95e48a0)
+
+
 ## 👥 Server 팀원
 |고민영|김종우|김근식|
 |:-:|:-:|:-:|
@@ -18,3 +21,6 @@
 |:rocket: | `:rocket:` |  `chore`   | 패키지 매니저 수정 (Dockerfile, gradle, sh, yml) |
 |:fire: | `:fire:` |  `delete`   | 코드/파일 삭제 |
 |:ambulance: | `:ambulance:` |    `!hotfix`     | 급하게 치명적인 버그를 고쳐야 하는 경우 |
+
+## ERD
+![image](https://github.com/user-attachments/assets/8966793b-2bdb-4cc0-b363-231ff155c102)
