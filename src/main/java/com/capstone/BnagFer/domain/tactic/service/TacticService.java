@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,7 +91,8 @@ public class TacticService {
         }
     }
 
-    public TacticResponse copyTactic(Long tacticId, User user) {
+    @Transactional
+    public CopyTacticResponse copyTactic(Long tacticId, User user) {
 
         Tactic tactic = tacticRepository.findById(tacticId).orElseThrow(() -> new TacticExceptionHandler(ErrorCode.TACTIC_NOT_FOUND));
 
@@ -100,11 +102,20 @@ public class TacticService {
         Tactic copyTactic = Tactic.createTactic();
         copyTactic.setCopyDetail(user, tactic);
 
+        // 깊은 복사 수행
+        copyTactic.setTacticPositionDetails(new ArrayList<>());
+        for (TacticPositionDetail detail : tactic.getTacticPositionDetails()) {
+            TacticPositionDetail copyDetail = new TacticPositionDetail();
+            // TacticPositionDetail의 모든 필드를 복사
+            copyDetail.setDetail(copyTactic, detail);
+            copyTactic.getTacticPositionDetails().add(copyDetail);
+        }
+
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(user);
         tacticRepository.save(copyTactic);
 
-        return TacticResponse.from(copyTactic);
+        return CopyTacticResponse.from(copyTactic);
     }
 
     public CommentResponse createComment(Long tacticId, CommentCreateRequest request, User user, Long parentCommentId){

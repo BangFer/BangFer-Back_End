@@ -9,6 +9,7 @@ import com.capstone.BnagFer.domain.accounts.jwt.util.JwtProvider;
 import com.capstone.BnagFer.domain.accounts.jwt.dto.JwtDto;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.SecurityCustomException;
 import com.capstone.BnagFer.domain.accounts.jwt.exception.TokenErrorCode;
+import com.capstone.BnagFer.domain.accounts.service.account.AccountsCommonService;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsQueryService;
 import com.capstone.BnagFer.domain.accounts.service.account.AccountsService;
 import com.capstone.BnagFer.domain.accounts.service.account.KakaoService;
@@ -37,6 +38,7 @@ public class AccountsController {
     private final JwtProvider jwtProvider;
     private final KakaoService kakaoService;
     private final EmailService emailService;
+    private final AccountsCommonService accountsCommonService;
 
     @Operation(summary = "일반 로그인", description = "이메일, 비밀번호를 입력받아 로그인을 진행합니다. 이때, FCM토큰을 같이 넘겨줘야 함." +
             "반환 값으로 JWT accessToken과 refreshToken이 발급됨. accessToken 값을 Authorize에 인증")
@@ -152,9 +154,16 @@ public class AccountsController {
         boolean check = emailService.verifyCode(requestDto);
         if (check) {
             return ApiResponse.onSuccess("인증 완료!");
-        }
-        else {
+        } else {
             return ApiResponse.onFailure(HttpStatus.BAD_REQUEST.name(), "인증 실패");
         }
     }
+
+    @Operation(summary = "이메일 사용 가능 여부 확인", description = "이메일을 입력받아 사용 가능한지 여부를 확인합니다.")
+    @GetMapping("/checkEmail")
+    public ApiResponse<String> checkEmailAvailability(@RequestParam String email) {
+        accountsCommonService.checkUserEmail(email);
+        return ApiResponse.onSuccess("사용 가능한 이메일입니다.");
+    }
+
 }

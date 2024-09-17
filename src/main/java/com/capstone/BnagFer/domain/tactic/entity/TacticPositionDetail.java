@@ -32,4 +32,10 @@ public class TacticPositionDetail {
         position = request.position();
         positionDescription = request.positionDescription();
     }
+
+    public void setDetail(Tactic tactic, TacticPositionDetail request){
+        this.tactic = tactic;
+        position = request.getPosition();
+        positionDescription = request.getPositionDescription();
+    }
 }
