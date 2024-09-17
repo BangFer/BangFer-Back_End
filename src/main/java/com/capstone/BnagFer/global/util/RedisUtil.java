@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisUtil {
     private final RedisTemplate<String, Object> redisTemplate;
+    private static final String FCM_TOKEN_PREFIX = "fcm:token:";
     private static final long ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60; // 일주일을 초로 표현
 
     public void save(String key, Object val, Long time, TimeUnit timeUnit) {
@@ -68,12 +69,13 @@ public class RedisUtil {
     }
 
     public void saveFCMToken(String userEmail, String fcmToken) {
-        redisTemplate.opsForValue().set(userEmail, fcmToken);
-        redisTemplate.expire(userEmail, 30, TimeUnit.DAYS);
+        String key = FCM_TOKEN_PREFIX + userEmail;
+        redisTemplate.opsForValue().set(key, fcmToken, 30, TimeUnit.DAYS);
     }
 
     public String getFCMToken(String userEmail) {
-        Object tokenObj = redisTemplate.opsForValue().get(userEmail);
+        String key = FCM_TOKEN_PREFIX + userEmail;
+        Object tokenObj = redisTemplate.opsForValue().get(key);
         if (tokenObj != null) {
             return (String) tokenObj;
         } else {
@@ -82,6 +84,7 @@ public class RedisUtil {
     }
 
     public void removeFCMToken(String userEmail) {
-        redisTemplate.delete(userEmail);
+        String key = FCM_TOKEN_PREFIX + userEmail;
+        redisTemplate.delete(key);
     }
 }

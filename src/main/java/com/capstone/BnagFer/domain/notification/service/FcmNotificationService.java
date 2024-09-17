@@ -13,13 +13,10 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -29,36 +26,12 @@ public class FcmNotificationService {
     private final UserJpaRepository userJpaRepository;
     private final RedisUtil redisUtil;
     private final FcmNotificationRepository fcmNotificationRepository;
-    private final RedissonClient redissonClient;
-
-    private static final String LOCK_PREFIX = "fcm_notification:";
 
     // 항상 새로운 트랜잭션에서 실행
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public FcmNotification saveNotification(FcmNotificationRequestDto requestDto, User user) {
-        String lockKey = LOCK_PREFIX + user.getId();
-        RLock lock = redissonClient.getLock(lockKey);
-
-        try {
-            // 5초 동안 락 획득 시도, 획득 성공 시 최대 10초 동안 락 유지 => 데드락 방지
-
-            if (lock.tryLock(5, 10, TimeUnit.SECONDS)) {
-                try {
-                    FcmNotification fcmNotification = requestDto.toEntity(user);
-                    return fcmNotificationRepository.save(fcmNotification);
-                } finally {
-                    // 작업 완료 후 즉시 락 해제 시도
-                    if (lock.isHeldByCurrentThread()) {
-                        lock.unlock();
-                    }
-                }
-            } else {
-                throw new FcmNotificationExceptionHandler(ErrorCode.LOCK_ACQUISITION_FAILED);
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new FcmNotificationExceptionHandler(ErrorCode.NOTIFICATION_SAVE_FAILED);
-        }
+        FcmNotification fcmNotification = requestDto.toEntity(user);
+        return fcmNotificationRepository.save(fcmNotification);
     }
 
     // 트랜잭션 없이 실행

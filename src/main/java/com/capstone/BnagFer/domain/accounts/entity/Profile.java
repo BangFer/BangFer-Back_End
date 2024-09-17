@@ -27,7 +27,7 @@ public class Profile extends BaseEntity {
     @Column(name = "profile_id")
     private Long id;
 
-    @Column(name = "nickname", nullable = false, length = 20)
+    @Column(name = "nickname", nullable = false, unique = true, length = 20)
     private String nickname; // 닉네임
 
     @Column(name = "profile_image_url")
