@@ -64,7 +64,7 @@ public class TeamInviteService {
         // 프로필 존재 확인
         accountsCommonService.checkUserProfile(teamMember.getUser());
         //방장에게만 강퇴 권한
-        if (team.getLeader().getId().equals(user.getId()))
+        if (!team.getLeader().getId().equals(user.getId()))
             throw new TeamMemberExceptionHandler(ErrorCode.NO_AUTHORIZATION);
 
         //방장이 자기 자신을 강퇴 못하게 해주는 예외처리
